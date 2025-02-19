@@ -1,6 +1,6 @@
 package com.shopping.repository;
 
-import java.lang.reflect.Member;
+import com.shopping.model.Member;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

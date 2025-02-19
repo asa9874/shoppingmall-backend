@@ -11,6 +11,8 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class Member {
     @Id
