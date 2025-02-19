@@ -23,6 +23,8 @@ public class Product {
     @Column(nullable = false)
     private String name;
     
+    private String image;
+    
     private String description;
 
     @Column(nullable = false)
@@ -33,5 +35,5 @@ public class Product {
 
     @OneToOne
     @JoinColumn(name = "seller_id", referencedColumnName = "id", nullable = false)
-    private String sellerId;
+    private Seller seller;
 }
