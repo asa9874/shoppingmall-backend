@@ -1,4 +1,4 @@
-package com.shopping.shoppingmall_backend;
+package com.shopping;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
