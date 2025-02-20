@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.service.ProductService;
+import com.shopping.dto.ProductDTO;
 import com.shopping.model.Product;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,7 +21,7 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/")
-    public List<Product> getProductItems(){
+    public List<ProductDTO> getProductItems(){
         return productService.getProductItems();
     }
 }
