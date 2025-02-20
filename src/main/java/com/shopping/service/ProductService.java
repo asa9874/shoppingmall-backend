@@ -18,13 +18,14 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     
-    public List<ProductDTO> getProductItems(){
+    public List<ProductDTO> getProductItems(int count){
         List<Product> productList = productRepository.findAll();
         if (productList.isEmpty()) {
             return Collections.emptyList(); 
         }
     
         List<ProductDTO> productDTOList = productList.stream()
+            .limit(count)
             .map(product -> ProductDTO.builder()
                 .id(product.getId())                  
                 .description(product.getDescription())   
