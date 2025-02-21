@@ -15,7 +15,8 @@ public class MemberService {
     
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final CustomerService customerService;
+    private final SellerService sellerService;
     public void register(MemberRegisterDto memberRegisterDto) {
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(memberRegisterDto.getPassword());
@@ -28,6 +29,14 @@ public class MemberService {
             .role(memberRegisterDto.getRole())
             .build();
         memberRepository.save(member);
+
+        if (member.getRole() == Member.Role.CUSTOMER) {
+            customerService.registerCustomer(member);  
+        }
+
+        if (member.getRole() == Member.Role.SELLER) {
+            sellerService.registerSeller(member);  
+        }
     }
 
 }
