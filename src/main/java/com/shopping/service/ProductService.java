@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.shopping.dto.ProductDTO;
+import com.shopping.dto.Response.ProductDTO;
 import com.shopping.model.Product;
 import com.shopping.repository.ProductRepository;
 

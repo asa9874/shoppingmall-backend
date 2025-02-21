@@ -1,4 +1,4 @@
-package com.shopping.dto;
+package com.shopping.dto.Request;
 
 import com.shopping.model.Member;
 

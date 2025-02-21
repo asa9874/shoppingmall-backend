@@ -1,4 +1,4 @@
-package com.shopping.dto;
+package com.shopping.dto.Response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

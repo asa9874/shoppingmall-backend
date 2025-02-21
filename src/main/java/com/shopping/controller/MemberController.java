@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shopping.dto.MemberRegisterDto;
+import com.shopping.dto.Request.MemberRegisterDto;
 import com.shopping.service.MemberService;
 
 import org.springframework.web.bind.annotation.RequestBody;
