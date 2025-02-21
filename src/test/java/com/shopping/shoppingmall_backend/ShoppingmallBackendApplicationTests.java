@@ -32,7 +32,7 @@ class ShoppingmallBackendApplicationTests {
 	@BeforeEach
     public void setUp() {
         member = Member.builder()
-                .userId("TestMan123")
+                .memberId("TestMan123")
                 .password("password123")
                 .nickname("TestMan")
                 .role(Member.Role.SELLER)

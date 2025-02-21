@@ -1,24 +1,22 @@
-package com.shopping.model;
+package com.shopping.dto;
+
+import com.shopping.model.Member;
+
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
-@Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Member {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class MemberRegisterDto {
     @Column(nullable = false)
     private String memberId;
 
@@ -30,9 +28,9 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
+    private String role;
 
-    public enum Role {
-        CUSTOMER, SELLER, BOTH
+    public Member.Role getRole() {
+        return Member.Role.valueOf(this.role); 
     }
 }
