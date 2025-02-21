@@ -27,21 +27,7 @@ public class SecurityConfig {
 
             //  H2 Console을 위한 헤더 설정
             .headers(headers -> headers
-                .frameOptions(frame -> frame.sameOrigin()))
-
-            //  로그인 설정
-            .formLogin(formLogin -> formLogin
-                .loginPage("/auth/login") // 로그인 페이지 지정
-                .defaultSuccessUrl("/") // 로그인 성공 후 리디렉션
-                .permitAll())
-
-            //  로그아웃 설정
-            .logout(logout -> logout
-                .logoutUrl("/auth/logout")
-                .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-                .permitAll());
+                .frameOptions(frame -> frame.sameOrigin()));
 
         return http.build();
     }
