@@ -1,9 +1,14 @@
 package com.shopping.controller;
 
+import java.util.HashMap;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,5 +41,11 @@ public class MemberController {
         
         memberService.register(memberRegisterDto);
         return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 성공");
+    }
+
+    @GetMapping("/me")
+    public String getMe(@AuthenticationPrincipal UserDetails userDetails) {
+        String nickname = memberService.getNicknameByMemberId(userDetails.getUsername()); 
+        return nickname;
     }
 }

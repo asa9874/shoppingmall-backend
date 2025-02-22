@@ -18,6 +18,7 @@ public class MemberService {
     private final CustomerService customerService;
     private final SellerService sellerService;
     
+    //회원가입
     public void register(MemberRegisterDto memberRegisterDto) {
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(memberRegisterDto.getPassword());
@@ -38,6 +39,13 @@ public class MemberService {
         if (member.getRole() == Member.Role.SELLER) {
             sellerService.registerSeller(member);  
         }
+    }
+
+    //토큰 기반 닉네임 조회
+    public String getNicknameByMemberId(String memberId){
+        Member member = memberRepository.findBymemberId(memberId)
+            .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
+        return member.getNickname();
     }
 
 }
