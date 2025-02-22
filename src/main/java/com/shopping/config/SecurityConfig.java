@@ -40,6 +40,8 @@ public class SecurityConfig {
                 .requestMatchers("/h2-console/**").permitAll()                                  //  H2 콘솔 
                 .requestMatchers("/products/**").permitAll()                                    //  상품
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html" ).permitAll()//swagger
+                .requestMatchers("/test/public").permitAll()                                        //테스트용
+                .requestMatchers("/test/protected").authenticated()                                 //테스트용
                 .anyRequest().authenticated()                                                               
             )                   
             .csrf(csrf -> csrf.disable())                                                                   //  CSRF 보호 비활성화 
