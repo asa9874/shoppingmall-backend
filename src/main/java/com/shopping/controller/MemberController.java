@@ -1,6 +1,7 @@
 package com.shopping.controller;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,8 +45,10 @@ public class MemberController {
     }
 
     @GetMapping("/me")
-    public String getMe(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Map<String, String>> getMe(@AuthenticationPrincipal UserDetails userDetails) {
         String nickname = memberService.getNicknameByMemberId(userDetails.getUsername()); 
-        return nickname;
+        Map<String, String> response = new HashMap<>();
+        response.put("nickname", nickname);
+        return ResponseEntity.ok(response);
     }
 }
