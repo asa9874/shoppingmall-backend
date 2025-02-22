@@ -52,4 +52,15 @@ public class JwtTokenProvider {
                 .getPayload() 
                 .getSubject();
     }
+
+    // JWT 만료시간 가져오기
+    public long getExpiration(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        return claims.getExpiration().getTime() - System.currentTimeMillis();
+    }
 }
