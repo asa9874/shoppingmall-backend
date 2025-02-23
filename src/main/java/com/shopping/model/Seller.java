@@ -32,6 +32,7 @@ public class Seller {
     @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
     private Member member;
 
+    @Builder.Default
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products = new ArrayList<>();
 }
