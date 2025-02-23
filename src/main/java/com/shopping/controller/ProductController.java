@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shopping.dto.Response.ProductDTO;
+import com.shopping.dto.Response.ProductResponseDTO;
 import com.shopping.service.ProductService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -27,20 +27,20 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/")
-    public List<ProductDTO> getProductItems(@RequestParam(defaultValue = "10") int count) {
+    public List<ProductResponseDTO> getProductItems(@RequestParam(defaultValue = "10") int count) {
         return productService.getProductItems(count);
     }
 
 
     //TODO:상품 상세조회
     @GetMapping("/{productId}")
-    public ProductDTO getProductItemDetail(@PathVariable Long productId){
+    public ProductResponseDTO getProductItemDetail(@PathVariable Long productId){
         return null;
     }
 
     //TODO:상품 목록 검색
     @GetMapping("/search")
-    public List<ProductDTO> searchProducts(
+    public List<ProductResponseDTO> searchProducts(
         @RequestParam(required = false) String keyword, 
         @RequestParam(required = false) String category, 
         @RequestParam(required = false) Double minPrice, 
@@ -55,15 +55,15 @@ public class ProductController {
 
     //----DTO는 ProductDTO 아님 임의로 넣어둔거임
     //TODO: 관리자 상품추가
-    @PostMapping("/Create")
-    public ResponseEntity<Void> createProduct(@RequestBody ProductDTO productDTO) {
+    @PostMapping("/create")
+    public ResponseEntity<Void> createProduct(@RequestBody ProductResponseDTO productDTO) {
         return ResponseEntity.status(200).build();
     }
 
 
     //TODO: 관리자 상품수정
     @PutMapping("/modify/{productId}")
-    public ResponseEntity<Void> modifyProduct(@PathVariable Long productId, @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<Void> modifyProduct(@PathVariable Long productId, @RequestBody ProductResponseDTO productDTO) {
         return ResponseEntity.status(200).build();
     }
 
