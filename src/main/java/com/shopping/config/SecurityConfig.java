@@ -34,17 +34,19 @@ public class SecurityConfig {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))                              //  CORS
             .authorizeHttpRequests(auth -> auth                                                             
-                .requestMatchers("/auth/**").permitAll()                                        //  로그인,로그아웃
-                .requestMatchers("/member/register").permitAll()                                //  회원가입
-                .requestMatchers("/h2-console/**").permitAll()                                  //  H2 콘솔 
+                .requestMatchers("/auth/**").permitAll()                                    
+                .requestMatchers("/member/register").permitAll()                               
+                .requestMatchers("/h2-console/**").permitAll()                                 
                 .requestMatchers("/product/**").permitAll()     
                 .requestMatchers("/product/create").authenticated() 
                 .requestMatchers("/product/update").authenticated()                                
                 .requestMatchers("/product/delete").authenticated()                                
-                .requestMatchers("/images/**").permitAll()                                    //  이미지
+                .requestMatchers("/images/**").permitAll()                                   
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html" ).permitAll()//swagger
-                .requestMatchers("/test/public").permitAll()                                        //테스트용
-                .requestMatchers("/test/protected").authenticated()                                 //테스트용
+                .requestMatchers("/test/public").permitAll()                                        
+                .requestMatchers("/test/protected").authenticated()                                
+                .requestMatchers("/test/customer").hasRole("CUSTOMER")
+                .requestMatchers("/test/seller").hasRole("SELLER")
                 .anyRequest().authenticated()                                                               
             )                   
             .csrf(csrf -> csrf.disable())                                                                   //  CSRF 보호 비활성화 
