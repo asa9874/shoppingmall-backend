@@ -53,15 +53,13 @@ public class ProductService {
     public Product createProduct(ProductCreateRequestDTO requestDTO) {
         Seller seller = sellerRepository.findById(requestDTO.getSellerId())
             .orElseThrow(() -> {
-                String errorMessage = String.format("Seller NOT FOUND sellerId: %d (Seller not found: %d)", requestDTO.getSellerId(), requestDTO.getSellerId());
-                log.error(errorMessage); // 로그 출력
+                String errorMessage = String.format("(sellerId: %d)", requestDTO.getSellerId());
                 return new SellerNotFoundException(errorMessage);
             });
 
         // 가격과 재고 검증
         if (requestDTO.getPrice() <= 0 || requestDTO.getStock() < 0) {
-            String errorMessage = String.format("STock or Price ERROR (Invalid product data: Price = %d, Stock = %d)", requestDTO.getPrice(), requestDTO.getStock());
-            log.error(errorMessage); // 로그 출력
+            String errorMessage = String.format("(Price = %d, Stock = %d)", requestDTO.getPrice(), requestDTO.getStock());
             throw new InvalidProductDataException(errorMessage);
         }
     
