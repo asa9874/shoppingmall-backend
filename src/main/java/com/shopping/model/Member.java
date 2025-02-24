@@ -33,6 +33,6 @@ public class Member {
     private Role role;
 
     public enum Role {
-        CUSTOMER, SELLER, BOTH
+        CUSTOMER, SELLER, ADMIN
     }
 }

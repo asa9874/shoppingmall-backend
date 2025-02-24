@@ -1,6 +1,5 @@
 package com.shopping.controller;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +19,11 @@ public class TestController {
     @GetMapping("/protected")
     public String protectedEndpoint(@AuthenticationPrincipal UserDetails userDetails) {
         return "사용자: " + userDetails.getUsername();
+    }
+
+    @GetMapping("/admin")
+    public String adminEndpoint(@AuthenticationPrincipal UserDetails userDetails) {
+        return "어드민: " + userDetails.getUsername();
     }
 
     @GetMapping("/seller")

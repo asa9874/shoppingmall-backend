@@ -8,15 +8,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.shopping.model.Seller;
 import com.shopping.repository.MemberRepository;
 import com.shopping.repository.ProductRepository;
 import com.shopping.repository.SellerRepository;
+
 
 @SpringBootTest
 class ShoppingmallBackendApplicationTests {
@@ -32,8 +33,22 @@ class ShoppingmallBackendApplicationTests {
 
     private Member member;
 
-    @BeforeEach
-    public void setUp() {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Test
+    void CreateAdminAcount() {
+        member = Member.builder()
+                .memberId("admin123")
+                .password(passwordEncoder.encode("admin123"))
+                .nickname("어드민")
+                .role(Member.Role.ADMIN)
+                .build();
+        memberRepository.save(member);
+    }
+
+    @Test
+    void ProductCreateMultipleTest() {
         member = Member.builder()
                 .memberId("testman123")
                 .password("testman123")
@@ -41,10 +56,7 @@ class ShoppingmallBackendApplicationTests {
                 .role(Member.Role.SELLER)
                 .build();
         memberRepository.save(member);
-    }
 
-    @Test
-    void ProductCreateMultipleTest() {
         Seller seller = Seller.builder()
                 .member(member)
                 .build();

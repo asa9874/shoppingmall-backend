@@ -28,35 +28,34 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
 
-
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))                              //  CORS
-            .authorizeHttpRequests(auth -> auth                                                             
-                .requestMatchers("/auth/**").permitAll()                                    
-                .requestMatchers("/member/register").permitAll()                               
-                .requestMatchers("/h2-console/**").permitAll()                                 
-                .requestMatchers("/product/**").permitAll()     
-                .requestMatchers("/product/create").authenticated() 
-                .requestMatchers("/product/update").authenticated()                                
-                .requestMatchers("/product/delete").authenticated()                                
-                .requestMatchers("/images/**").permitAll()                                   
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html" ).permitAll()//swagger
-                .requestMatchers("/test/public").permitAll()                                        
-                .requestMatchers("/test/protected").authenticated()                                
-                .requestMatchers("/test/customer").hasRole("CUSTOMER")
-                .requestMatchers("/test/seller").hasRole("SELLER")
-                .anyRequest().authenticated()                                                               
-            )                   
-            .csrf(csrf -> csrf.disable())                                                                   //  CSRF 보호 비활성화 
-            .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))                          //  H2 Console설정
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  //  세션 사용안함 
-            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/**", "/member/register", "/h2-console/**", "/product/**", "/images/**",
+                                "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/test/public")
+                        .permitAll()
+                        .requestMatchers("/**").hasRole("ADMIN")
+
+                        .requestMatchers("/product/create", "/product/update", "/product/delete", "/test/seller")
+                        .hasRole("SELLER")
+
+                        .requestMatchers("/test/customer")
+                        .hasRole("CUSTOMER")
+                        
+                        .requestMatchers("/test/protected")
+                        .authenticated()
+
+                        .anyRequest().authenticated())
+                .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
-    //  CORS 설정
+    // CORS 설정
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -70,21 +69,22 @@ public class SecurityConfig {
         return source;
     }
 
-    //  JwtAuthenticationFilter를 Bean으로 등록
+    // JwtAuthenticationFilter를 Bean으로 등록
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter(jwtTokenProvider);
     }
 
-    //  비밀번호 암호화 설정(회원가입 시 비밀번호 암호화에 사용)
+    // 비밀번호 암호화 설정(회원가입 시 비밀번호 암호화에 사용)
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    //  AuthenticationManager 등록(로그인 시 인증에 사용)
+    // AuthenticationManager 등록(로그인 시 인증에 사용)
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }
