@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.shopping.dto.Request.ProductCreateRequestDTO;
 import com.shopping.dto.Request.ProductUpdateRequestDto;
 import com.shopping.dto.Response.ProductResponseDTO;
-import com.shopping.exception.InvalidProductDataException;
 import com.shopping.exception.ProductNotFoundException;
 import com.shopping.exception.SellerNotFoundException;
 import com.shopping.model.Product;
@@ -73,5 +73,17 @@ public class ProductService {
         ProductUpdateUtil.updateProductFields(product, requestDto);
         return productRepository.save(product);
     }
+
+    //삭제
+    @Transactional
+    public void deleteProduct(Long productId) {
+        log.info("Deleting product with id: {}", productId);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(String.format("(productId: %d)", productId)));
+        productRepository.delete(product);
+        log.info("Product with id {} deleted.", productId);
+    }
+    
+
     
 }

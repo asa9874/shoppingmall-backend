@@ -68,9 +68,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO); // 201 CREATED
     }
     
-
-
-    //TODO: 관리자 상품수정
+    //판매자 상품수정
     @PutMapping("/update/{productId}")
     public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long productId, @RequestBody ProductUpdateRequestDto productResponseDTO) {
         Product product = productService.updateProduct(productId,productResponseDTO);
@@ -78,10 +76,11 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
-    //TODO: 관리자 상품제거
+    //상품제거
     @DeleteMapping("/delete/{productId}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
-        return ResponseEntity.status(200).build();
+        productService.deleteProduct(productId);
+        return ResponseEntity.noContent().build();
     }
 
 

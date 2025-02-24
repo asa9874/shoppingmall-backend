@@ -37,9 +37,10 @@ public class SecurityConfig {
                 .requestMatchers("/auth/**").permitAll()                                        //  로그인,로그아웃
                 .requestMatchers("/member/register").permitAll()                                //  회원가입
                 .requestMatchers("/h2-console/**").permitAll()                                  //  H2 콘솔 
-                .requestMatchers("/product/").permitAll()     
+                .requestMatchers("/product/**").permitAll()     
                 .requestMatchers("/product/create").authenticated() 
-                .requestMatchers("/product/update").authenticated()                                //  상품
+                .requestMatchers("/product/update").authenticated()                                
+                .requestMatchers("/product/delete").authenticated()                                
                 .requestMatchers("/images/**").permitAll()                                    //  이미지
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html" ).permitAll()//swagger
                 .requestMatchers("/test/public").permitAll()                                        //테스트용

@@ -29,6 +29,14 @@ public class GlobalExceptionHandler {
         log.error("Invalid product data: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid product data: " + ex.getMessage());
     }
+    
+    // Handle ProductNotFoundException
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<String> handleProductNotFoundException(ProductNotFoundException ex) {
+        log.error("Product Not Found: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Product Not Found" + ex.getMessage());
+    }
+
 
     // Handle generic exceptions (500 Internal Server Error)
     @ExceptionHandler(Exception.class)
@@ -36,4 +44,6 @@ public class GlobalExceptionHandler {
         log.error("Unexpected error: {}", ex.getMessage(), ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error: " + ex.getMessage());
     }
+
+    
 }
