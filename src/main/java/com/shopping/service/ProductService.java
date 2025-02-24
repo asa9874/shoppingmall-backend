@@ -7,13 +7,17 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.shopping.dto.Request.ProductCreateRequestDTO;
+import com.shopping.dto.Request.ProductUpdateRequestDto;
 import com.shopping.dto.Response.ProductResponseDTO;
 import com.shopping.exception.InvalidProductDataException;
+import com.shopping.exception.ProductNotFoundException;
 import com.shopping.exception.SellerNotFoundException;
 import com.shopping.model.Product;
 import com.shopping.model.Seller;
 import com.shopping.repository.ProductRepository;
 import com.shopping.repository.SellerRepository;
+import com.shopping.util.ProductUpdateUtil;
+import com.shopping.util.ProductValidationUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,18 +56,21 @@ public class ProductService {
     // 생성
     public Product createProduct(ProductCreateRequestDTO requestDTO) {
         Seller seller = sellerRepository.findById(requestDTO.getSellerId())
-            .orElseThrow(() -> {
-                String errorMessage = String.format("(sellerId: %d)", requestDTO.getSellerId());
-                return new SellerNotFoundException(errorMessage);
-            });
-
-        // 가격과 재고 검증
-        if (requestDTO.getPrice() <= 0 || requestDTO.getStock() < 0) {
-            String errorMessage = String.format("(Price = %d, Stock = %d)", requestDTO.getPrice(), requestDTO.getStock());
-            throw new InvalidProductDataException(errorMessage);
-        }
-    
+                .orElseThrow(() -> {
+                    String errorMessage = String.format("(sellerId: %d)", requestDTO.getSellerId());
+                    return new SellerNotFoundException(errorMessage);
+                });
+        ProductValidationUtil.validatePriceAndStock(requestDTO.getPrice(), requestDTO.getStock());
         Product product = requestDTO.toEntity(seller);
+        return productRepository.save(product);
+    }
+
+    // 수정
+    public Product updateProduct(Long productId, ProductUpdateRequestDto requestDto) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(String.format("(productId: %d)", productId)));
+        ProductValidationUtil.validatePriceAndStock(requestDto.getPrice(), requestDto.getStock());
+        ProductUpdateUtil.updateProductFields(product, requestDto);
         return productRepository.save(product);
     }
     

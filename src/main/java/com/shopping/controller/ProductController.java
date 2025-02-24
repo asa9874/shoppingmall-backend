@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.dto.Request.ProductCreateRequestDTO;
+import com.shopping.dto.Request.ProductUpdateRequestDto;
 import com.shopping.dto.Response.ProductResponseDTO;
 import com.shopping.model.Product;
 import com.shopping.service.ProductService;
@@ -59,7 +60,7 @@ public class ProductController {
     }
 
 
-    //관리자 상품추가
+    //판매자 상품추가
     @PostMapping("/create")
     public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductCreateRequestDTO productCreateRequestDTO) {
         Product product = productService.createProduct(productCreateRequestDTO);
@@ -70,9 +71,11 @@ public class ProductController {
 
 
     //TODO: 관리자 상품수정
-    @PutMapping("/modify/{productId}")
-    public ResponseEntity<Void> modifyProduct(@PathVariable Long productId, @RequestBody ProductResponseDTO productDTO) {
-        return ResponseEntity.status(200).build();
+    @PutMapping("/update/{productId}")
+    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long productId, @RequestBody ProductUpdateRequestDto productResponseDTO) {
+        Product product = productService.updateProduct(productId,productResponseDTO);
+        ProductResponseDTO responseDTO = ProductResponseDTO.fromEntity(product);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
     //TODO: 관리자 상품제거
