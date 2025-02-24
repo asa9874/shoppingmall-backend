@@ -1,0 +1,17 @@
+<configuration>
+    <!-- 콘솔 로그 출력 포맷을 간결하게 설정 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- 로그 출력 포맷 설정: 시간, 로그 레벨, 메시지만 출력 -->
+            <pattern>[%-5level]-[%logger{36}] - %msg%n </pattern>
+        </encoder>
+    </appender>
+
+    <!-- 로그 레벨 설정 -->
+    <root level="ERROR">
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+    <!-- 특정 패키지의 로그 레벨 설정 (예: DEBUG) -->
+    <logger name="com.shopping" level="ERROR" />
+</configuration>

@@ -59,27 +59,12 @@ public class ProductController {
     }
 
 
-    //----DTO는 ProductDTO 아님 임의로 넣어둔거임
-    //TODO: 관리자 상품추가
+    //관리자 상품추가
     @PostMapping("/create")
     public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductCreateRequestDTO productCreateRequestDTO) {
-        try {
-            Product product = productService.createProduct(productCreateRequestDTO);
-            ProductResponseDTO responseDTO = ProductResponseDTO.fromEntity(product);
-            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO); // 201 CREATED
-        } catch (com.shopping.exception.SellerNotFoundException e) {
-            // 404 - Seller not found
-            log.error("Seller not found: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        } catch (com.shopping.exception.InvalidProductDataException e) {
-            // 400 - Bad Request (잘못된 데이터)
-            log.error("Invalid product data: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        } catch (Exception e) {
-            // 500 - Internal Server Error (예기치 않은 서버 오류)
-            log.error("Unexpected error: {}", e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+        Product product = productService.createProduct(productCreateRequestDTO);
+        ProductResponseDTO responseDTO = ProductResponseDTO.fromEntity(product);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO); // 201 CREATED
     }
     
 

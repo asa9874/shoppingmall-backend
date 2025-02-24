@@ -16,9 +16,11 @@ import com.shopping.repository.ProductRepository;
 import com.shopping.repository.SellerRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -49,14 +51,18 @@ public class ProductService {
 
     // 생성
     public Product createProduct(ProductCreateRequestDTO requestDTO) {
-        if (requestDTO.getSellerId() == null) {
-            throw new IllegalArgumentException("ID must not be null");
-        }
         Seller seller = sellerRepository.findById(requestDTO.getSellerId())
-                .orElseThrow(() -> new SellerNotFoundException("판매자를 찾을 수 없습니다. sellerId: " + requestDTO.getSellerId()));
-    
+            .orElseThrow(() -> {
+                String errorMessage = String.format("Seller NOT FOUND sellerId: %d (Seller not found: %d)", requestDTO.getSellerId(), requestDTO.getSellerId());
+                log.error(errorMessage); // 로그 출력
+                return new SellerNotFoundException(errorMessage);
+            });
+
+        // 가격과 재고 검증
         if (requestDTO.getPrice() <= 0 || requestDTO.getStock() < 0) {
-            throw new InvalidProductDataException("가격 또는 재고가 잘못되었습니다.");
+            String errorMessage = String.format("STock or Price ERROR (Invalid product data: Price = %d, Stock = %d)", requestDTO.getPrice(), requestDTO.getStock());
+            log.error(errorMessage); // 로그 출력
+            throw new InvalidProductDataException(errorMessage);
         }
     
         Product product = requestDTO.toEntity(seller);
