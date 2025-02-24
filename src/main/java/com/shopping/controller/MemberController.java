@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shopping.dto.Request.MemberRegisterDto;
+import com.shopping.dto.Request.MemberRegisterRequestDto;
 import com.shopping.service.MemberService;
 
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +31,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody @Valid MemberRegisterDto memberRegisterDto, BindingResult bindingResult) {
+    public ResponseEntity<String> register(@RequestBody @Valid MemberRegisterRequestDto memberRegisterDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder errorMessage = new StringBuilder();
             for (ObjectError error : bindingResult.getAllErrors()) {

@@ -3,7 +3,7 @@ package com.shopping.service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.shopping.dto.Request.MemberRegisterDto;
+import com.shopping.dto.Request.MemberRegisterRequestDto;
 import com.shopping.model.Member;
 import com.shopping.repository.MemberRepository;
 
@@ -19,7 +19,7 @@ public class MemberService {
     private final SellerService sellerService;
     
     //회원가입
-    public void register(MemberRegisterDto memberRegisterDto) {
+    public void register(MemberRegisterRequestDto memberRegisterDto) {
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(memberRegisterDto.getPassword());
 

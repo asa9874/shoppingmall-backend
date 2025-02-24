@@ -29,4 +29,17 @@ public class ProductResponseDTO {
     private String sellerName;
 
     private Product.Category category;
+
+    public static ProductResponseDTO fromEntity(Product product) {
+        return ProductResponseDTO.builder()
+            .id(product.getId())
+            .name(product.getName())
+            .image(product.getImage())
+            .description(product.getDescription())
+            .price(product.getPrice())
+            .stock(product.getStock())
+            .category(product.getCategory())
+            .sellerName(product.getSeller().getMember().getNickname())  
+            .build();
+    }
 }
