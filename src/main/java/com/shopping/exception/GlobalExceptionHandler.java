@@ -4,9 +4,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import io.swagger.v3.oas.annotations.Hidden;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Hidden
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
