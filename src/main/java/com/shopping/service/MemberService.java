@@ -49,11 +49,18 @@ public class MemberService {
         return member.getNickname();
     }
 
-    public Member getMemberInfo() {
+    // 내정보조회
+    public Member getMyInfo() {
         String MemberId = SecurityUtil.getCurrentUserId();
         Member member = memberRepository.findBymemberId(MemberId)
                 .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
         return member;
+    }
+
+    public Member getMemberInfo(Long id){
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
+        return member;                    
     }
 
 }

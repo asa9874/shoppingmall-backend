@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
@@ -33,20 +36,30 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/member/register", "/h2-console/**", "/product/**", "/images/**",
-                                "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/test/public")
+                        .requestMatchers(
+                                "/auth/**",
+                                "/member/register",
+                                "/h2-console/**",
+                                "/product/**",
+                                "/images/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/test/public")
                         .permitAll()
-                        .requestMatchers("/**").hasRole("ADMIN")
 
                         .requestMatchers("/product/create", "/product/update", "/product/delete", "/test/seller")
-                        .hasRole("SELLER")
+                        .hasAnyRole("SELLER", "ADMIN")
 
                         .requestMatchers("/test/customer")
-                        .hasRole("CUSTOMER")
-                        
+                        .hasAnyRole("CUSTOMER", "ADMIN")
+
                         .requestMatchers("/test/protected")
                         .authenticated()
 
+                        .requestMatchers("/test/admin") 
+                        .hasRole("ADMIN")
+                        
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
