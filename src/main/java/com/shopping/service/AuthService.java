@@ -47,8 +47,16 @@ public class AuthService {
 
         String currentUserId = SecurityUtil.getCurrentUserId();
         if (!product.isOwnedBy(currentUserId)) {
-            throw new AccessDeniedException("이 상품에 대한 권한이 없습니다.");
+            throw new AccessDeniedException(String.format("NO OWNER THIS PRODUCTId: %d",productId));
         }
         return product;
+    }
+
+    //제출 아이디 같은지 검사
+    public void validateSameMemberId(String memberId) {
+        String currentUserId = SecurityUtil.getCurrentUserId();
+        if (currentUserId != memberId) {
+            throw new AccessDeniedException(String.format("User ID is not the same as the current logged-in user ID "));
+        }
     }
 }

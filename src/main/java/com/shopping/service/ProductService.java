@@ -33,6 +33,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final SellerRepository sellerRepository;
     private final AuthService authService;
+
     // 조회
     public List<ProductResponseDTO> getProductItems(int count) {
         List<Product> productList = productRepository.findAll();
@@ -63,6 +64,7 @@ public class ProductService {
                     String errorMessage = String.format("(sellerId: %d)", requestDTO.getSellerId());
                     return new SellerNotFoundException(errorMessage);
                 });
+        authService.validateSameMemberId(seller.getMember().getMemberId());
         ProductValidationUtil.validatePriceAndStock(requestDTO.getPrice(), requestDTO.getStock());
         Product product = requestDTO.toEntity(seller);
         return productRepository.save(product);
