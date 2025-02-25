@@ -60,7 +60,7 @@ public class ProductController {
         return null;
     }
 
-
+    
     //판매자 상품추가
     @PostMapping("/create")
     public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductCreateRequestDTO productCreateRequestDTO) {
@@ -77,7 +77,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
-    //상품제거
+    //판매자 상품제거
     @DeleteMapping("/delete/{productId}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
         productService.deleteProduct(productId);

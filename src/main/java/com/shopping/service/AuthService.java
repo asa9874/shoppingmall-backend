@@ -1,6 +1,10 @@
 package com.shopping.service;
 
 
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.shopping.dto.Request.AuthRequestDto;
 import com.shopping.dto.Response.AuthResponseDto;
 import com.shopping.exception.ProductNotFoundException;
@@ -12,10 +16,6 @@ import com.shopping.repository.ProductRepository;
 import com.shopping.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -53,6 +53,7 @@ public class AuthService {
     }
 
     //제출 아이디 같은지 검사
+    //TODO: 이거 PreAuthorize에서 대체 가능하니까 사용한부분 제거하기
     public void validateSameMemberId(String memberId) {
         String currentUserId = SecurityUtil.getCurrentUserId();
         if (currentUserId != memberId) {

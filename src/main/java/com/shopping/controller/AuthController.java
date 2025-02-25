@@ -26,4 +26,22 @@ public class AuthController {
         AuthResponseDto response = authService.login(request);
         return ResponseEntity.ok(response);
     }
+
+    //TODO: 토큰 시간 초기화
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken() {
+        return null;
+    }
+
+    //TODO: 비밀번호 초기화
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword() {
+        return null;
+    }
+
+    //TODO: 로그아웃
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        return null;
+    }
 }

@@ -10,9 +10,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,7 +50,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 성공");
     }
 
-    //이거 진짜 쓸모없이 만들었다. 나중에 지울거
+    //TODO: 이거 진짜 쓸모없이 만들었다. 나중에 지울거
     @GetMapping("/me")
     public ResponseEntity<Map<String, String>> getMe(@AuthenticationPrincipal UserDetails userDetails) {
         String nickname = memberService.getNicknameByMemberId(userDetails.getUsername()); 
@@ -72,5 +74,18 @@ public class MemberController {
         Member member = memberService.getMemberInfo(id);
         MemberInfoResponseDto responseDto = MemberInfoResponseDto.fromEntity(member);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
+
+    //TODO: 맴버삭제
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteMember() {
+        return null;
+    }
+
+    //TODO: 맴버 정보 수정
+    @PutMapping("/update")
+    public ResponseEntity<?> updateMember() {
+        return null;
     }
 }
