@@ -1,6 +1,7 @@
 package com.shopping.controller;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,7 +40,7 @@ public class ProductController {
     }
 
 
-    //TODO:상품 상세조회
+    //상품 상세조회
     @GetMapping("/{productId}")
     public ResponseEntity<ProductResponseDTO> getProductItemDetail(@PathVariable Long productId){
         ProductResponseDTO responseDTO = productService.getProductDetail(productId);
@@ -48,7 +49,7 @@ public class ProductController {
 
     //TODO:상품 목록 검색
     @GetMapping("/search")
-    public List<ProductResponseDTO> searchProducts(
+    public Page<ProductResponseDTO> searchProducts(
         @RequestParam(required = false) String keyword, 
         @RequestParam(required = false) String category, 
         @RequestParam(required = false) Double minPrice, 
@@ -56,7 +57,6 @@ public class ProductController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int count
     ) {
-
         return null;
     }
 

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.dto.Request.MemberRegisterRequestDto;
+import com.shopping.dto.Response.MemberInfoResponseDto;
+import com.shopping.model.Member;
 import com.shopping.service.MemberService;
 
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,11 +46,20 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 성공");
     }
 
+    //이거 진짜 쓸모없이 만들었다. 나중에 지울거
     @GetMapping("/me")
     public ResponseEntity<Map<String, String>> getMe(@AuthenticationPrincipal UserDetails userDetails) {
         String nickname = memberService.getNicknameByMemberId(userDetails.getUsername()); 
         Map<String, String> response = new HashMap<>();
         response.put("nickname", nickname);
         return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping("/my-info")
+    public ResponseEntity<MemberInfoResponseDto> getMemberInfo(){
+        Member member = memberService.getMemberInfo();
+        MemberInfoResponseDto responseDto = MemberInfoResponseDto.fromEntity(member);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 }
