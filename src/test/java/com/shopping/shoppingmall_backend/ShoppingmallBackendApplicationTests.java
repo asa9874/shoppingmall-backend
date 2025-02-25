@@ -51,7 +51,7 @@ class ShoppingmallBackendApplicationTests {
     void ProductCreateMultipleTest() {
         member = Member.builder()
                 .memberId("testman123")
-                .password("testman123")
+                .password(passwordEncoder.encode("testman123"))
                 .nickname("테스트닉네임")
                 .role(Member.Role.SELLER)
                 .build();

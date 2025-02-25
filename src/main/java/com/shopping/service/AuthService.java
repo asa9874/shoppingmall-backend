@@ -3,11 +3,17 @@ package com.shopping.service;
 
 import com.shopping.dto.Request.AuthRequestDto;
 import com.shopping.dto.Response.AuthResponseDto;
+import com.shopping.exception.ProductNotFoundException;
 import com.shopping.jwt.JwtTokenProvider;
 import com.shopping.model.Member;
+import com.shopping.model.Product;
 import com.shopping.repository.MemberRepository;
+import com.shopping.repository.ProductRepository;
+import com.shopping.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +24,7 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-
+    private final ProductRepository productRepository;
     //로그인 (JWT 반환)
     public AuthResponseDto login(AuthRequestDto request) {
         Member member = memberRepository.findBymemberId(request.getMemberId())
@@ -32,5 +38,17 @@ public class AuthService {
         return new AuthResponseDto(token);
     }
 
-    
+
+
+    //상품 소유 인증
+    public Product validateProductOwnership(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(String.format("(productId: %d)", productId)));
+
+        String currentUserId = SecurityUtil.getCurrentUserId();
+        if (!product.isOwnedBy(currentUserId)) {
+            throw new AccessDeniedException("이 상품에 대한 권한이 없습니다.");
+        }
+        return product;
+    }
 }

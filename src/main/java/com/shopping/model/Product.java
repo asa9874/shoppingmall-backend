@@ -56,4 +56,8 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "seller_id", nullable = false)
     private Seller seller;
+
+    public boolean isOwnedBy(String memberId) {
+        return seller.getMember().getMemberId().equals(memberId);
+    }
 }
