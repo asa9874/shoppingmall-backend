@@ -41,8 +41,9 @@ public class ProductController {
 
     //TODO:상품 상세조회
     @GetMapping("/{productId}")
-    public ProductResponseDTO getProductItemDetail(@PathVariable Long productId){
-        return null;
+    public ResponseEntity<ProductResponseDTO> getProductItemDetail(@PathVariable Long productId){
+        ProductResponseDTO responseDTO = productService.getProductDetail(productId);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
     //TODO:상품 목록 검색

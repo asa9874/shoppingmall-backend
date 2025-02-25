@@ -4,8 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +18,6 @@ import com.shopping.repository.ProductRepository;
 import com.shopping.repository.SellerRepository;
 import com.shopping.util.ProductUpdateUtil;
 import com.shopping.util.ProductValidationUtil;
-import com.shopping.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,6 +52,16 @@ public class ProductService {
                         .build())
                 .collect(Collectors.toList());
         return productDTOList;
+    }
+
+    public ProductResponseDTO getProductDetail(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> {
+                    String errorMessage = String.format("(ProductId: %d)", productId);
+                    return new ProductNotFoundException(errorMessage);
+                });
+
+        return ProductResponseDTO.fromEntity(product);
     }
 
     // 생성
