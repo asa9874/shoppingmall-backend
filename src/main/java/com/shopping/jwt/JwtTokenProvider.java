@@ -19,9 +19,9 @@ public class JwtTokenProvider {
     private final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
 
     // JWT 토큰 생성
-    public String createToken(String userId, String role) {
+    public String createToken(String userId, String role,Long id) {
         return Jwts.builder()
-                .claims().empty().add("role", role) // role 추가
+                .claims().empty().add("role", role).add("id", id) // role,id 추가
                 .and()
                 .subject(userId)
                 .issuedAt(new Date())
@@ -62,6 +62,16 @@ public class JwtTokenProvider {
                 .parseSignedClaims(token)
                 .getPayload()
                 .get("role", String.class);
+    }
+
+    //JWT에서 id 추출
+    public Long getIdFromToken(String token) {
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("id", Long.class);
     }
 
     // JWT 만료시간 가져오기

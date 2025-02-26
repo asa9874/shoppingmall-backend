@@ -34,7 +34,7 @@ public class AuthService {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
 
-        String token = jwtTokenProvider.createToken(member.getMemberId(),member.getRole().name());
+        String token = jwtTokenProvider.createToken(member.getMemberId(),member.getRole().name(),member.getId());
         return new AuthResponseDto(token);
     }
 

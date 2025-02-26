@@ -19,6 +19,7 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //TODO: 이거 membername 으로 바꾸고 나머지도 id  -> name으로 바꾸기
     @Column(name = "member_id", nullable = false, unique = true)
     private String memberId;
 

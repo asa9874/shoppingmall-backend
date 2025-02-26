@@ -53,9 +53,6 @@ public class SecurityConfig {
                         .requestMatchers("/test/customer")
                         .hasAnyRole("CUSTOMER", "ADMIN")
 
-                        .requestMatchers("/test/protected")
-                        .authenticated()
-
                         .requestMatchers("/test/admin") 
                         .hasRole("ADMIN")
                         

@@ -4,6 +4,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.shopping.dto.Request.MemberRegisterRequestDto;
+import com.shopping.dto.Request.MemberUpdateRequestDto;
+import com.shopping.exception.InvalidProductDataException;
 import com.shopping.model.Customer;
 import com.shopping.model.Member;
 import com.shopping.model.Seller;
@@ -95,5 +97,17 @@ public class MemberService {
                     throw new RuntimeException("유저 삭제에 실패했습니다. 아직 존재합니다.");
                 },
                 () -> System.out.println("Member Delte Sucesss"));
+    }
+
+    //유저업데이트
+    public Member updateMember(Long id ,MemberUpdateRequestDto requestDto){
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
+
+        if (requestDto.getNickname() == null) {
+            throw new RuntimeException(String.format("Invalid NickName"));
+        }
+        member.setNickname(requestDto.getNickname());
+        return memberRepository.save(member);
     }
 }
