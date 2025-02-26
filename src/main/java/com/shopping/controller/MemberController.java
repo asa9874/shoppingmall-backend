@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.dto.Request.MemberRegisterRequestDto;
@@ -78,13 +79,17 @@ public class MemberController {
 
 
     //TODO: 맴버삭제
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteMember() {
-        return null;
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #id == authentication.principal.id")
+    public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
+        memberService.deleteMember(id);
+        return ResponseEntity.noContent().build();
     }
+    
 
     //TODO: 맴버 정보 수정
     @PutMapping("/update")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #id == authentication.principal.id")
     public ResponseEntity<?> updateMember() {
         return null;
     }

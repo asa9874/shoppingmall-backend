@@ -4,10 +4,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.shopping.dto.Request.MemberRegisterRequestDto;
+import com.shopping.model.Customer;
 import com.shopping.model.Member;
+import com.shopping.model.Seller;
+import com.shopping.repository.CustomerRepository;
 import com.shopping.repository.MemberRepository;
+import com.shopping.repository.SellerRepository;
 import com.shopping.util.SecurityUtil;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -15,6 +20,9 @@ import lombok.RequiredArgsConstructor;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final SellerRepository sellerRepository;
+    private final CustomerRepository customerRepository;
+
     private final PasswordEncoder passwordEncoder;
     private final CustomerService customerService;
     private final SellerService sellerService;
@@ -57,10 +65,35 @@ public class MemberService {
         return member;
     }
 
-    public Member getMemberInfo(Long id){
+    // 유저정보조회
+    public Member getMemberInfo(Long id) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
-        return member;                    
+        return member;
     }
 
+    // 유저삭제
+    @Transactional
+    public void deleteMember(Long id) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
+        
+        if (Member.Role.CUSTOMER.equals(member.getRole())) {
+            Customer customer = customerRepository.findByMemberId(id)
+                    .orElseThrow(() -> new RuntimeException("Customer 정보를 찾을 수 없습니다."));
+            customerRepository.delete(customer);
+        }
+
+        if (Member.Role.SELLER.equals(member.getRole())) {
+            Seller seller = sellerRepository.findByMemberId(id)
+                    .orElseThrow(() -> new RuntimeException("Seller 정보를 찾을 수 없습니다."));
+            sellerRepository.delete(seller);
+        }
+
+        memberRepository.findById(id).ifPresentOrElse(
+                existingMember -> {
+                    throw new RuntimeException("유저 삭제에 실패했습니다. 아직 존재합니다.");
+                },
+                () -> System.out.println("Member Delte Sucesss"));
+    }
 }

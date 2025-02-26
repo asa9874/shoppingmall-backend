@@ -65,7 +65,7 @@ public class Product {
     @ManyToMany
     @Builder.Default
     @JoinTable(name = "customer_product", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "customer_id"))
-    private List<Customer> orderCustomers = new ArrayList<>();
+    private List<Customer> customers = new ArrayList<>();
 
 
     public boolean isOwnedBy(String memberId) {

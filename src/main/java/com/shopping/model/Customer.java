@@ -27,11 +27,11 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
     private Member member;
 
     @Builder.Default
-    @ManyToMany(mappedBy = "customers", cascade = CascadeType.ALL)
-    private List<Product> orderProducts = new ArrayList<>();
+    @ManyToMany(mappedBy = "customers")
+    private List<Product> orderedProducts = new ArrayList<>();
 }
