@@ -3,6 +3,7 @@ package com.shopping.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,10 +29,11 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    //TODO: 토큰 시간 초기화
+    //토큰 시간 초기화
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken() {
-        return null;
+    public ResponseEntity<AuthResponseDto> refreshToken(@RequestHeader("Authorization") String refreshToken) {
+        AuthResponseDto response = authService.refreshAccessToken(refreshToken);
+        return ResponseEntity.ok(response);
     }
 
     //TODO: 비밀번호 초기화, 이메일 기능추가하기

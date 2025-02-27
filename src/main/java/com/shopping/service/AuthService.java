@@ -38,6 +38,23 @@ public class AuthService {
         return new AuthResponseDto(token);
     }
 
+    //토큰 재발급
+    public AuthResponseDto refreshAccessToken(String refreshToken) {
+        if (refreshToken.startsWith("Bearer ")) {
+            refreshToken = refreshToken.substring(7);
+        }
+
+        if (!jwtTokenProvider.validateToken(refreshToken)) {
+            throw new RuntimeException("Refresh Token이 유효하지 않습니다.");
+        }
+        String userId = jwtTokenProvider.getUserIdFromToken(refreshToken);
+        String role = jwtTokenProvider.getRoleFromToken(refreshToken);
+        Long id = jwtTokenProvider.getIdFromToken(refreshToken);
+    
+        String newAccessToken = jwtTokenProvider.createToken(userId, role, id);
+
+        return new AuthResponseDto(newAccessToken);
+    }
 
 
     //상품 소유 인증
