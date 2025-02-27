@@ -34,6 +34,11 @@ http://localhost:8080/swagger-ui.html
 | `/member/update/{id}` | PUT | 회원 정보 수정 | ✅ | - |
 | `/member/{id}` | GET | 특정 회원 조회 | ✅ | - |
 | `/member/delete/{id}` | DELETE | 회원 삭제 | ✅ | - |
+---
+### 🛠 판매자(Seller) API
+| 엔드포인트 | 메서드 | 설명 | 인증 필요 여부 | ROLE |
+|------------|--------|------|------|------|
+| `/products/{id}` | GET | 판매상품조회 | ✅ | SELLER |
 
 ---
 ### 🛍 상품(Product) API

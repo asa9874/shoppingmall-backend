@@ -27,7 +27,7 @@ public class SellerController {
 
     private final SellerService sellerService;
 
-    // TODO: 올린 상품 리스트 조회
+    //올린 상품 리스트 조회
     @GetMapping("/products/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #id == authentication.principal.id")
     public ResponseEntity<List<ProductResponseDTO>> getProducts(@PathVariable Long id) {

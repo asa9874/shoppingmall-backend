@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +32,11 @@ public class Customer {
     @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
     private Member member;
 
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    @ManyToMany(mappedBy = "customers")
-    private List<Product> orderedProducts = new ArrayList<>();
+    private List<OrderItem> orderedProducts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<CartItem> cartProducts = new ArrayList<>();
 }
