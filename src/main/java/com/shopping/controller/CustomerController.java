@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,9 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.dto.Response.CartItemResponseDto;
 import com.shopping.dto.Response.OrderItemResponseDto;
-import com.shopping.dto.Response.ProductResponseDTO;
 import com.shopping.model.CartItem;
-import com.shopping.model.Customer;
 import com.shopping.service.CustomerService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -59,10 +56,11 @@ public class CustomerController {
         return ResponseEntity.ok(responseDto);
     }
 
-    // TODO: 장바구니 추가
-    @PostMapping("/{customerId}/cart/{productId}")
-    public ResponseEntity<CartItemResponseDto> AddCart(@PathVariable Long productId) {
-        return null;
+    // 장바구니 추가
+    @PostMapping("/{customerId}/cart/{productId}/{quantity}")
+    public ResponseEntity<CartItemResponseDto> addCart(@PathVariable Long productId, @PathVariable int quantity, @PathVariable Long customerId) {
+        CartItem cartItem = customerService.addCart(customerId, productId, quantity);
+        return ResponseEntity.ok(CartItemResponseDto.fromEntity(cartItem));
     }
 
     // TODO: 장바구니 상품제거
