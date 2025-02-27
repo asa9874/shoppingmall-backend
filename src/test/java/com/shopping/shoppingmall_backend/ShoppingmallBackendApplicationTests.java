@@ -1,8 +1,5 @@
 package com.shopping.shoppingmall_backend;
 
-import com.shopping.model.Member;
-import com.shopping.model.Product;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
@@ -13,12 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.shopping.model.Member;
+import com.shopping.model.Product;
 import com.shopping.model.Seller;
 import com.shopping.repository.MemberRepository;
 import com.shopping.repository.ProductRepository;
 import com.shopping.repository.SellerRepository;
 
-
+//TODO: 단위 테스트(unit test) 생성하기
 @SpringBootTest
 class ShoppingmallBackendApplicationTests {
 

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import com.shopping.dto.Request.MemberRegisterRequestDto;
 import com.shopping.dto.Request.MemberUpdateRequestDto;
-import com.shopping.exception.InvalidProductDataException;
 import com.shopping.model.Customer;
 import com.shopping.model.Member;
 import com.shopping.model.Seller;

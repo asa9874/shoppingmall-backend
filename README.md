@@ -31,6 +31,9 @@ http://localhost:8080/swagger-ui.html
 | `/member/register` | POST | 회원 가입 | ❌ | - |
 | `/member/me` | GET | 내 이름| ✅ | - |
 | `/member/my-info` | GET | 내 정보 조회 | ✅ | - |
+| `/member/update/{id}` | PUT | 회원 정보 수정 | ✅ | - |
+| `/member/{id}` | GET | 특정 회원 조회 | ✅ | - |
+| `/member/delete/{id}` | DELETE | 회원 삭제 | ✅ | - |
 
 ---
 ### 🛍 상품(Product) API
@@ -40,6 +43,7 @@ http://localhost:8080/swagger-ui.html
 | `/product/{productId}` | GET | 상품 조회 | ❌ | - |
 | `/product/create` | POST | 상품 생성 | ✅ | SELLER |
 | `/product/update` | PUT | 상품 업데이트 | ✅ | SELLER |
+| `/product/delete/{productId}` | DELETE | 상품 삭제 | ✅ | SELLER |
 
 ---
 ### 🔑 인증(Auth) API
@@ -53,6 +57,9 @@ http://localhost:8080/swagger-ui.html
 |------------|--------|------|------|--------|
 | `/test/public` | GET | 공용 테스트 API | ❌ | - |
 | `/test/protected` | GET | 보호된 테스트 API | ✅ | - |
+| `/test/seller` | GET | 판매자 전용 테스트 API | ✅ | SELLER |
+| `/test/customer` | GET | 고객 전용 테스트 API | ✅ | CUSTOMER |
+| `/test/admin` | GET | 관리자 전용 테스트 API | ✅ | ADMIN |
 
 
 ## 📌 인증 방식

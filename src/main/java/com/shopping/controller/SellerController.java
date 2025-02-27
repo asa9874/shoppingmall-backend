@@ -1,9 +1,18 @@
 package com.shopping.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.shopping.dto.Response.ProductResponseDTO;
+import com.shopping.model.Product;
+import com.shopping.service.SellerService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +25,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SellerController {
 
-    //TODO: 올린 상품 리스트 조회
-    @GetMapping("/products")
-    public ResponseEntity<?> getProducts() {
-        return null;
+    private final SellerService sellerService;
+
+    // TODO: 올린 상품 리스트 조회
+    @GetMapping("/products/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #id == authentication.principal.id")
+    public ResponseEntity<List<ProductResponseDTO>> getProducts(@PathVariable Long id) {
+        List<Product> products = sellerService.getProducts(id);
+        List<ProductResponseDTO> responseDTOs = products.stream()
+                .map(ProductResponseDTO::fromEntity)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(responseDTOs);
     }
 
-    
 }

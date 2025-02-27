@@ -65,15 +65,15 @@ public class ProductService {
     }
 
     // 생성
-    public Product createProduct(ProductCreateRequestDTO requestDTO) {
-        Seller seller = sellerRepository.findById(requestDTO.getSellerId())
+    public Product createProduct(Long memberId,ProductCreateRequestDTO requestDTO) {
+        Seller seller = sellerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> {
-                    String errorMessage = String.format("(sellerId: %d)", requestDTO.getSellerId());
+                    String errorMessage = String.format("(sellerId: %d)", memberId);
                     return new SellerNotFoundException(errorMessage);
                 });
-        authService.validateSameMemberId(seller.getMember().getMemberId());
         ProductValidationUtil.validatePriceAndStock(requestDTO.getPrice(), requestDTO.getStock());
         Product product = requestDTO.toEntity(seller);
+        seller.getProducts().add(product);
         return productRepository.save(product);
     }
 

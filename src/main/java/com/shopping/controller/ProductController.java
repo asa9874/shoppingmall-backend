@@ -62,9 +62,9 @@ public class ProductController {
 
     
     //판매자 상품추가
-    @PostMapping("/create")
-    public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductCreateRequestDTO productCreateRequestDTO) {
-        Product product = productService.createProduct(productCreateRequestDTO);
+    @PostMapping("/{memberId}/create")
+    public ResponseEntity<ProductResponseDTO> createProduct(@Valid @PathVariable Long memberId ,@RequestBody ProductCreateRequestDTO productCreateRequestDTO) {
+        Product product = productService.createProduct(memberId,productCreateRequestDTO);
         ProductResponseDTO responseDTO = ProductResponseDTO.fromEntity(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO); // 201 CREATED
     }

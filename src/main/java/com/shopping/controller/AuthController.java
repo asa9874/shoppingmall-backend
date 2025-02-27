@@ -21,6 +21,7 @@ public class AuthController {
     private final AuthService authService;
 
     //로그인 API
+    //TODO: Swagger 에 토큰 시간뜨게
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDto> login(@RequestBody AuthRequestDto request) {
         AuthResponseDto response = authService.login(request);
@@ -33,7 +34,7 @@ public class AuthController {
         return null;
     }
 
-    //TODO: 비밀번호 초기화
+    //TODO: 비밀번호 초기화, 이메일 기능추가하기
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword() {
         return null;
