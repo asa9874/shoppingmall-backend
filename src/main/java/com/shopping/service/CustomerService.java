@@ -49,4 +49,14 @@ public class CustomerService {
         customerRepository.save(customer);
         return cartItem;
     }
+
+    public void deleteCart(Long customerId, Long cartItemId){
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new RuntimeException("Cart item not found"));
+        customer.getCartProducts().remove(cartItem);
+        customerRepository.save(customer);
+        cartItemRepository.delete(cartItem);
+    }
 }

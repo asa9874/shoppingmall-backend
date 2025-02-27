@@ -63,10 +63,11 @@ public class CustomerController {
         return ResponseEntity.ok(CartItemResponseDto.fromEntity(cartItem));
     }
 
-    // TODO: 장바구니 상품제거
-    @DeleteMapping("/{customerId}/cart/{productId}")
-    public ResponseEntity<Void> deleteCart(@PathVariable Long productId) {
-        return null;
+    // 장바구니 상품제거
+    @DeleteMapping("/{customerId}/cart/{cartItemId}")
+    public ResponseEntity<Void> deleteCart(@PathVariable Long cartItemId, @PathVariable Long customerId) {
+        customerService.deleteCart(customerId,cartItemId);
+        return ResponseEntity.noContent().build();
     }
 
 }
