@@ -23,8 +23,8 @@ public class SellerService {
         sellerRepository.save(seller);
     }
 
-    public List<Product> getProducts(Long id) {
-        Seller seller = sellerRepository.findById(id)
+    public List<Product> getProducts(Long memberId) {
+        Seller seller = sellerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new RuntimeException("판매자 정보를 찾을 수 없습니다."));
         return seller.getProducts();
     }

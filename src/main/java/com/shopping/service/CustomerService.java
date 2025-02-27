@@ -28,14 +28,14 @@ public class CustomerService {
         customerRepository.save(customer);
     }
 
-    public List<CartItem> getCart(Long customerId) {
-        Customer customer = customerRepository.findById(customerId)
+    public List<CartItem> getCart(Long memberId) {
+        Customer customer = customerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         return customer.getCartProducts();
     }
 
-    public CartItem addCart(Long customerId, Long productId,int quantity) {
-        Customer customer = customerRepository.findById(customerId)
+    public CartItem addCart(Long memberId, Long productId,int quantity) {
+        Customer customer = customerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
@@ -50,8 +50,8 @@ public class CustomerService {
         return cartItem;
     }
 
-    public void deleteCart(Long customerId, Long cartItemId){
-        Customer customer = customerRepository.findById(customerId)
+    public void deleteCart(Long memberId, Long cartItemId){
+        Customer customer = customerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(() -> new RuntimeException("Cart item not found"));

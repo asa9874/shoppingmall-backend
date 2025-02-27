@@ -28,14 +28,13 @@ public class SellerController {
     private final SellerService sellerService;
 
     //올린 상품 리스트 조회
-    @GetMapping("/{sellerId}/products/")
+    @GetMapping("/{memberId}/products/")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #id == authentication.principal.id")
-    public ResponseEntity<List<ProductResponseDTO>> getProducts(@PathVariable Long sellerId) {
-        List<Product> products = sellerService.getProducts(sellerId);
+    public ResponseEntity<List<ProductResponseDTO>> getProducts(@PathVariable Long memberId) {
+        List<Product> products = sellerService.getProducts(memberId);
         List<ProductResponseDTO> responseDTOs = products.stream()
                 .map(ProductResponseDTO::fromEntity)
                 .collect(Collectors.toList());
-
         return ResponseEntity.ok(responseDTOs);
     }
 

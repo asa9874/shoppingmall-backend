@@ -47,6 +47,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
+    //TODO: SELLER로 옮기기
     //판매자 상품추가
     @PostMapping("/{memberId}/create")
     public ResponseEntity<ProductResponseDTO> createProduct(@Valid @PathVariable Long memberId ,@RequestBody ProductCreateRequestDTO productCreateRequestDTO) {

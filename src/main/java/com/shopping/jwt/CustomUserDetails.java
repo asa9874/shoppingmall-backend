@@ -1,9 +1,11 @@
 package com.shopping.jwt;
 
+import java.util.Collection;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
-import java.util.Collection;
+
 
 public class CustomUserDetails extends User {
     private final Long id; 
@@ -16,4 +18,5 @@ public class CustomUserDetails extends User {
     public Long getId() {
         return id;
     }
+
 }
