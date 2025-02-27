@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shopping.dto.Response.CartItemResponseDto;
 import com.shopping.dto.Response.OrderItemResponseDto;
 import com.shopping.model.CartItem;
+import com.shopping.model.OrderItem;
 import com.shopping.service.CustomerService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,12 +30,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CustomerController {
     private final CustomerService customerService;
-    
-    //TODO: 구매한 상품 리스트 조회
+
+    //구매한 상품 리스트 조회
     @GetMapping("/{memberId}/orders")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #id == authentication.principal.id")
-    public ResponseEntity<OrderItemResponseDto> getOrders() {
-        return null;
+    public ResponseEntity<List<OrderItemResponseDto>> getOrders(@PathVariable Long memberId) {
+        List<OrderItem> orderItem = customerService.getOrders(memberId);
+        List<OrderItemResponseDto> responseDto = orderItem.stream()
+                .map(OrderItemResponseDto::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(responseDto);
     }
 
     // TODO: 특정 상품구입
@@ -54,7 +60,7 @@ public class CustomerController {
     @GetMapping("/{memberId}/cart")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #id == authentication.principal.id")
     public ResponseEntity<List<CartItemResponseDto>> getCart(@PathVariable Long memberId) {
-        List<CartItem> cartItems =customerService.getCart(memberId);
+        List<CartItem> cartItems = customerService.getCart(memberId);
         List<CartItemResponseDto> responseDto = cartItems.stream()
                 .map(CartItemResponseDto::fromEntity)
                 .collect(Collectors.toList());
@@ -64,7 +70,8 @@ public class CustomerController {
     // 장바구니 추가
     @PostMapping("/{memberId}/cart/{productId}/{quantity}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #id == authentication.principal.id")
-    public ResponseEntity<CartItemResponseDto> addCart(@PathVariable Long productId, @PathVariable int quantity, @PathVariable Long memberId) {
+    public ResponseEntity<CartItemResponseDto> addCart(@PathVariable Long productId, @PathVariable int quantity,
+            @PathVariable Long memberId) {
         CartItem cartItem = customerService.addCart(memberId, productId, quantity);
         return ResponseEntity.ok(CartItemResponseDto.fromEntity(cartItem));
     }
@@ -73,7 +80,7 @@ public class CustomerController {
     @DeleteMapping("/{memberId}/cart/{cartItemId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #id == authentication.principal.id")
     public ResponseEntity<Void> deleteCart(@PathVariable Long cartItemId, @PathVariable Long memberId) {
-        customerService.deleteCart(memberId,cartItemId);
+        customerService.deleteCart(memberId, cartItemId);
         return ResponseEntity.noContent().build();
     }
 

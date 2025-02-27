@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.shopping.model.CartItem;
 import com.shopping.model.Customer;
 import com.shopping.model.Member;
+import com.shopping.model.OrderItem;
 import com.shopping.model.Product;
 import com.shopping.repository.CartItemRepository;
 import com.shopping.repository.CustomerRepository;
@@ -28,10 +29,23 @@ public class CustomerService {
         customerRepository.save(customer);
     }
 
+    //ORDER 
+    public List<OrderItem> getOrders(Long memberId) {
+        Customer customer = customerRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+        return customer.getOrderedItems();
+    }
+
+
+
+
+
+
+    //CART
     public List<CartItem> getCart(Long memberId) {
         Customer customer = customerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
-        return customer.getCartProducts();
+        return customer.getCartItems();
     }
 
     public CartItem addCart(Long memberId, Long productId,int quantity) {
@@ -45,7 +59,7 @@ public class CustomerService {
                 .quantity(quantity)
                 .build();
         cartItemRepository.save(cartItem);
-        customer.getCartProducts().add(cartItem);
+        customer.getCartItems().add(cartItem);
         customerRepository.save(customer);
         return cartItem;
     }
@@ -55,7 +69,7 @@ public class CustomerService {
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(() -> new RuntimeException("Cart item not found"));
-        customer.getCartProducts().remove(cartItem);
+        customer.getCartItems().remove(cartItem);
         customerRepository.save(customer);
         cartItemRepository.delete(cartItem);
     }

@@ -33,9 +33,9 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<OrderItem> orderedProducts = new ArrayList<>();
+    private List<OrderItem> orderedItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<CartItem> cartProducts = new ArrayList<>();
+    private List<CartItem> cartItems = new ArrayList<>();
 }
