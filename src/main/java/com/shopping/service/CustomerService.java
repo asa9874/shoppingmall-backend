@@ -26,7 +26,9 @@ public class CustomerService {
     }
 
 
-    public List<CartItem> getCart() {
-        return null;
+    public List<CartItem> getCart(Long customerId) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+        return customer.getCartProducts();
     }
 }
