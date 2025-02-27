@@ -36,7 +36,30 @@ public class CustomerService {
         return customer.getOrderedItems();
     }
 
+    public OrderItem buyProduct(Long memberId, Long productId, int quantity) {
+        Customer customer = customerRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
 
+        if(product.getStock() < quantity){
+            throw new RuntimeException("Not enough stock");
+        }
+        product.setStock(product.getStock() - quantity);
+        if(product.getStock() == 0){
+            productRepository.delete(product);
+        }
+        else{
+            productRepository.save(product);
+        }
+        OrderItem orderItem = OrderItem.builder()
+                .customer(customer)
+                .product(product)
+                .build();
+        customer.getOrderedItems().add(orderItem);
+        customerRepository.save(customer);
+        return orderItem;
+    }
 
 
 

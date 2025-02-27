@@ -69,8 +69,8 @@ public class MemberController {
     }
 
 
-    @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or #id == authentication.principal.id")
+    @GetMapping("/{memberId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<MemberInfoResponseDto> getMemberInfo(@PathVariable Long id){
         Member member = memberService.getMemberInfo(id);
         MemberInfoResponseDto responseDto = MemberInfoResponseDto.fromEntity(member);
@@ -79,8 +79,8 @@ public class MemberController {
 
 
     //맴버삭제
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or #id == authentication.principal.id")
+    @DeleteMapping("/{memberId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
         memberService.deleteMember(id);
         return ResponseEntity.noContent().build();
@@ -88,8 +88,8 @@ public class MemberController {
     
 
     //맴버 정보 수정
-    @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or #id == authentication.principal.id")
+    @PutMapping("/{memberId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<Void> updateMember(@PathVariable Long id, MemberUpdateRequestDto requestDto) {
         memberService.updateMember(id,requestDto);
         return ResponseEntity.noContent().build();

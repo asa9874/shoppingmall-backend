@@ -29,7 +29,7 @@ public class SellerController {
 
     //올린 상품 리스트 조회
     @GetMapping("/{memberId}/products/")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or #id == authentication.principal.id")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<List<ProductResponseDTO>> getProducts(@PathVariable Long memberId) {
         List<Product> products = sellerService.getProducts(memberId);
         List<ProductResponseDTO> responseDTOs = products.stream()
