@@ -79,7 +79,7 @@ public class MemberController {
 
 
     //맴버삭제
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #id == authentication.principal.id")
     public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
         memberService.deleteMember(id);
@@ -87,8 +87,8 @@ public class MemberController {
     }
     
 
-    //TODO: 맴버 정보 수정 (현재는 닉네임만 )
-    @PutMapping("/update/{id}")
+    //맴버 정보 수정
+    @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #id == authentication.principal.id")
     public ResponseEntity<Void> updateMember(@PathVariable Long id, MemberUpdateRequestDto requestDto) {
         memberService.updateMember(id,requestDto);

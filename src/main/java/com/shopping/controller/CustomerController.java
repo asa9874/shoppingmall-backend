@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.method.P;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,25 +32,25 @@ public class CustomerController {
     private final CustomerService customerService;
     
     //TODO: 구매한 상품 리스트 조회
-    @GetMapping("/orders")
+    @GetMapping("/{customerId}/orders")
     public ResponseEntity<OrderItemResponseDto> getOrders() {
         return null;
     }
 
     // TODO: 특정 상품구입
-    @PostMapping("buy-product/{productId}")
+    @PostMapping("/{customerId}/buy-product/{productId}")
     public ResponseEntity<OrderItemResponseDto> buyProduct(@PathVariable Long productId) {
         return null;
     }
 
     // TODO: 장바구니 상품전체 구입
-    @PostMapping("/buy-product")
+    @PostMapping("/{customerId}/buy-product")
     public ResponseEntity<OrderItemResponseDto> buyCart() {
         return null;
     }
 
     // 장바구니 조회
-    @GetMapping("{customerId}/cart")
+    @GetMapping("/{customerId}/cart")
     public ResponseEntity<List<CartItemResponseDto>> getCart(@PathVariable Long customerId) {
         List<CartItem> cartItems =customerService.getCart(customerId);
         List<CartItemResponseDto> responseDto = cartItems.stream()
@@ -59,13 +60,13 @@ public class CustomerController {
     }
 
     // TODO: 장바구니 추가
-    @PostMapping("{customerId}/cart/{productId}")
+    @PostMapping("/{customerId}/cart/{productId}")
     public ResponseEntity<CartItemResponseDto> AddCart(@PathVariable Long productId) {
         return null;
     }
 
     // TODO: 장바구니 상품제거
-    @PostMapping("{customerId}/cart/{productId}")
+    @DeleteMapping("/{customerId}/cart/{productId}")
     public ResponseEntity<Void> deleteCart(@PathVariable Long productId) {
         return null;
     }

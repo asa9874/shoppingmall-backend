@@ -47,6 +47,29 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
+    //판매자 상품추가
+    @PostMapping("/{memberId}/create")
+    public ResponseEntity<ProductResponseDTO> createProduct(@Valid @PathVariable Long memberId ,@RequestBody ProductCreateRequestDTO productCreateRequestDTO) {
+        Product product = productService.createProduct(memberId,productCreateRequestDTO);
+        ProductResponseDTO responseDTO = ProductResponseDTO.fromEntity(product);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO); // 201 CREATED
+    }
+    
+    //판매자 상품수정
+    @PutMapping("/{productId}")
+    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long productId, @RequestBody ProductUpdateRequestDto productResponseDTO) {
+        Product product = productService.updateProduct(productId,productResponseDTO);
+        ProductResponseDTO responseDTO = ProductResponseDTO.fromEntity(product);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
+    }
+
+    //판매자 상품제거
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+        productService.deleteProduct(productId);
+        return ResponseEntity.noContent().build();
+    }
+
     //TODO:상품 목록 검색
     @GetMapping("/search")
     public Page<ProductResponseDTO> searchProducts(
@@ -59,30 +82,4 @@ public class ProductController {
     ) {
         return null;
     }
-
-    
-    //판매자 상품추가
-    @PostMapping("/{memberId}/create")
-    public ResponseEntity<ProductResponseDTO> createProduct(@Valid @PathVariable Long memberId ,@RequestBody ProductCreateRequestDTO productCreateRequestDTO) {
-        Product product = productService.createProduct(memberId,productCreateRequestDTO);
-        ProductResponseDTO responseDTO = ProductResponseDTO.fromEntity(product);
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO); // 201 CREATED
-    }
-    
-    //판매자 상품수정
-    @PutMapping("/update/{productId}")
-    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long productId, @RequestBody ProductUpdateRequestDto productResponseDTO) {
-        Product product = productService.updateProduct(productId,productResponseDTO);
-        ProductResponseDTO responseDTO = ProductResponseDTO.fromEntity(product);
-        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
-    }
-
-    //판매자 상품제거
-    @DeleteMapping("/delete/{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
-        productService.deleteProduct(productId);
-        return ResponseEntity.noContent().build();
-    }
-
-
 }
