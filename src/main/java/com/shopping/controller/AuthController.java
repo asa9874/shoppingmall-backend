@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.dto.Request.AuthRequestDto;
+import com.shopping.dto.Request.AuthResetPasswordRequestDto;
 import com.shopping.dto.Response.AuthResponseDto;
 import com.shopping.service.AuthService;
 
@@ -36,15 +37,16 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    //TODO: 비밀번호 초기화, 이메일 기능추가하기
+    //비밀번호 초기화, 
+    //TODO: 이메일 기능추가하기
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword() {
-        return null;
+    public ResponseEntity<Void> resetPassword(@RequestBody AuthResetPasswordRequestDto requestDto) {
+        return authService.resetPassword(requestDto.getCurrentPassword(), requestDto.getNewPassword());
     }
 
     //TODO: 로그아웃
     @PostMapping("/logout")
-    public ResponseEntity<?> logout() {
+    public ResponseEntity<Void> logout() {
         return null;
     }
 }

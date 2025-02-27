@@ -1,6 +1,7 @@
 package com.shopping.service;
 
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -54,6 +55,20 @@ public class AuthService {
         String newAccessToken = jwtTokenProvider.createToken(userId, role, id);
 
         return new AuthResponseDto(newAccessToken);
+    }
+
+    //비번 초기화
+    public ResponseEntity<Void> resetPassword(String currentPassword,String newPassword) {
+        Member member = memberRepository.findBymemberId(SecurityUtil.getCurrentUserId())
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        
+        if (!passwordEncoder.matches(currentPassword, member.getPassword())) {
+            throw new RuntimeException("현재 비밀번호가 일치하지 않습니다.");
+        }
+        
+        member.setPassword(passwordEncoder.encode(newPassword));
+        memberRepository.save(member);
+        return ResponseEntity.ok().build();
     }
 
 

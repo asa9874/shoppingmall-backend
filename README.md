@@ -46,10 +46,13 @@ http://localhost:8080/swagger-ui.html
 | `/product/delete/{productId}` | DELETE | 상품 삭제 | ✅ | SELLER |
 
 ---
+
 ### 🔑 인증(Auth) API
 | 엔드포인트 | 메서드 | 설명 | 인증 필요 여부 | ROLE |
 |------------|--------|------|------|--------|
 | `/auth/login` | POST | 로그인 (JWT 토큰 반환) | ❌ | - |
+| `/auth/refresh-token` | POST | JWT 토큰 초기화 | ✅ | - |
+| `/auth/reset-password` | POST | 비밀번호 초기화 | ✅ | - |
 
 ---
 ### 🧪 테스트(Test) API 
