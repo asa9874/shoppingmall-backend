@@ -4,6 +4,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +58,17 @@ public class ProductService {
         return productDTOList;
     }
 
+    public Page<ProductResponseDTO> searchProducts(String keyword, String category, Double minPrice, Double maxPrice, int page, int count) {
+        
+        Pageable pageable = PageRequest.of(page, count, Sort.by(Sort.Direction.DESC, "id"));
+        
+        Page<Product> products = productRepository.searchProducts(keyword, category, minPrice, maxPrice, pageable);
+        
+        return products.map(ProductResponseDTO::fromEntity);
+    }
+
+
+
     public ProductResponseDTO getProductDetail(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> {
@@ -68,7 +83,7 @@ public class ProductService {
     public Product createProduct(Long memberId,ProductCreateRequestDTO requestDTO) {
         Seller seller = sellerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> {
-                    String errorMessage = String.format("(sellerId: %d)", memberId);
+                    String errorMessage = String.format("(MemberId: %d)", memberId);
                     return new SellerNotFoundException(errorMessage);
                 });
         ProductValidationUtil.validatePriceAndStock(requestDTO.getPrice(), requestDTO.getStock());

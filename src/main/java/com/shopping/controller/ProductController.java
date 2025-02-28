@@ -47,7 +47,6 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
-    //TODO: SELLER로 옮기기
     //판매자 상품추가
     @PostMapping("/{memberId}/create")
     public ResponseEntity<ProductResponseDTO> createProduct(@Valid @PathVariable Long memberId ,@RequestBody ProductCreateRequestDTO productCreateRequestDTO) {
@@ -71,9 +70,9 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    //TODO:상품 목록 검색
+    //상품 목록 검색
     @GetMapping("/search")
-    public Page<ProductResponseDTO> searchProducts(
+    public ResponseEntity<Page<ProductResponseDTO>> searchProducts(
         @RequestParam(required = false) String keyword, 
         @RequestParam(required = false) String category, 
         @RequestParam(required = false) Double minPrice, 
@@ -81,6 +80,7 @@ public class ProductController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int count
     ) {
-        return null;
+        Page<ProductResponseDTO> result = productService.searchProducts(keyword, category, minPrice, maxPrice, page, count);
+        return ResponseEntity.ok(result);
     }
 }
