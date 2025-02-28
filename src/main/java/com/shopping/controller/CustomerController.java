@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -98,10 +97,11 @@ public class CustomerController {
     }
 
 
-    //TODO: 장바구니 전체제거
+    // 장바구니 전체제거
     @DeleteMapping("/{memberId}/cart/clear")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<Void> clearCart(@PathVariable Long memberId) {
+        customerService.clearCart(memberId);
         return ResponseEntity.noContent().build();
     }
 

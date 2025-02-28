@@ -16,6 +16,7 @@ import com.shopping.repository.CustomerRepository;
 import com.shopping.repository.OrderItemRepository;
 import com.shopping.repository.ProductRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -33,14 +34,14 @@ public class CustomerService {
         customerRepository.save(customer);
     }
 
-    //ORDER 
+    // ORDER
     public List<OrderItem> getOrders(Long memberId) {
         Customer customer = customerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         return customer.getOrderedItems();
     }
 
-    public OrderItem getOrder(Long orderId){
+    public OrderItem getOrder(Long orderId) {
         OrderItem orderItem = orderItemRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         return orderItem;
@@ -52,7 +53,7 @@ public class CustomerService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        if(product.getStock() < quantity){
+        if (product.getStock() < quantity) {
             throw new RuntimeException("Not enough stock");
         }
         product.setStock(product.getStock() - quantity);
@@ -68,30 +69,29 @@ public class CustomerService {
         return orderItem;
     }
 
-    public List<OrderItem> buyCart(Long memberId){
+    public List<OrderItem> buyCart(Long memberId) {
         Customer customer = customerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         List<CartItem> cartItems = customer.getCartItems();
         List<OrderItem> orderItems = cartItems.stream()
-            .map(cartItem -> buyProduct(memberId, cartItem.getProduct().getId(), cartItem.getQuantity()))
-            .collect(Collectors.toList());
+                .map(cartItem -> buyProduct(memberId, cartItem.getProduct().getId(), cartItem.getQuantity()))
+                .collect(Collectors.toList());
         return orderItems;
     }
 
-
-    //CART
+    // CART
     public List<CartItem> getCart(Long memberId) {
         Customer customer = customerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         return customer.getCartItems();
     }
 
-    public CartItem addCart(Long memberId, Long productId,int quantity) {
+    public CartItem addCart(Long memberId, Long productId, int quantity) {
         Customer customer = customerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
-        if(product.getStock() < quantity){
+        if (product.getStock() < quantity) {
             throw new RuntimeException("Not enough stock");
         }
         CartItem cartItem = CartItem.builder()
@@ -105,13 +105,20 @@ public class CustomerService {
         return cartItem;
     }
 
-    public void deleteCart(Long memberId, Long cartItemId){
+    @Transactional
+    public void deleteCart(Long memberId, Long cartItemId) {
         Customer customer = customerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(() -> new RuntimeException("Cart item not found"));
         customer.getCartItems().remove(cartItem);
-        customerRepository.save(customer);
-        cartItemRepository.delete(cartItem);
+    }
+
+    @Transactional
+    public void clearCart(Long memberId) {
+        Customer customer = customerRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        customer.getCartItems().clear(); 
     }
 }
