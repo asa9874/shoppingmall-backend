@@ -84,12 +84,13 @@ public class AuthService {
         return product;
     }
 
+    /* PreAuthorize 사용함에 따라 안씀
     //제출 아이디 같은지 검사
-    //TODO: 이거 PreAuthorize에서 대체 가능하니까 사용한부분 제거하기
     public void validateSameMemberId(String memberId) {
         String currentUserId = SecurityUtil.getCurrentUserId();
         if (currentUserId != memberId) {
             throw new AccessDeniedException(String.format("User ID is not the same as the current logged-in user ID "));
         }
     }
+    */
 }

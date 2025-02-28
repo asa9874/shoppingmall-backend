@@ -22,6 +22,7 @@ public class TestController {
     }
 
     @GetMapping("/admin")
+    
     public String adminEndpoint(@AuthenticationPrincipal UserDetails userDetails) {
         return "어드민: " + userDetails.getUsername();
     }

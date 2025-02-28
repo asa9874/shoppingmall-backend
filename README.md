@@ -58,9 +58,6 @@ http://localhost:8080/swagger-ui.html
 | ---------------------------- | ------ | -------------- | -------------- | ------ |
 | `/product/`                  | GET    | 상품 목록 조회 | ❌             | -      |
 | `/product/{productId}`       | GET    | 상품 조회      | ❌             | -      |
-| `/product/{productId}`       | PUT    | 상품 업데이트  | ✅             | SELLER |
-| `/product/{productId}`       | DELETE | 상품 삭제      | ✅             | SELLER |
-| `/product/{memberId}/create` | POST   | 상품 생성      | ✅             | SELLER |
 | `/product/search`            | GET    | 상품 검색      | ❌             | -      |
 
 ---
@@ -81,6 +78,9 @@ http://localhost:8080/swagger-ui.html
 | 엔드포인트                     | 메서드 | 설명           | 인증 필요 여부 | ROLE   |
 | ------------------------------ | ------ | -------------- | -------------- | ------ |
 | `/seller/{memberId}/products/` | GET    | 판매 상품 조회 | ✅             | SELLER |
+| `/seller/{memberId}/product/{productId}`       | PUT    | 상품 업데이트  | ✅             | SELLER |
+| `/seller/{memberId}/product/{productId}`       | DELETE | 상품 삭제      | ✅             | SELLER |
+| `/seller/{memberId}/product/create` | POST   | 상품 생성      | ✅             | SELLER |
 
 ---
 

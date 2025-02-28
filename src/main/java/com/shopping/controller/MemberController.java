@@ -51,7 +51,6 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 성공");
     }
 
-    //TODO: 이거 진짜 쓸모없이 만들었다. 나중에 지울거
     @GetMapping("/me")
     public ResponseEntity<Map<String, String>> getMe(@AuthenticationPrincipal UserDetails userDetails) {
         String nickname = memberService.getNicknameByMemberId(userDetails.getUsername()); 
