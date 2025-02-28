@@ -1,5 +1,6 @@
 package com.shopping.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import com.shopping.model.OrderItem;
 import com.shopping.model.Product;
 import com.shopping.repository.CartItemRepository;
 import com.shopping.repository.CustomerRepository;
+import com.shopping.repository.OrderItemRepository;
 import com.shopping.repository.ProductRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
+    private final OrderItemRepository orderItemRepository;
 
     public void registerCustomer(Member member) {
         Customer customer = new Customer();
@@ -34,6 +37,12 @@ public class CustomerService {
         Customer customer = customerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         return customer.getOrderedItems();
+    }
+
+    public OrderItem getOrder(Long orderId){
+        OrderItem orderItem = orderItemRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        return orderItem;
     }
 
     public OrderItem buyProduct(Long memberId, Long productId, int quantity) {
@@ -55,6 +64,8 @@ public class CustomerService {
         OrderItem orderItem = OrderItem.builder()
                 .customer(customer)
                 .product(product)
+                .quantity(quantity)
+                .orderDate(LocalDateTime.now())
                 .build();
         customer.getOrderedItems().add(orderItem);
         customerRepository.save(customer);

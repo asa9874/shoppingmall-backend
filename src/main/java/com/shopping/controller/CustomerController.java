@@ -3,9 +3,7 @@ package com.shopping.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.aspectj.weaver.ast.Or;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomerController {
     private final CustomerService customerService;
 
-    //구매한 상품 리스트 조회
+    //맴버의 구매한 상품 리스트 조회
     @GetMapping("/{memberId}/orders")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<List<OrderItemResponseDto>> getOrders(@PathVariable Long memberId) {
@@ -43,7 +41,16 @@ public class CustomerController {
         return ResponseEntity.ok(responseDto);
     }
 
-    // TODO: 특정 상품구입
+    // 상품 구입 조회
+    @GetMapping("/{memberId}/orders/{orderId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
+    public ResponseEntity<OrderItemResponseDto> getOrder(@PathVariable Long memberId, @PathVariable Long orderId) {
+        OrderItem orderItem = customerService.getOrder(orderId);
+        OrderItemResponseDto responseDto = OrderItemResponseDto.fromEntity(orderItem);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    // 특정 상품구입
     @PostMapping("/{memberId}/buy-product/{productId}/{quantity}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<OrderItemResponseDto> buyProduct(@PathVariable Long productId, @PathVariable Long memberId, @PathVariable int quantity) {
@@ -82,6 +89,14 @@ public class CustomerController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<Void> deleteCart(@PathVariable Long cartItemId, @PathVariable Long memberId) {
         customerService.deleteCart(memberId, cartItemId);
+        return ResponseEntity.noContent().build();
+    }
+
+
+    //TODO: 장바구니 전체제거
+    @DeleteMapping("/{memberId}/cart/clear")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
+    public ResponseEntity<Void> clearCart(@PathVariable Long memberId) {
         return ResponseEntity.noContent().build();
     }
 
