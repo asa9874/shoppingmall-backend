@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,11 +58,15 @@ public class CustomerController {
         OrderItem orderItem = customerService.buyProduct(memberId,productId,quantity);
         return ResponseEntity.ok(OrderItemResponseDto.fromEntity(orderItem));}
 
-    // TODO: 장바구니 상품전체 구입
+    // 장바구니 상품전체 구입
     @PostMapping("/{memberId}/buy-product")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
-    public ResponseEntity<OrderItemResponseDto> buyCart() {
-        return null;
+    public ResponseEntity<List<OrderItemResponseDto>> buyCart(@PathVariable Long memberId) {
+        List<OrderItem> orderItem = customerService.buyCart(memberId);
+        List<OrderItemResponseDto> responseDto = orderItem.stream()
+                .map(OrderItemResponseDto::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(responseDto);
     }
 
     // 장바구니 조회

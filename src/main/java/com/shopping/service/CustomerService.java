@@ -2,6 +2,7 @@ package com.shopping.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -55,12 +56,7 @@ public class CustomerService {
             throw new RuntimeException("Not enough stock");
         }
         product.setStock(product.getStock() - quantity);
-        if(product.getStock() == 0){
-            productRepository.delete(product);
-        }
-        else{
-            productRepository.save(product);
-        }
+        productRepository.save(product);
         OrderItem orderItem = OrderItem.builder()
                 .customer(customer)
                 .product(product)
@@ -72,7 +68,15 @@ public class CustomerService {
         return orderItem;
     }
 
-
+    public List<OrderItem> buyCart(Long memberId){
+        Customer customer = customerRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+        List<CartItem> cartItems = customer.getCartItems();
+        List<OrderItem> orderItems = cartItems.stream()
+            .map(cartItem -> buyProduct(memberId, cartItem.getProduct().getId(), cartItem.getQuantity()))
+            .collect(Collectors.toList());
+        return orderItems;
+    }
 
 
     //CART
@@ -87,6 +91,9 @@ public class CustomerService {
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
+        if(product.getStock() < quantity){
+            throw new RuntimeException("Not enough stock");
+        }
         CartItem cartItem = CartItem.builder()
                 .customer(customer)
                 .product(product)
