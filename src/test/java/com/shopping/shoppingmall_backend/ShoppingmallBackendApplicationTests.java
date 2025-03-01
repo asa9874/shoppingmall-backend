@@ -54,7 +54,6 @@ class ShoppingmallBackendApplicationTests {
                 .nickname("테스트닉네임")
                 .role(Member.Role.SELLER)
                 .build();
-        memberRepository.save(member);
 
         Seller seller = Seller.builder()
                 .member(member)

@@ -1,7 +1,5 @@
 package com.shopping.model;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,8 +9,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -64,12 +60,6 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "seller_id", nullable = false)
     private Seller seller;
-
-    @ManyToMany
-    @Builder.Default
-    @JoinTable(name = "customer_product", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "customer_id"))
-    private List<Customer> customers = new ArrayList<>();
-
 
     public boolean isOwnedBy(String memberId) {
         return seller.getMember().getMemberId().equals(memberId);

@@ -48,7 +48,7 @@ public class ProductService {
                         .id(product.getId())
                         .name(product.getName())
                         .description(product.getDescription())
-                        .image("http://localhost:8080/images/" + product.getImage())
+                        .image(product.getImage())
                         .price(product.getPrice())
                         .stock(product.getStock())
                         .sellerName(product.getSeller().getMember().getNickname())
