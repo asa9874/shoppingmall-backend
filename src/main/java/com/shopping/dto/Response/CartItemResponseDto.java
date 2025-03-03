@@ -15,6 +15,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class CartItemResponseDto {
+    private Long id;
+
     private Long productid;
 
     private String name;
@@ -35,6 +37,7 @@ public class CartItemResponseDto {
 
     public static CartItemResponseDto fromEntity(CartItem cartItem) {
         return CartItemResponseDto.builder()
+            .id(cartItem.getId())
             .productid(cartItem.getProduct().getId())
             .name(cartItem.getProduct().getName())
             .image(cartItem.getProduct().getImage())

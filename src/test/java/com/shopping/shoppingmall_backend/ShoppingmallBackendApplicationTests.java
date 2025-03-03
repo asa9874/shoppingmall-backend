@@ -1,6 +1,6 @@
 package com.shopping.shoppingmall_backend;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ class ShoppingmallBackendApplicationTests {
         for (int i = 1; i <= 10; i++) {
             Product product = Product.builder()
                     .name("스마트폰 " + i)
-                    .image("smartphone.jpg")
+                    .image("/images/smartphone.jpg")
                     .description("훌륭한 스마트폰 " + i + "이다.")
                     .price(500)
                     .stock(100)

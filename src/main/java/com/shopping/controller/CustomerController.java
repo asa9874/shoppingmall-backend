@@ -51,6 +51,8 @@ public class CustomerController {
     }
 
     // 특정 상품구입
+    //TODO : DTO 만들어서 PATH -> BODY로 변경 
+    //TODO: "/{memberId}/orders/{productId}" POST 로 RESTful하게 변경
     @PostMapping("/{memberId}/buy-product/{productId}/{quantity}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<OrderItemResponseDto> buyProduct(@PathVariable Long productId, @PathVariable Long memberId, @PathVariable int quantity) {
@@ -58,6 +60,7 @@ public class CustomerController {
         return ResponseEntity.ok(OrderItemResponseDto.fromEntity(orderItem));}
 
     // 장바구니 상품전체 구입
+    //TODO: "/{memberId}/orders" POST 로 RESTful하게 변경
     @PostMapping("/{memberId}/buy-product")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<List<OrderItemResponseDto>> buyCart(@PathVariable Long memberId) {
@@ -80,6 +83,7 @@ public class CustomerController {
     }
 
     // 장바구니 추가
+    //TODO : DTO 만들어서 PATH -> BODY로 변경 
     @PostMapping("/{memberId}/cart/{productId}/{quantity}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<CartItemResponseDto> addCart(@PathVariable Long productId, @PathVariable int quantity,
