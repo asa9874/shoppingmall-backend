@@ -38,7 +38,7 @@ public class SellerController {
     private final ProductService productService;
 
     //올린 상품 리스트 조회
-    @GetMapping("/{memberId}/products/")
+    @GetMapping("/{memberId}/products")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<List<ProductResponseDTO>> getProducts(@PathVariable Long memberId) {
         List<Product> products = sellerService.getProducts(memberId);

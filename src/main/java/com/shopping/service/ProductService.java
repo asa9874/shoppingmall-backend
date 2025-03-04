@@ -18,6 +18,8 @@ import com.shopping.exception.ProductNotFoundException;
 import com.shopping.exception.SellerNotFoundException;
 import com.shopping.model.Product;
 import com.shopping.model.Seller;
+import com.shopping.repository.CartItemRepository;
+import com.shopping.repository.OrderItemRepository;
 import com.shopping.repository.ProductRepository;
 import com.shopping.repository.SellerRepository;
 import com.shopping.util.ProductUpdateUtil;
@@ -34,7 +36,8 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final SellerRepository sellerRepository;
     private final AuthService authService;
-
+    private final CartItemRepository cartItemRepository;
+    private final OrderItemRepository orderItemRepository;
     // 조회
     public List<ProductResponseDTO> getProductItems(int count) {
         List<Product> productList = productRepository.findAll();
@@ -104,6 +107,8 @@ public class ProductService {
     @Transactional
     public void deleteProduct(Long productId) {
         Product product = authService.validateProductOwnership(productId);
+        cartItemRepository.deleteByProductId(productId);
+        orderItemRepository.deleteByProductId(productId);
         productRepository.delete(product);
     }
 
