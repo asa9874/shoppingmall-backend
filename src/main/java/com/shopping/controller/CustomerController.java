@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.dto.Response.CartItemResponseDto;
@@ -51,17 +52,14 @@ public class CustomerController {
     }
 
     // 특정 상품구입
-    //TODO : DTO 만들어서 PATH -> BODY로 변경 
-    //TODO: "/{memberId}/orders/{productId}" POST 로 RESTful하게 변경
-    @PostMapping("/{memberId}/buy-product/{productId}/{quantity}")
+    @PostMapping("/{memberId}/orders/{productId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
-    public ResponseEntity<OrderItemResponseDto> buyProduct(@PathVariable Long productId, @PathVariable Long memberId, @PathVariable int quantity) {
+    public ResponseEntity<OrderItemResponseDto> buyProduct(@PathVariable Long productId, @PathVariable Long memberId, @RequestParam int quantity) {
         OrderItem orderItem = customerService.buyProduct(memberId,productId,quantity);
         return ResponseEntity.ok(OrderItemResponseDto.fromEntity(orderItem));}
 
     // 장바구니 상품전체 구입
-    //TODO: "/{memberId}/orders" POST 로 RESTful하게 변경
-    @PostMapping("/{memberId}/buy-product")
+    @PostMapping("/{memberId}/orders")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<List<OrderItemResponseDto>> buyCart(@PathVariable Long memberId) {
         List<OrderItem> orderItem = customerService.buyCart(memberId);
@@ -83,11 +81,9 @@ public class CustomerController {
     }
 
     // 장바구니 추가
-    //TODO : DTO 만들어서 PATH -> BODY로 변경 
-    @PostMapping("/{memberId}/cart/{productId}/{quantity}")
+    @PostMapping("/{memberId}/cart/{productId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
-    public ResponseEntity<CartItemResponseDto> addCart(@PathVariable Long productId, @PathVariable int quantity,
-            @PathVariable Long memberId) {
+    public ResponseEntity<CartItemResponseDto> addCart(@PathVariable Long productId, @RequestParam int quantity, @PathVariable Long memberId) {
         CartItem cartItem = customerService.addCart(memberId, productId, quantity);
         return ResponseEntity.ok(CartItemResponseDto.fromEntity(cartItem));
     }
