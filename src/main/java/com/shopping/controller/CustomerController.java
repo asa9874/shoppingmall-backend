@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shopping.dto.Request.CartRequestDto;
+import com.shopping.dto.Request.OrderRequestDto;
 import com.shopping.dto.Response.CartItemResponseDto;
 import com.shopping.dto.Response.OrderItemResponseDto;
 import com.shopping.model.CartItem;
@@ -54,8 +56,8 @@ public class CustomerController {
     // 특정 상품구입
     @PostMapping("/{memberId}/orders/{productId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
-    public ResponseEntity<OrderItemResponseDto> buyProduct(@PathVariable Long productId, @PathVariable Long memberId, @RequestParam int quantity) {
-        OrderItem orderItem = customerService.buyProduct(memberId,productId,quantity);
+    public ResponseEntity<OrderItemResponseDto> buyProduct(@PathVariable Long productId, @PathVariable Long memberId, @RequestBody OrderRequestDto orderRequestDto) {
+        OrderItem orderItem = customerService.buyProduct(memberId,productId,orderRequestDto.getQuantity());
         return ResponseEntity.ok(OrderItemResponseDto.fromEntity(orderItem));}
 
     // 장바구니 상품전체 구입
@@ -83,8 +85,8 @@ public class CustomerController {
     // 장바구니 추가
     @PostMapping("/{memberId}/cart/{productId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
-    public ResponseEntity<CartItemResponseDto> addCart(@PathVariable Long productId, @RequestParam int quantity, @PathVariable Long memberId) {
-        CartItem cartItem = customerService.addCart(memberId, productId, quantity);
+    public ResponseEntity<CartItemResponseDto> addCart(@PathVariable Long productId, @RequestBody CartRequestDto cartRequestDto, @PathVariable Long memberId) {
+        CartItem cartItem = customerService.addCart(memberId, productId, cartRequestDto.getQuantity());
         return ResponseEntity.ok(CartItemResponseDto.fromEntity(cartItem));
     }
 
