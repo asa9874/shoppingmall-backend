@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,13 +25,14 @@ import com.shopping.dto.Response.MemberInfoResponseDto;
 import com.shopping.model.Member;
 import com.shopping.service.MemberService;
 
-import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 @RestController
 @RequiredArgsConstructor
+@Log4j2
 @RequestMapping("/member")
 @Tag(name = "맴버API", description = "/member")
 public class MemberController {
@@ -89,8 +91,8 @@ public class MemberController {
     //맴버 정보 수정
     @PutMapping("/{memberId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
-    public ResponseEntity<Void> updateMember(@PathVariable Long id, MemberUpdateRequestDto requestDto) {
-        memberService.updateMember(id,requestDto);
+    public ResponseEntity<Void> updateMember(@PathVariable Long memberId, @RequestBody MemberUpdateRequestDto requestDto) {
+        memberService.updateMember(memberId,requestDto);
         return ResponseEntity.noContent().build();
     }
 }
