@@ -17,6 +17,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class OrderItemResponseDto {
+    private Long id;
+
     private Long productid;
 
     private String name;
@@ -40,6 +42,7 @@ public class OrderItemResponseDto {
 
     public static OrderItemResponseDto fromEntity(OrderItem orderItem) {
         return OrderItemResponseDto.builder()
+            .id(orderItem.getId())
             .productid(orderItem.getProduct().getId())
             .name(orderItem.getProduct().getName())
             .image(orderItem.getProduct().getImage())
