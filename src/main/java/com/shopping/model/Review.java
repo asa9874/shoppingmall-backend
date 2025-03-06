@@ -34,5 +34,5 @@ public class Review {
 
     private String content;
 
-    private int rating;
+    private Long rating;
 }

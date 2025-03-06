@@ -18,7 +18,7 @@ public class ReviewResponseDto {
     private String productName;
     private String customerName;
     private String content;
-    private int rating;
+    private Long rating;
 
 
     public static ReviewResponseDto fromEntity(Review review) {
