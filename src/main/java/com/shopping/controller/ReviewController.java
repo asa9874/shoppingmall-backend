@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,11 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.dto.Request.ReviewCreateRequestDto;
+import com.shopping.dto.Request.ReviewUpdateRequestDto;
 import com.shopping.dto.Response.ReviewResponseDto;
 import com.shopping.model.Review;
 import com.shopping.service.ReviewService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -48,8 +51,11 @@ public class ReviewController {
     }
 
     @PutMapping("/{reviewId}")
-    public ResponseEntity<ReviewResponseDto> updateReviews(@RequestBody ReviewCreateRequestDto requestDto) {
-        return ResponseEntity.ok().build();
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
+    public ResponseEntity<ReviewResponseDto> updateReviews(@PathVariable Long reviewId, @RequestBody ReviewUpdateRequestDto requestDto) {
+        Review review =  reviewService.updateReview(reviewId,requestDto);
+        ReviewResponseDto responseDto = ReviewResponseDto.fromEntity(review);
+        return ResponseEntity.ok(responseDto);
     }
     
     @DeleteMapping("/{reviewId}")

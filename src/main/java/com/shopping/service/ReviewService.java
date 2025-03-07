@@ -3,6 +3,7 @@ package com.shopping.service;
 import org.springframework.stereotype.Service;
 
 import com.shopping.dto.Request.ReviewCreateRequestDto;
+import com.shopping.dto.Request.ReviewUpdateRequestDto;
 import com.shopping.model.Customer;
 import com.shopping.model.Product;
 import com.shopping.model.Review;
@@ -30,6 +31,15 @@ public class ReviewService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다."));
         
         Review review = requestDto.toEntity(product, customer);
+        return reviewRepository.save(review);
+    }
+
+    public Review updateReview(Long reviewId,ReviewUpdateRequestDto requestDto) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다."));
+
+        review.setContent(requestDto.getContent());
+        review.setRating(requestDto.getRating());
         return reviewRepository.save(review);
     }
 
