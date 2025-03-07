@@ -21,12 +21,13 @@ import com.shopping.model.Review;
 import com.shopping.service.ReviewService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/review")
+@Log4j2
 @Tag(name = "리뷰API", description = "/review")
 public class ReviewController {
     
@@ -39,8 +40,10 @@ public class ReviewController {
     }
 
     @GetMapping("/{reviewId}")
-    public ResponseEntity<ReviewResponseDto> getReview() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ReviewResponseDto> getReview(@PathVariable Long reviewId) {
+        Review review = reviewService.getReview(reviewId);
+        ReviewResponseDto responseDto = ReviewResponseDto.fromEntity(review);
+        return ResponseEntity.ok(responseDto);
     }
 
     @PostMapping("/")

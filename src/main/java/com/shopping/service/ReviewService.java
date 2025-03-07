@@ -24,6 +24,14 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ProductRepository productRepository;
 
+    public Review getReview(Long reviewId) {
+        Review review =reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다."));
+        return review;
+        }
+
+
+
     public Review createReview(ReviewCreateRequestDto requestDto) {
         Customer customer = customerRepository.findByMemberId(requestDto.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));

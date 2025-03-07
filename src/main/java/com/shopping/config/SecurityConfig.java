@@ -40,6 +40,7 @@ public class SecurityConfig {
                                 "/member/register",
                                 "/h2-console/**",
                                 "/product/**",
+                                "/review/**",
                                 "/images/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
