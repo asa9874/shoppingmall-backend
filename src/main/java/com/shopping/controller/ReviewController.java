@@ -1,6 +1,7 @@
 package com.shopping.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,13 +31,17 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @Tag(name = "리뷰API", description = "/review")
 public class ReviewController {
-    
+
     private final ReviewService reviewService;
 
-    //TODO: Review CRUD 
+    // TODO: Review CRUD
     @GetMapping("/")
     public ResponseEntity<List<ReviewResponseDto>> getReviews() {
-        return ResponseEntity.ok().build();
+        List<Review> reviews = reviewService.getReviews();
+        List<ReviewResponseDto> responseDto = reviews.stream()
+                .map(ReviewResponseDto::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/{reviewId}")
@@ -49,22 +54,24 @@ public class ReviewController {
     @PostMapping("/")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
     public ResponseEntity<ReviewResponseDto> createReviews(@RequestBody ReviewCreateRequestDto requestDto) {
-        Review review =  reviewService.createReview(requestDto);
+        Review review = reviewService.createReview(requestDto);
         ReviewResponseDto responseDto = ReviewResponseDto.fromEntity(review);
         return ResponseEntity.ok(responseDto);
     }
 
     @PutMapping("/{reviewId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
-    public ResponseEntity<ReviewResponseDto> updateReviews(@PathVariable Long reviewId, @RequestBody ReviewUpdateRequestDto requestDto) {
-        Review review =  reviewService.updateReview(reviewId,requestDto);
+    public ResponseEntity<ReviewResponseDto> updateReviews(@PathVariable Long reviewId,
+            @RequestBody ReviewUpdateRequestDto requestDto) {
+        Review review = reviewService.updateReview(reviewId, requestDto);
         ReviewResponseDto responseDto = ReviewResponseDto.fromEntity(review);
         return ResponseEntity.ok(responseDto);
     }
-    
+
     @DeleteMapping("/{reviewId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
-    public ResponseEntity<Void> deleteReviews(@PathVariable Long reviewId,@RequestBody ReviewDeleteRequestDto requestDto) {
+    public ResponseEntity<Void> deleteReviews(@PathVariable Long reviewId,
+            @RequestBody ReviewDeleteRequestDto requestDto) {
         reviewService.deleteReview(reviewId);
         return ResponseEntity.noContent().build();
     }

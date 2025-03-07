@@ -1,5 +1,7 @@
 package com.shopping.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,13 +26,17 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ProductRepository productRepository;
 
+    public List<Review> getReviews() {
+        List<Review> reviews = reviewRepository.findAll();
+        return reviews;
+    }
+
+
     public Review getReview(Long reviewId) {
-        Review review =reviewRepository.findById(reviewId)
+        Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다."));
         return review;
-        }
-
-
+    }
 
     public Review createReview(ReviewCreateRequestDto requestDto) {
         Customer customer = customerRepository.findByMemberId(requestDto.getMemberId())
@@ -38,12 +44,12 @@ public class ReviewService {
 
         Product product = productRepository.findById(requestDto.getProductId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다."));
-        
+
         Review review = requestDto.toEntity(product, customer);
         return reviewRepository.save(review);
     }
 
-    public Review updateReview(Long reviewId,ReviewUpdateRequestDto requestDto) {
+    public Review updateReview(Long reviewId, ReviewUpdateRequestDto requestDto) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다."));
 
