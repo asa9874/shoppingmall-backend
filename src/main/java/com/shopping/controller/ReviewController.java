@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.dto.Request.ReviewCreateRequestDto;
+import com.shopping.dto.Request.ReviewDeleteRequestDto;
 import com.shopping.dto.Request.ReviewUpdateRequestDto;
 import com.shopping.dto.Response.ReviewResponseDto;
 import com.shopping.model.Review;
@@ -59,7 +60,9 @@ public class ReviewController {
     }
     
     @DeleteMapping("/{reviewId}")
-    public ResponseEntity<Void> deleteReviews() {
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
+    public ResponseEntity<Void> deleteReviews(@PathVariable Long reviewId,@RequestBody ReviewDeleteRequestDto requestDto) {
+        reviewService.deleteReview(reviewId);
         return ResponseEntity.noContent().build();
     }
 

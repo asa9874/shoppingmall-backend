@@ -13,7 +13,9 @@ import com.shopping.repository.MemberRepository;
 import com.shopping.repository.SellerRepository;
 import com.shopping.util.SecurityUtil;
 
-import jakarta.transaction.Transactional;
+
+import org.springframework.transaction.annotation.Transactional;
+
 import lombok.RequiredArgsConstructor;
 
 @Service

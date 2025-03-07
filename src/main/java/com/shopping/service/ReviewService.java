@@ -1,6 +1,7 @@
 package com.shopping.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.shopping.dto.Request.ReviewCreateRequestDto;
 import com.shopping.dto.Request.ReviewUpdateRequestDto;
@@ -41,6 +42,13 @@ public class ReviewService {
         review.setContent(requestDto.getContent());
         review.setRating(requestDto.getRating());
         return reviewRepository.save(review);
+    }
+
+    @Transactional
+    public void deleteReview(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다."));
+        reviewRepository.delete(review);
     }
 
 }
