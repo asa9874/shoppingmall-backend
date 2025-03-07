@@ -14,13 +14,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.shopping.dto.Request.ProductCreateRequestDTO;
 import com.shopping.dto.Request.ProductUpdateRequestDto;
 import com.shopping.dto.Response.ProductResponseDTO;
+import com.shopping.dto.Response.ReviewResponseDto;
 import com.shopping.exception.ProductNotFoundException;
 import com.shopping.exception.SellerNotFoundException;
 import com.shopping.model.Product;
+import com.shopping.model.Review;
 import com.shopping.model.Seller;
 import com.shopping.repository.CartItemRepository;
 import com.shopping.repository.OrderItemRepository;
 import com.shopping.repository.ProductRepository;
+import com.shopping.repository.ReviewRepository;
 import com.shopping.repository.SellerRepository;
 import com.shopping.util.ProductUpdateUtil;
 import com.shopping.util.ProductValidationUtil;
@@ -38,6 +41,8 @@ public class ProductService {
     private final AuthService authService;
     private final CartItemRepository cartItemRepository;
     private final OrderItemRepository orderItemRepository;
+    private final ReviewRepository reviewRepository;
+
     // 조회
     public List<ProductResponseDTO> getProductItems(int count) {
         List<Product> productList = productRepository.findAll();
@@ -61,16 +66,21 @@ public class ProductService {
         return productDTOList;
     }
 
-    public Page<ProductResponseDTO> searchProducts(String keyword, String category, Double minPrice, Double maxPrice, int page, int count) {
-        
+    public Page<ReviewResponseDto> getProductReviews(Long productId, int page, int count) {
         Pageable pageable = PageRequest.of(page, count, Sort.by(Sort.Direction.DESC, "id"));
-        
-        Page<Product> products = productRepository.searchProducts(keyword, category, minPrice, maxPrice, pageable);
-        
-        return products.map(ProductResponseDTO::fromEntity);
+        Page<Review> reviews = reviewRepository.findByProductId(productId, pageable);
+        return reviews.map(ReviewResponseDto::fromEntity);
     }
 
+    public Page<ProductResponseDTO> searchProducts(String keyword, String category, Double minPrice, Double maxPrice,
+            int page, int count) {
 
+        Pageable pageable = PageRequest.of(page, count, Sort.by(Sort.Direction.DESC, "id"));
+
+        Page<Product> products = productRepository.searchProducts(keyword, category, minPrice, maxPrice, pageable);
+
+        return products.map(ProductResponseDTO::fromEntity);
+    }
 
     public ProductResponseDTO getProductDetail(Long productId) {
         Product product = productRepository.findById(productId)
@@ -83,7 +93,7 @@ public class ProductService {
     }
 
     // 생성
-    public Product createProduct(Long memberId,ProductCreateRequestDTO requestDTO) {
+    public Product createProduct(Long memberId, ProductCreateRequestDTO requestDTO) {
         Seller seller = sellerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> {
                     String errorMessage = String.format("(MemberId: %d)", memberId);

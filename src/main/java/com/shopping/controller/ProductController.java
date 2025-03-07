@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.dto.Response.ProductResponseDTO;
+import com.shopping.dto.Response.ReviewResponseDto;
 import com.shopping.service.ProductService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,6 +38,12 @@ public class ProductController {
     public ResponseEntity<ProductResponseDTO> getProductItemDetail(@PathVariable Long productId){
         ProductResponseDTO responseDTO = productService.getProductDetail(productId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
+    }
+
+    @GetMapping("/{productId}/reviews")
+    public ResponseEntity<Page<ReviewResponseDto>> getProductReviews(@PathVariable Long productId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int count) {
+        Page<ReviewResponseDto> result = productService.getProductReviews(productId, page, count);
+        return ResponseEntity.ok(result);
     }
 
     //상품 목록 검색

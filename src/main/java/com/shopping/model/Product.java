@@ -4,6 +4,7 @@ package com.shopping.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -65,7 +66,7 @@ public class Product {
     @JoinColumn(name = "seller_id", nullable = false)
     private Seller seller;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Review> reviews = new ArrayList<>();
 

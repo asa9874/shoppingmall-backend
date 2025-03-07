@@ -46,6 +46,8 @@ public class ReviewService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다."));
 
         Review review = requestDto.toEntity(product, customer);
+        customer.getReviews().add(review);
+        product.getReviews().add(review);
         return reviewRepository.save(review);
     }
 
@@ -62,6 +64,8 @@ public class ReviewService {
     public void deleteReview(Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다."));
+        review.getCustomer().getReviews().remove(review);
+        review.getProduct().getReviews().remove(review);
         reviewRepository.delete(review);
     }
 
