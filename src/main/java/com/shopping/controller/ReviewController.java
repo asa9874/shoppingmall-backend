@@ -51,7 +51,7 @@ public class ReviewController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @PostMapping("/")
+    @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
     public ResponseEntity<ReviewResponseDto> createReviews(@RequestBody ReviewCreateRequestDto requestDto) {
         Review review = reviewService.createReview(requestDto);
