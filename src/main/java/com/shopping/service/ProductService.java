@@ -77,7 +77,13 @@ public class ProductService {
 
         Pageable pageable = PageRequest.of(page, count, Sort.by(Sort.Direction.DESC, "id"));
 
-        Page<Product> products = productRepository.searchProducts(keyword, category, minPrice, maxPrice, pageable);
+
+        Page<Product> products = productRepository.searchProducts(
+                keyword,
+                category,
+                minPrice,
+                maxPrice,
+                pageable);
 
         return products.map(ProductResponseDTO::fromEntity);
     }
