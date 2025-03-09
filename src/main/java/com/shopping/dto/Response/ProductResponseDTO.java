@@ -28,6 +28,8 @@ public class ProductResponseDTO {
 
     private String sellerName;
 
+    private Long memberId;
+
     private Product.Category category;
 
     public static ProductResponseDTO fromEntity(Product product) {
@@ -40,6 +42,7 @@ public class ProductResponseDTO {
             .stock(product.getStock())
             .category(product.getCategory())
             .sellerName(product.getSeller().getMember().getNickname())  
+            .memberId(product.getSeller().getMember().getId())
             .build();
     }
 }

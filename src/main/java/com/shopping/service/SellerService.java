@@ -23,9 +23,14 @@ public class SellerService {
         sellerRepository.save(seller);
     }
 
-    public List<Product> getProducts(Long memberId) {
+    public List<Product> getProducts(Long memberId, Integer count) {
         Seller seller = sellerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new RuntimeException("판매자 정보를 찾을 수 없습니다."));
-        return seller.getProducts();
+        if (count != null) {
+            return seller.getProducts().subList(0, count);
+        }
+        else{
+            return seller.getProducts();
+        }
     }
 }

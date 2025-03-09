@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.dto.Request.ProductCreateRequestDTO;
@@ -39,9 +40,8 @@ public class SellerController {
 
     //올린 상품 리스트 조회
     @GetMapping("/{memberId}/products")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
-    public ResponseEntity<List<ProductResponseDTO>> getProducts(@PathVariable Long memberId) {
-        List<Product> products = sellerService.getProducts(memberId);
+    public ResponseEntity<List<ProductResponseDTO>> getProducts(@PathVariable Long memberId, @RequestParam(required = false) Integer count) {
+        List<Product> products = sellerService.getProducts(memberId,count);
         List<ProductResponseDTO> responseDTOs = products.stream()
                 .map(ProductResponseDTO::fromEntity)
                 .collect(Collectors.toList());
