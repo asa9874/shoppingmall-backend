@@ -72,11 +72,11 @@ public class ProductService {
         return reviews.map(ReviewResponseDto::fromEntity);
     }
 
-    public Page<ProductResponseDTO> searchProducts(String keyword, String category, Double minPrice, Double maxPrice,
+    public Page<ProductResponseDTO> searchProducts(String keyword, String categorystr, Double minPrice, Double maxPrice,
             int page, int count) {
 
         Pageable pageable = PageRequest.of(page, count, Sort.by(Sort.Direction.DESC, "id"));
-
+        Product.Category category = Product.fromString(categorystr);
 
         Page<Product> products = productRepository.searchProducts(
                 keyword,

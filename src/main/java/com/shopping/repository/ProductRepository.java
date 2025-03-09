@@ -16,7 +16,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "(:maxPrice IS NULL OR p.price <= :maxPrice)")
     Page<Product> searchProducts(
             @Param("keyword") String keyword,
-            @Param("category") String category,
+            @Param("category") Product.Category category,
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice,
             Pageable pageable);

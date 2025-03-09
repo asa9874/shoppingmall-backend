@@ -74,4 +74,15 @@ public class Product {
     public boolean isOwnedBy(String memberId) {
         return seller.getMember().getMemberId().equals(memberId);
     }
+
+    public static Category fromString(String category) {
+        if (category == null) {
+            return null;
+        }
+        try {
+            return Category.valueOf(category.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid category: " + category);
+        }
+    }
 }
