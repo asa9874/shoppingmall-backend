@@ -1,6 +1,6 @@
 package com.shopping.service;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -26,14 +26,19 @@ public class QuestionService {
     public Question createQuestion(QuestionCreateRequestDto requestDto) {
         Member member = memberRepository.findById(requestDto.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
-
-        Question question = Question.builder()
-                .title(requestDto.getTitle())
-                .content(requestDto.getContent())
-                .member(member)
-                .createdDate(LocalDateTime.now())
-                .build();
-
+        Question question = requestDto.toEntity(member);
         return questionRepository.save(question);
     }
+
+    public List<Question> getQuestions() {
+        List<Question> questions = questionRepository.findAll();
+        return questions;
+    }
+
+    public Question getQuestion(Long id){
+        Question question = questionRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 질문이 존재하지 않습니다."));
+        return question;
+    }
+
 }

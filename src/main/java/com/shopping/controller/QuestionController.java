@@ -1,5 +1,8 @@
 package com.shopping.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -8,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.dto.Request.QuestionCreateRequestDto;
@@ -28,7 +32,7 @@ public class QuestionController {
     
     private final QuestionService questionService;
 
-    //TODO : 질문생성
+    //질문생성
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
     public ResponseEntity<QuestionResponseDto> createQuestion(@RequestBody QuestionCreateRequestDto requestDto) {
@@ -37,16 +41,22 @@ public class QuestionController {
         return ResponseEntity.ok(responseDto);
     }
 
-    //TODO : 질문들 조회
+    //질문들 조회
     @GetMapping
-    public ResponseEntity<?> getQuestions() {
-        return null;
+    public ResponseEntity<List<QuestionResponseDto>> getQuestions() {
+        List<Question> questions = questionService.getQuestions();
+        List<QuestionResponseDto> responseDtos = questions.stream()
+                .map(QuestionResponseDto::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(responseDtos);
     }
 
-    //TODO : 질문 조회
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getQuestion() {
-        return null;
+    //질문 조회
+    @GetMapping("/{questionId}")
+    public ResponseEntity<QuestionResponseDto> getQuestion(@RequestParam Long questionId) {
+        Question question = questionService.getQuestion(questionId);
+        QuestionResponseDto responseDto = QuestionResponseDto.fromEntity(question);
+        return ResponseEntity.ok(responseDto);
     }
 
     //TODO : 질문 업데이트

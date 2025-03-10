@@ -42,6 +42,8 @@ public class SecurityConfig {
                                 "/product/**",
                                 "/seller/**",
                                 "/review/**",
+                                "/question/**",
+                                "/answer/**",
                                 "/images/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
