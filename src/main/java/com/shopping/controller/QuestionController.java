@@ -7,16 +7,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.dto.Request.QuestionCreateRequestDto;
+import com.shopping.dto.Request.QuestionDeleteRequestDto;
 import com.shopping.dto.Request.QuestionUpdateRequestDto;
+import com.shopping.dto.Response.AnswerResponseDto;
 import com.shopping.dto.Response.QuestionResponseDto;
+import com.shopping.model.Answer;
 import com.shopping.model.Question;
 import com.shopping.service.QuestionService;
 
@@ -54,7 +57,7 @@ public class QuestionController {
 
     //질문 조회
     @GetMapping("/{questionId}")
-    public ResponseEntity<QuestionResponseDto> getQuestion(@RequestParam Long questionId) {
+    public ResponseEntity<QuestionResponseDto> getQuestion(@PathVariable Long questionId) {
         Question question = questionService.getQuestion(questionId);
         QuestionResponseDto responseDto = QuestionResponseDto.fromEntity(question);
         return ResponseEntity.ok(responseDto);
@@ -71,14 +74,20 @@ public class QuestionController {
 
     //TODO : 질문 제거
     @DeleteMapping("/{questionId}")
-    public ResponseEntity<?> deleteQuestion() {
-        return null;
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
+    public ResponseEntity<Void> deleteQuestion(@RequestBody QuestionDeleteRequestDto requestDto,@PathVariable Long questionId) {
+        questionService.deleteQuestion(questionId,requestDto);
+        return ResponseEntity.noContent().build();
     }
 
-    //TODO : 질문에 답변조회
+    //질문에 답변조회
     @GetMapping("/{questionId}/answer")
-    public ResponseEntity<?> getAnswers() {
-        return null;
+    public ResponseEntity<List<AnswerResponseDto>> getAnswers(@PathVariable Long questionId) {
+        List<Answer> answers =questionService.getAnswers(questionId);
+        List<AnswerResponseDto> responseDto = answers.stream()
+                .map(AnswerResponseDto::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(responseDto);
     }
     
 }

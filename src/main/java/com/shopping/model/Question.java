@@ -42,5 +42,5 @@ public class Question {
     private Member member;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
-    private List<Answer> answer;
+    private List<Answer> answers;
 }

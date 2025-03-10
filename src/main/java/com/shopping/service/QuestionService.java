@@ -6,13 +6,16 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.shopping.dto.Request.QuestionCreateRequestDto;
+import com.shopping.dto.Request.QuestionDeleteRequestDto;
 import com.shopping.dto.Request.QuestionUpdateRequestDto;
+import com.shopping.model.Answer;
 import com.shopping.model.Member;
 import com.shopping.model.Question;
 import com.shopping.repository.AnswerRepository;
 import com.shopping.repository.MemberRepository;
 import com.shopping.repository.QuestionRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,6 +53,19 @@ public class QuestionService {
         question.setTitle(requestDto.getTitle());
         question.setUpDateTime(LocalDateTime.now());
         return questionRepository.save(question);
+    }
+
+    @Transactional
+    public void deleteQuestion(Long questionId,QuestionDeleteRequestDto requestDto){
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 질문이 존재하지 않습니다."));
+        questionRepository.delete(question);
+    }
+
+    public List<Answer> getAnswers(Long questionId){
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 질문이 존재하지 않습니다."));
+        return question.getAnswers();
     }
 
 }
