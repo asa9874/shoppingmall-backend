@@ -1,20 +1,28 @@
 package com.shopping.jwt;
 
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 import javax.crypto.SecretKey;
 
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Component;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
 
     private static final String SECRET_KEY = "mySecretKeymySecretKeymySecretKey123";
     private static final long EXPIRATION_TIME = 1000 * 60 * 60; // 1시간
+    private final StringRedisTemplate redisTemplate;
 
     private final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
 
@@ -32,6 +40,11 @@ public class JwtTokenProvider {
 
     // JWT 토큰 검증
     public boolean validateToken(String token) {
+        if (redisTemplate.hasKey("blacklist:" + token)) { //블랙리스트
+            log.error("blackList Token: {}", token);
+            return false;
+        }
+
         try {
             Jwts.parser()
                     .verifyWith(key)

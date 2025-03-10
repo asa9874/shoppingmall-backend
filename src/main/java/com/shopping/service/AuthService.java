@@ -1,6 +1,9 @@
 package com.shopping.service;
 
 
+import java.util.concurrent.TimeUnit;
+
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +29,8 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final ProductRepository productRepository;
+    private final StringRedisTemplate redisTemplate;
+
     //로그인 (JWT 반환)
     public AuthResponseDto login(AuthRequestDto request) {
         Member member = memberRepository.findBymemberId(request.getMemberId())
@@ -82,6 +87,18 @@ public class AuthService {
             throw new AccessDeniedException(String.format("NO OWNER THIS PRODUCTId: %d",productId));
         }
         return product;
+    }
+
+    public void logout(String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new RuntimeException("Refresh Token이 유효하지 않습니다.");
+        }
+
+        redisTemplate.opsForValue().set("blacklist:" + token, "blacklisted", 1, TimeUnit.HOURS); // TTL 1시간
     }
 
     /* PreAuthorize 사용함에 따라 안씀

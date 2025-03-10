@@ -8,6 +8,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import io.jsonwebtoken.JwtException;
 import io.swagger.v3.oas.annotations.Hidden;
 
 @Hidden
@@ -44,6 +45,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied: " + ex.getMessage());
     }
 
+    // Handle JwtException (JWT 검증 오류 처리)
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<String> handleJwtException(JwtException ex) {
+        log.error("JWT Error: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or blacklisted JWT: " + ex.getMessage());
+
+    }
     // Handle generic exceptions (500 Internal Server Error)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleUnexpectedError(Exception ex) {
