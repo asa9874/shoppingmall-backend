@@ -36,4 +36,7 @@ public class Answer {
     private Question question;
 
     private LocalDateTime createdDate;
+
+    @Builder.Default
+    private LocalDateTime updatedDate = null;
 }

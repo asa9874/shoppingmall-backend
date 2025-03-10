@@ -95,7 +95,7 @@ public class AuthService {
         }
 
         if (!jwtTokenProvider.validateToken(token)) {
-            throw new RuntimeException("Refresh Token이 유효하지 않습니다.");
+            throw new RuntimeException("Token이 유효하지 않습니다.");
         }
 
         redisTemplate.opsForValue().set("blacklist:" + token, "blacklisted", 1, TimeUnit.HOURS); // TTL 1시간

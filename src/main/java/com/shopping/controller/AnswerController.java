@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.dto.Request.AnswerCreateRequestDto;
+import com.shopping.dto.Request.AnswerDeleteRequestDto;
+import com.shopping.dto.Request.AnswerUpdateRequestDto;
 import com.shopping.dto.Response.AnswerResponseDto;
 import com.shopping.model.Answer;
 import com.shopping.service.AnswerService;
@@ -40,27 +42,36 @@ public class AnswerController {
         return ResponseEntity.ok(responseDto);
     }
 
-    //TODO : 전체 답변 조회
+    //전체 답변 조회
     @GetMapping
     public ResponseEntity<List<AnswerResponseDto>> getAnswers() {
-        return null;
+        List<Answer> answers = answerService.getAnswers();
+        List<AnswerResponseDto> responseDto = answers.stream().map(AnswerResponseDto::fromEntity).toList();
+        return ResponseEntity.ok(responseDto);
     }
 
-    //TODO : 답변 조회
-    @GetMapping("/{questionId}")
-    public ResponseEntity<AnswerResponseDto> getAnswer(@PathVariable Long questionId) {
-        return null;
+    //답변 조회
+    @GetMapping("/{answerId}")
+    public ResponseEntity<AnswerResponseDto> getAnswer(@PathVariable Long answerId) {
+        Answer answer = answerService.getAnswer(answerId);
+        AnswerResponseDto responseDto = AnswerResponseDto.fromEntity(answer);
+        return ResponseEntity.ok(responseDto);
     }
 
-    //TODO : 답변 업데이트
-    @PutMapping("/{questionId}")
-    public ResponseEntity<AnswerResponseDto> updateAnswer(@PathVariable Long questionId) {
-        return null;
+    //답변 업데이트
+    @PutMapping("/{answerId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
+    public ResponseEntity<AnswerResponseDto> updateAnswer(@PathVariable Long answerId, @RequestBody AnswerUpdateRequestDto requestDto) {
+        Answer answer = answerService.updateAnswer(answerId,requestDto);
+        AnswerResponseDto responseDto = AnswerResponseDto.fromEntity(answer);
+        return ResponseEntity.ok(responseDto);
     }
     
-    //TODO : 답변 제거
-    @DeleteMapping("/{questionId}")
-    public ResponseEntity<AnswerResponseDto> deleteAnswer(@PathVariable Long questionId) {
-        return null;
+    //답변 제거
+    @DeleteMapping("/{answerId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
+    public ResponseEntity<Void> deleteAnswer(@PathVariable Long answerId, @RequestBody AnswerDeleteRequestDto requestDto) {
+        answerService.deleteAnswer(answerId);
+        return ResponseEntity.noContent().build();
     }
 }

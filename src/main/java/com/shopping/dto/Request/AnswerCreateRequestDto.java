@@ -18,7 +18,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AnswerCreateRequestDto {
-    private String title;
     private String content;
     private Long memberId;
 
