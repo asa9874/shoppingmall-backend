@@ -44,6 +44,7 @@ public class ProductService {
     private final ReviewRepository reviewRepository;
 
     // 조회
+    //TODO : 서비스 전체적 리펙토링 필요
     public List<ProductResponseDTO> getProductItems(int count) {
         List<Product> productList = productRepository.findAll();
         if (productList.isEmpty()) {

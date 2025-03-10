@@ -1,5 +1,7 @@
 package com.shopping.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,7 +31,7 @@ public class AnswerController {
     
     private final AnswerService answerService;
 
-    //TODO : 답변생성
+    //답변생성
     @PostMapping("/{questionId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
     public ResponseEntity<AnswerResponseDto> createAnswer(@PathVariable Long questionId, @RequestBody AnswerCreateRequestDto requestDto) {
@@ -40,25 +42,25 @@ public class AnswerController {
 
     //TODO : 전체 답변 조회
     @GetMapping
-    public ResponseEntity<?> getAnswers() {
+    public ResponseEntity<List<AnswerResponseDto>> getAnswers() {
         return null;
     }
 
     //TODO : 답변 조회
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getAnswer() {
+    @GetMapping("/{questionId}")
+    public ResponseEntity<AnswerResponseDto> getAnswer(@PathVariable Long questionId) {
         return null;
     }
 
     //TODO : 답변 업데이트
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateAnswer() {
+    @PutMapping("/{questionId}")
+    public ResponseEntity<AnswerResponseDto> updateAnswer(@PathVariable Long questionId) {
         return null;
     }
     
     //TODO : 답변 제거
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteAnswer() {
+    @DeleteMapping("/{questionId}")
+    public ResponseEntity<AnswerResponseDto> deleteAnswer(@PathVariable Long questionId) {
         return null;
     }
 }

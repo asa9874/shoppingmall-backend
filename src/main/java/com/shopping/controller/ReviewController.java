@@ -34,7 +34,6 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    // TODO: Review CRUD
     @GetMapping("/")
     public ResponseEntity<List<ReviewResponseDto>> getReviews() {
         List<Review> reviews = reviewService.getReviews();

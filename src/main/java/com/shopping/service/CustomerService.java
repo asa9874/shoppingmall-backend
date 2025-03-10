@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.shopping.model.CartItem;
 import com.shopping.model.Customer;
@@ -16,7 +17,6 @@ import com.shopping.repository.CustomerRepository;
 import com.shopping.repository.OrderItemRepository;
 import com.shopping.repository.ProductRepository;
 
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -64,7 +64,7 @@ public class CustomerService {
                 .quantity(quantity)
                 .orderDate(LocalDateTime.now())
                 .build();
-        customer.getOrderedItems().add(orderItem);
+        customer.getOrderedItems().add(orderItem); //TODO: 제거후 확인
         customerRepository.save(customer);
         return orderItem;
     }
@@ -100,7 +100,7 @@ public class CustomerService {
                 .quantity(quantity)
                 .build();
         cartItemRepository.save(cartItem);
-        customer.getCartItems().add(cartItem);
+        customer.getCartItems().add(cartItem);//TODO: 제거후 확인
         customerRepository.save(customer);
         return cartItem;
     }

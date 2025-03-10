@@ -6,10 +6,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shopping.service.TestService;
+
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/test")
+@RequiredArgsConstructor
 public class TestController {
-
+    private final TestService testService;
    
     @GetMapping("/public")
     public String publicEndpoint() {
@@ -35,5 +40,10 @@ public class TestController {
     @GetMapping("/customer")
     public String customertest() {
         return "접근성공";
+    }
+
+    @GetMapping("/redistest")
+    public String redistest() {
+        return testService.testRedisConnection();
     }
 }
