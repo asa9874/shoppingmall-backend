@@ -34,6 +34,9 @@ public class Question {
 
     private LocalDateTime createdDate;
 
+    @Builder.Default
+    private LocalDateTime upDateTime= null;
+    
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;

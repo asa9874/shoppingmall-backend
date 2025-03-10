@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.dto.Request.QuestionCreateRequestDto;
+import com.shopping.dto.Request.QuestionUpdateRequestDto;
 import com.shopping.dto.Response.QuestionResponseDto;
 import com.shopping.model.Question;
 import com.shopping.service.QuestionService;
@@ -59,20 +60,23 @@ public class QuestionController {
         return ResponseEntity.ok(responseDto);
     }
 
-    //TODO : 질문 업데이트
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateQuestion() {
-        return null;
+    //질문 업데이트
+    @PutMapping("/{questionId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
+    public ResponseEntity<QuestionResponseDto> updateQuestion(@RequestBody QuestionUpdateRequestDto requestDto) {
+        Question question = questionService.updateQuestion(requestDto);
+        QuestionResponseDto responseDto = QuestionResponseDto.fromEntity(question);
+        return ResponseEntity.ok(responseDto);
     }
 
     //TODO : 질문 제거
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{questionId}")
     public ResponseEntity<?> deleteQuestion() {
         return null;
     }
 
     //TODO : 질문에 답변조회
-    @GetMapping("/{id}/answer")
+    @GetMapping("/{questionId}/answer")
     public ResponseEntity<?> getAnswers() {
         return null;
     }

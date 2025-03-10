@@ -1,10 +1,12 @@
 package com.shopping.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.shopping.dto.Request.QuestionCreateRequestDto;
+import com.shopping.dto.Request.QuestionUpdateRequestDto;
 import com.shopping.model.Member;
 import com.shopping.model.Question;
 import com.shopping.repository.AnswerRepository;
@@ -39,6 +41,15 @@ public class QuestionService {
         Question question = questionRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 질문이 존재하지 않습니다."));
         return question;
+    }
+
+    public Question updateQuestion(QuestionUpdateRequestDto requestDto){
+        Question question = questionRepository.findById(requestDto.getQuestionId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 질문이 존재하지 않습니다."));
+        question.setContent(requestDto.getContent());
+        question.setTitle(requestDto.getTitle());
+        question.setUpDateTime(LocalDateTime.now());
+        return questionRepository.save(question);
     }
 
 }
