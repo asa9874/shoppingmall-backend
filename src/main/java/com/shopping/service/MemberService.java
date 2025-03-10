@@ -2,6 +2,7 @@ package com.shopping.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.shopping.dto.Request.MemberRegisterRequestDto;
 import com.shopping.dto.Request.MemberUpdateRequestDto;
@@ -12,9 +13,6 @@ import com.shopping.repository.CustomerRepository;
 import com.shopping.repository.MemberRepository;
 import com.shopping.repository.SellerRepository;
 import com.shopping.util.SecurityUtil;
-
-
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 

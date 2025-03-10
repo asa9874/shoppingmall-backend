@@ -1,4 +1,7 @@
 package com.shopping.model;
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,9 +46,11 @@ public class Member {
     }
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private Question question;
+    @Builder.Default
+    private List<Question> questions = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private Answer answer;
+    @Builder.Default
+    private List<Answer> answers = new ArrayList<>();
 
 }
