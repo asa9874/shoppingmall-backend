@@ -52,5 +52,10 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Answer> answers = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<Notification> notifications = new ArrayList<>();
+
 
 }
