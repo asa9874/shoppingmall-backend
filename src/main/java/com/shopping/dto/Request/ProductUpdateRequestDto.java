@@ -25,8 +25,6 @@ public class ProductUpdateRequestDto {
 
     private Integer stock;
     
-    private Long sellerId;
-
     private Product.Category category;
 
     public Product toEntity(Seller seller) {

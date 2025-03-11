@@ -17,5 +17,11 @@ public class ProductUpdateUtil {
         if (requestDto.getCategory() != null) {
             product.setCategory(requestDto.getCategory());
         }
+        if (requestDto.getPrice() != null) {
+            product.setPrice(requestDto.getPrice());
+        }
+        if (requestDto.getStock() != null) {
+            product.setStock(requestDto.getStock());
+        }
     }
 }

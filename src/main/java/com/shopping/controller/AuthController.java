@@ -43,7 +43,7 @@ public class AuthController {
         return authService.resetPassword(requestDto.getCurrentPassword(), requestDto.getNewPassword());
     }
 
-    //TODO: 로그아웃
+    //로그아웃
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestHeader("Authorization") String token) {
         authService.logout(token);

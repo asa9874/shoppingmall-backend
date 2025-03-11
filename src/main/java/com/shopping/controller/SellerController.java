@@ -53,8 +53,7 @@ public class SellerController {
     @PostMapping("/{memberId}/product/create")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<ProductResponseDTO> createProduct(@Valid @PathVariable Long memberId ,@RequestBody ProductCreateRequestDTO productCreateRequestDTO) {
-        Product product = productService.createProduct(memberId,productCreateRequestDTO);
-        ProductResponseDTO responseDTO = ProductResponseDTO.fromEntity(product);
+        ProductResponseDTO responseDTO = productService.createProduct(memberId,productCreateRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO); // 201 CREATED
     }
     
@@ -62,8 +61,7 @@ public class SellerController {
     @PutMapping("/{memberId}/product/{productId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long productId,@PathVariable Long memberId, @RequestBody ProductUpdateRequestDto productResponseDTO) {
-        Product product = productService.updateProduct(productId,productResponseDTO);
-        ProductResponseDTO responseDTO = ProductResponseDTO.fromEntity(product);
+        ProductResponseDTO responseDTO = productService.updateProduct(productId,productResponseDTO);
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 

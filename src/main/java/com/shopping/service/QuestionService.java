@@ -11,7 +11,6 @@ import com.shopping.dto.Request.QuestionUpdateRequestDto;
 import com.shopping.model.Answer;
 import com.shopping.model.Member;
 import com.shopping.model.Question;
-import com.shopping.repository.AnswerRepository;
 import com.shopping.repository.MemberRepository;
 import com.shopping.repository.QuestionRepository;
 
@@ -26,7 +25,6 @@ public class QuestionService {
 
     private final MemberRepository memberRepository;
     private final QuestionRepository questionRepository;
-    private final AnswerRepository answerRepository;
 
     public Question createQuestion(QuestionCreateRequestDto requestDto) {
         Member member = memberRepository.findById(requestDto.getMemberId())

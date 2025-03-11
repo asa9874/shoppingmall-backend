@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,27 +47,16 @@ public class ProductService {
     private final ReviewRepository reviewRepository;
 
     // 조회
-    //TODO : 서비스 전체적 리펙토링 필요
+    // TODO : 서비스 전체적 리펙토링 필요
     public List<ProductResponseDTO> getProductItems(int count) {
         List<Product> productList = productRepository.findAll();
         if (productList.isEmpty()) {
             return Collections.emptyList();
         }
-
-        List<ProductResponseDTO> productDTOList = productList.stream()
+        return productList.stream()
                 .limit(count)
-                .map(product -> ProductResponseDTO.builder()
-                        .id(product.getId())
-                        .name(product.getName())
-                        .description(product.getDescription())
-                        .image(product.getImage())
-                        .price(product.getPrice())
-                        .stock(product.getStock())
-                        .sellerName(product.getSeller().getMember().getNickname())
-                        .category(product.getCategory())
-                        .build())
+                .map(ProductResponseDTO::fromEntity)
                 .collect(Collectors.toList());
-        return productDTOList;
     }
 
     public Page<ReviewResponseDto> getProductReviews(Long productId, int page, int count) {
@@ -89,6 +81,8 @@ public class ProductService {
         return products.map(ProductResponseDTO::fromEntity);
     }
 
+    // 조회
+    @Cacheable(value = "product", key = "#productId")
     public ProductResponseDTO getProductDetail(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> {
@@ -100,7 +94,7 @@ public class ProductService {
     }
 
     // 생성
-    public Product createProduct(Long memberId, ProductCreateRequestDTO requestDTO) {
+    public ProductResponseDTO createProduct(Long memberId, ProductCreateRequestDTO requestDTO) {
         Seller seller = sellerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> {
                     String errorMessage = String.format("(MemberId: %d)", memberId);
@@ -109,21 +103,33 @@ public class ProductService {
         ProductValidationUtil.validatePriceAndStock(requestDTO.getPrice(), requestDTO.getStock());
         Product product = requestDTO.toEntity(seller);
         seller.getProducts().add(product);
-        return productRepository.save(product);
+        productRepository.save(product);
+        return ProductResponseDTO.fromEntity(product);
     }
 
     // 수정
-    public Product updateProduct(Long productId, ProductUpdateRequestDto requestDto) {
-        Product product = authService.validateProductOwnership(productId);
+    @CachePut(value = "product", key = "#productId")
+    public ProductResponseDTO updateProduct(Long productId, ProductUpdateRequestDto requestDto) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> {
+                    return new ProductNotFoundException(String.format("(ProductId: %d)", productId));
+                });
+        // Product product = authService.validateProductOwnership(productId);
         ProductValidationUtil.validatePriceAndStock(requestDto.getPrice(), requestDto.getStock());
         ProductUpdateUtil.updateProductFields(product, requestDto);
-        return productRepository.save(product);
+        productRepository.save(product);
+        return ProductResponseDTO.fromEntity(product);
     }
 
     // 삭제
     @Transactional
+    @CacheEvict(value = "product", key = "#productId")
     public void deleteProduct(Long productId) {
-        Product product = authService.validateProductOwnership(productId);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> {
+                    return new ProductNotFoundException(String.format("(ProductId: %d)", productId));
+                });
+        // Product product = authService.validateProductOwnership(productId);
         cartItemRepository.deleteByProductId(productId);
         orderItemRepository.deleteByProductId(productId);
         productRepository.delete(product);

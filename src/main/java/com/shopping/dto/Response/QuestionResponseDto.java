@@ -20,6 +20,7 @@ public class QuestionResponseDto {
     private Long questionId;
     private String createdDate;
     private String memberName;
+    private String upDateTime;
 
     public static QuestionResponseDto fromEntity(Question question) {
         return QuestionResponseDto.builder()
@@ -29,6 +30,7 @@ public class QuestionResponseDto {
                 .questionId(question.getId())
                 .createdDate(question.getCreatedDate().toString())
                 .memberName(question.getMember().getNickname())
+                .upDateTime(question.getUpDateTime() != null ? question.getUpDateTime().toString() : "")
                 .build();
     }
 }
