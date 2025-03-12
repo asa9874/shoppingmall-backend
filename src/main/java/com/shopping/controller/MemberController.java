@@ -1,6 +1,7 @@
 package com.shopping.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shopping.dto.Request.MemberRegisterRequestDto;
 import com.shopping.dto.Request.MemberUpdateRequestDto;
 import com.shopping.dto.Response.MemberInfoResponseDto;
+import com.shopping.dto.Response.NotificationResponseDto;
 import com.shopping.model.Member;
 import com.shopping.service.MemberService;
 
@@ -94,5 +96,19 @@ public class MemberController {
     public ResponseEntity<Void> updateMember(@PathVariable Long memberId, @RequestBody MemberUpdateRequestDto requestDto) {
         memberService.updateMember(memberId,requestDto);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{memberId}/notification")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
+    public ResponseEntity<List<NotificationResponseDto>> getNotification(@PathVariable Long memberId) {
+        List<NotificationResponseDto> notification = memberService.getNotification(memberId);
+        return ResponseEntity.ok(notification);
+    }
+
+    @GetMapping("/{memberId}/notification/{notificationId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
+    public ResponseEntity<NotificationResponseDto> getNotificationDetail(@PathVariable Long memberId, @PathVariable Long notificationId) {
+        NotificationResponseDto notification = memberService.getNotificationDetail(notificationId);
+        return ResponseEntity.ok(notification);
     }
 }

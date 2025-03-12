@@ -20,14 +20,13 @@ public class NotificationCreateRequestDto {
     private Long receiverId;
     private Notification.NotificationType type;
     private String message;
-    private boolean isRead;
 
     public Notification toEntity(Member receiver) {
         return Notification.builder()
                 .receiver(receiver)
                 .type(type)
                 .message(message)
-                .isRead(isRead)
+                .isRead(false)
                 .createdAt(LocalDateTime.now())
                 .build();
     }

@@ -14,7 +14,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NotificationUpdateRequestDto {
-    private Long receiverId;
     private Notification.NotificationType type;
     private String message;
     private boolean isRead;

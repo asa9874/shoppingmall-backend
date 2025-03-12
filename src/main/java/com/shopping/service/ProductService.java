@@ -41,7 +41,6 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final SellerRepository sellerRepository;
-    private final AuthService authService;
     private final CartItemRepository cartItemRepository;
     private final OrderItemRepository orderItemRepository;
     private final ReviewRepository reviewRepository;

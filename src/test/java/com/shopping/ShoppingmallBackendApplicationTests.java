@@ -1,4 +1,4 @@
-package com.shopping.shoppingmall_backend;
+package com.shopping;
 
 import static org.junit.jupiter.api.Assertions.*;
 

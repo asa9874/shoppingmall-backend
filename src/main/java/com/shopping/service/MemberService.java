@@ -1,16 +1,22 @@
 package com.shopping.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.shopping.dto.Request.MemberRegisterRequestDto;
 import com.shopping.dto.Request.MemberUpdateRequestDto;
+import com.shopping.dto.Response.NotificationResponseDto;
 import com.shopping.model.Customer;
 import com.shopping.model.Member;
+import com.shopping.model.Notification;
 import com.shopping.model.Seller;
 import com.shopping.repository.CustomerRepository;
 import com.shopping.repository.MemberRepository;
+import com.shopping.repository.NotificationRepository;
 import com.shopping.repository.SellerRepository;
 import com.shopping.util.SecurityUtil;
 
@@ -23,6 +29,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final SellerRepository sellerRepository;
     private final CustomerRepository customerRepository;
+    private final NotificationRepository notificationRepository;
 
     private final PasswordEncoder passwordEncoder;
     private final CustomerService customerService;
@@ -78,7 +85,7 @@ public class MemberService {
     public void deleteMember(Long id) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
-        
+
         if (Member.Role.CUSTOMER.equals(member.getRole())) {
             Customer customer = customerRepository.findByMemberId(id)
                     .orElseThrow(() -> new RuntimeException("Customer 정보를 찾을 수 없습니다."));
@@ -98,8 +105,8 @@ public class MemberService {
                 () -> System.out.println("Member Delte Sucesss"));
     }
 
-    //유저업데이트
-    public Member updateMember(Long id ,MemberUpdateRequestDto requestDto){
+    // 유저업데이트
+    public Member updateMember(Long id, MemberUpdateRequestDto requestDto) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
 
@@ -109,4 +116,23 @@ public class MemberService {
         member.setNickname(requestDto.getNickname());
         return memberRepository.save(member);
     }
+
+    public List<NotificationResponseDto> getNotification(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
+        return member.getNotifications().stream()
+                .map(NotificationResponseDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    public NotificationResponseDto getNotificationDetail(Long notificationId) {
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new RuntimeException("알림 정보를 찾을 수 없습니다."));
+
+        notification.setRead(true);
+        notificationRepository.save(notification);
+        return NotificationResponseDto.fromEntity(notification);
+            
+    }
+        
 }
