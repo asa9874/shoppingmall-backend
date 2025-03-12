@@ -37,6 +37,7 @@ public class Notification {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Builder.Default
     private NotificationType type = NotificationType.SYSTEM_ALERT;
 
     @Column(nullable = false)
