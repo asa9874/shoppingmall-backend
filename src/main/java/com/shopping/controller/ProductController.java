@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shopping.annotation.RateLimit;
 import com.shopping.dto.Response.ProductResponseDTO;
 import com.shopping.dto.Response.ReviewResponseDto;
 import com.shopping.service.ProductService;
@@ -35,6 +36,7 @@ public class ProductController {
 
     //상품 상세조회
     @GetMapping("/{productId}")
+    @RateLimit(value = 5, timeWindow = 1)
     public ResponseEntity<ProductResponseDTO> getProductItemDetail(@PathVariable Long productId){
         ProductResponseDTO responseDTO = productService.getProductDetail(productId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
