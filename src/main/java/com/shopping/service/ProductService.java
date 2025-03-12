@@ -2,6 +2,8 @@ package com.shopping.service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.cache.annotation.CacheEvict;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +47,8 @@ public class ProductService {
     private final CartItemRepository cartItemRepository;
     private final OrderItemRepository orderItemRepository;
     private final ReviewRepository reviewRepository;
+
+    private final RedisTemplate<String, Object> redisTemplate;
 
     // 조회
     // TODO : 서비스 전체적 리펙토링 필요
@@ -134,4 +139,21 @@ public class ProductService {
         productRepository.delete(product);
     }
 
+    // 인기 상품 상위 10개 조회
+    public List<ProductResponseDTO> getPopularProducts() {
+        String key = "product:views";
+        Set<Object> topProducts = redisTemplate.opsForZSet().reverseRange(key, 0, 9);
+
+        List<Long> productIds = topProducts.stream()
+                .map(productId -> Long.parseLong((String) productId))
+                .collect(Collectors.toList());
+        List<Product> products = productRepository.findByIdIn(productIds);
+
+        Map<Long, Product> productMap = products.stream()
+                .collect(Collectors.toMap(Product::getId, product -> product));
+        List<ProductResponseDTO> response = productIds.stream()
+                .map(productId -> ProductResponseDTO.fromEntity(productMap.get(productId)))
+                .collect(Collectors.toList());
+        return response;
+    }
 }

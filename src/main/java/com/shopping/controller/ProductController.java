@@ -14,6 +14,7 @@ import com.shopping.annotation.RateLimit;
 import com.shopping.dto.Response.ProductResponseDTO;
 import com.shopping.dto.Response.ReviewResponseDto;
 import com.shopping.service.ProductService;
+import com.shopping.service.RateLimiterService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductController {
     
     private final ProductService productService;
+    private final RateLimiterService rateLimiterService;
 
     @GetMapping("/")
     public List<ProductResponseDTO> getProductItems(@RequestParam(defaultValue = "10") int count) {
@@ -39,6 +41,7 @@ public class ProductController {
     @RateLimit(value = 5, timeWindow = 1)
     public ResponseEntity<ProductResponseDTO> getProductItemDetail(@PathVariable Long productId){
         ProductResponseDTO responseDTO = productService.getProductDetail(productId);
+        rateLimiterService.incrementProductView(productId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
@@ -60,5 +63,12 @@ public class ProductController {
     ) {
         Page<ProductResponseDTO> result = productService.searchProducts(keyword, category, minPrice, maxPrice, page, count);
         return ResponseEntity.ok(result);
+    }
+
+
+    @GetMapping("/top")
+    public ResponseEntity<List<ProductResponseDTO>> getPopularProducts() {
+        List<ProductResponseDTO> topProducts = productService.getPopularProducts();  
+        return ResponseEntity.ok(topProducts);
     }
 }

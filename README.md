@@ -9,7 +9,7 @@ SpringBoot를 통해 BackEnd 서비스를 제작하는 것을 목표
 
 - **언어**: Java
 - **프레임워크**: Spring Boot
-- **데이터베이스**: H2
+- **데이터베이스**: H2, Redis
 - **ORM**: JPA
 - **API 문서화**: Swagger
 
