@@ -27,6 +27,7 @@ import com.shopping.dto.Response.NotificationResponseDto;
 import com.shopping.model.Member;
 import com.shopping.service.MemberService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    @Operation(summary = "회원가입", description = "사용자를 회원가입합니다.")
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody @Valid MemberRegisterRequestDto memberRegisterDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -55,6 +57,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 성공");
     }
 
+    @Operation(summary = "내 정보 조회", description = "현재 로그인한 사용자의 정보를 조회합니다.")
     @GetMapping("/me")
     public ResponseEntity<Map<String, String>> getMe(@AuthenticationPrincipal UserDetails userDetails) {
         String nickname = memberService.getNicknameByMemberId(userDetails.getUsername()); 
@@ -63,7 +66,7 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
-
+    @Operation(summary = "내 정보 상세 조회", description = "현재 로그인한 사용자의 상세 정보를 조회합니다.")
     @GetMapping("/my-info")
     public ResponseEntity<MemberInfoResponseDto> getMyInfo(){
         Member member = memberService.getMyInfo();
@@ -71,33 +74,32 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
-
+    @Operation(summary = "회원 정보 조회", description = "특정 회원의 정보를 조회합니다.")
     @GetMapping("/{memberId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
-    public ResponseEntity<MemberInfoResponseDto> getMemberInfo(@PathVariable Long id){
-        Member member = memberService.getMemberInfo(id);
+    public ResponseEntity<MemberInfoResponseDto> getMemberInfo(@PathVariable Long memberId){
+        Member member = memberService.getMemberInfo(memberId);
         MemberInfoResponseDto responseDto = MemberInfoResponseDto.fromEntity(member);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
-
-    //맴버삭제
+    @Operation(summary = "회원 삭제", description = "특정 회원을 삭제합니다.")
     @DeleteMapping("/{memberId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
-    public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
-        memberService.deleteMember(id);
+    public ResponseEntity<Void> deleteMember(@PathVariable Long memberId) {
+        memberService.deleteMember(memberId);
         return ResponseEntity.noContent().build();
     }
-    
 
-    //맴버 정보 수정
+    @Operation(summary = "회원 정보 수정", description = "특정 회원의 정보를 수정합니다.")
     @PutMapping("/{memberId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<Void> updateMember(@PathVariable Long memberId, @RequestBody MemberUpdateRequestDto requestDto) {
-        memberService.updateMember(memberId,requestDto);
+        memberService.updateMember(memberId, requestDto);
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "알림 조회", description = "특정 회원의 알림을 조회합니다.")
     @GetMapping("/{memberId}/notification")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<List<NotificationResponseDto>> getNotification(@PathVariable Long memberId) {
@@ -105,6 +107,7 @@ public class MemberController {
         return ResponseEntity.ok(notification);
     }
 
+    @Operation(summary = "알림 상세 조회", description = "특정 회원의 알림 상세 정보를 조회합니다.")
     @GetMapping("/{memberId}/notification/{notificationId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<NotificationResponseDto> getNotificationDetail(@PathVariable Long memberId, @PathVariable Long notificationId) {

@@ -1,4 +1,5 @@
 package com.shopping.controller;
+
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -14,8 +15,8 @@ import com.shopping.annotation.RateLimit;
 import com.shopping.dto.Response.ProductResponseDTO;
 import com.shopping.dto.Response.ReviewResponseDto;
 import com.shopping.service.ProductService;
-import com.shopping.service.RateLimiterService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,30 +29,30 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductController {
     
     private final ProductService productService;
-    private final RateLimiterService rateLimiterService;
 
+    @Operation(summary = "상품 목록 조회", description = "상품 목록을 조회합니다.")
     @GetMapping("/")
     public List<ProductResponseDTO> getProductItems(@RequestParam(defaultValue = "10") int count) {
         return productService.getProductItems(count);
     }
 
-
-    //상품 상세조회
+    @Operation(summary = "상품 상세 조회", description = "특정 상품의 상세 정보를 조회합니다.")
     @GetMapping("/{productId}")
     @RateLimit(value = 5, timeWindow = 1)
     public ResponseEntity<ProductResponseDTO> getProductItemDetail(@PathVariable Long productId){
         ProductResponseDTO responseDTO = productService.getProductDetail(productId);
-        rateLimiterService.incrementProductView(productId);
+        productService.incrementProductView(productId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
+    @Operation(summary = "상품 리뷰 조회", description = "특정 상품의 리뷰를 조회합니다.")
     @GetMapping("/{productId}/reviews")
     public ResponseEntity<Page<ReviewResponseDto>> getProductReviews(@PathVariable Long productId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int count) {
         Page<ReviewResponseDto> result = productService.getProductReviews(productId, page, count);
         return ResponseEntity.ok(result);
     }
 
-    //상품 목록 검색
+    @Operation(summary = "상품 검색", description = "상품을 검색합니다.")
     @GetMapping("/search")
     public ResponseEntity<Page<ProductResponseDTO>> searchProducts(
         @RequestParam(required = false) String keyword, 
@@ -65,7 +66,7 @@ public class ProductController {
         return ResponseEntity.ok(result);
     }
 
-
+    @Operation(summary = "인기 상품 조회", description = "인기 상품 목록을 조회합니다.")
     @GetMapping("/top")
     public ResponseEntity<List<ProductResponseDTO>> getPopularProducts() {
         List<ProductResponseDTO> topProducts = productService.getPopularProducts();  

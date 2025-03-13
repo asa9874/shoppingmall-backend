@@ -27,15 +27,5 @@ public class RateLimiterService { //TODO: 이거 클래스명 변경해야할듯
         return currentCount <= requestLimit;
     }
 
-    // 조회수 증가
-    public void incrementProductView(Long productId) {
-        String key = "product:views";
-        String product = productId.toString(); 
-
-        // 조회수 증가
-        redisTemplate.opsForZSet().incrementScore(key, product, 1);
-        
-        //1시간(3600초) 동안만 유지
-        redisTemplate.expire(key, 1, TimeUnit.HOURS);
-    }
+    
 }

@@ -23,6 +23,7 @@ import com.shopping.model.Product;
 import com.shopping.service.ProductService;
 import com.shopping.service.SellerService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,44 +39,37 @@ public class SellerController {
     private final SellerService sellerService;
     private final ProductService productService;
 
-    //올린 상품 리스트 조회
+    @Operation(summary = "올린 상품 리스트 조회", description = "판매자가 올린 상품 리스트를 조회합니다.")
     @GetMapping("/{memberId}/products")
     public ResponseEntity<List<ProductResponseDTO>> getProducts(@PathVariable Long memberId, @RequestParam(required = false) Integer count) {
-        List<Product> products = sellerService.getProducts(memberId,count);
+        List<Product> products = sellerService.getProducts(memberId, count);
         List<ProductResponseDTO> responseDTOs = products.stream()
                 .map(ProductResponseDTO::fromEntity)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(responseDTOs);
     }
 
-
-    //판매자 상품추가
+    @Operation(summary = "판매자 상품 추가", description = "판매자가 새로운 상품을 추가합니다.")
     @PostMapping("/{memberId}/product/create")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
-    public ResponseEntity<ProductResponseDTO> createProduct(@Valid @PathVariable Long memberId ,@RequestBody ProductCreateRequestDTO productCreateRequestDTO) {
-        ProductResponseDTO responseDTO = productService.createProduct(memberId,productCreateRequestDTO);
+    public ResponseEntity<ProductResponseDTO> createProduct(@Valid @PathVariable Long memberId, @RequestBody ProductCreateRequestDTO productCreateRequestDTO) {
+        ProductResponseDTO responseDTO = productService.createProduct(memberId, productCreateRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO); // 201 CREATED
     }
-    
-    //판매자 상품수정
+
+    @Operation(summary = "판매자 상품 수정", description = "판매자가 상품을 수정합니다.")
     @PutMapping("/{memberId}/product/{productId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
-    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long productId,@PathVariable Long memberId, @RequestBody ProductUpdateRequestDto productResponseDTO) {
-        ProductResponseDTO responseDTO = productService.updateProduct(productId,productResponseDTO);
+    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long productId, @PathVariable Long memberId, @RequestBody ProductUpdateRequestDto productResponseDTO) {
+        ProductResponseDTO responseDTO = productService.updateProduct(productId, productResponseDTO);
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
-    //판매자 상품제거
+    @Operation(summary = "판매자 상품 제거", description = "판매자가 상품을 제거합니다.")
     @DeleteMapping("/{memberId}/product/{productId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long memberId,@PathVariable Long productId) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long memberId, @PathVariable Long productId) {
         productService.deleteProduct(productId);
         return ResponseEntity.noContent().build();
     }
-
-
-
-
-
-
 }

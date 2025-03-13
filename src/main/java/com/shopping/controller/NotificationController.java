@@ -18,6 +18,7 @@ import com.shopping.dto.Request.NotificationUpdateRequestDto;
 import com.shopping.dto.Response.NotificationResponseDto;
 import com.shopping.service.NotificationService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -31,21 +32,21 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
-    // 조회
+    @Operation(summary = "알림 조회", description = "모든 알림을 조회합니다.")
     @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<NotificationResponseDto>> getNotifications() {
         return ResponseEntity.ok(notificationService.getNotifications());
     }
 
-    // 상세조회
+    @Operation(summary = "알림 상세 조회", description = "특정 알림을 조회합니다.")
     @GetMapping("/{notificationId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<NotificationResponseDto> getNotification(@PathVariable Long notificationId) {
         return ResponseEntity.ok(notificationService.getNotification(notificationId));
     }
 
-    // 생성
+    @Operation(summary = "알림 생성", description = "새로운 알림을 생성합니다.")
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<NotificationResponseDto> createNotification(
@@ -53,7 +54,7 @@ public class NotificationController {
         return ResponseEntity.ok(notificationService.createNotification(requestDto));
     }
 
-    // 업데이트
+    @Operation(summary = "알림 업데이트", description = "특정 알림을 업데이트합니다.")
     @PutMapping("/{notificationId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<NotificationResponseDto> updateNotification(@PathVariable Long notificationId,
@@ -61,7 +62,7 @@ public class NotificationController {
         return ResponseEntity.ok(notificationService.updateNotification(notificationId, requestDto));
     }
 
-    // 삭제
+    @Operation(summary = "알림 삭제", description = "특정 알림을 삭제합니다.")
     @DeleteMapping("/{notificationId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteNotification(@PathVariable Long notificationId) {

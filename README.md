@@ -115,6 +115,16 @@ http://localhost:8080/swagger-ui.html
 | `/review/{reviewId}` | PUT | 리뷰 수정 | ✅ | CUSTOMER (작성자) |
 | `/review/{reviewId}` | DELETE | 리뷰 삭제 | ✅ | CUSTOMER (작성자) |
 
+
+### 📲 **알림(Notification) API**
+| 엔드포인트 | 메서드 | 설명 | 인증 필요 여부 | ROLE |
+|------------|--------|------|--------------|------|
+| `/notification/` | GET | 알림 목록 조회 | ✅ | - |
+| `/notification/{notificationId}` | GET | 특정 알림 조회 | ✅ | - |
+| `/notification/{notificationId}` | PUT | 알림 업데이트 | ✅ | - |
+| `/notification/{notificationId}` | DELETE | 알림 삭제 | ✅ | - |
+| `/notification` | POST | 알림 생성 | ✅ | - |
+
 ---
 
 ---

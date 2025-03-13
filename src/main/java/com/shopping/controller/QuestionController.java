@@ -23,6 +23,7 @@ import com.shopping.model.Answer;
 import com.shopping.model.Question;
 import com.shopping.service.QuestionService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,16 +37,16 @@ public class QuestionController {
     
     private final QuestionService questionService;
 
-    //질문생성
+    @Operation(summary = "질문 생성", description = "새로운 질문을 생성합니다.")
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
     public ResponseEntity<QuestionResponseDto> createQuestion(@RequestBody QuestionCreateRequestDto requestDto) {
-        Question question =questionService.createQuestion(requestDto);
+        Question question = questionService.createQuestion(requestDto);
         QuestionResponseDto responseDto = QuestionResponseDto.fromEntity(question);
         return ResponseEntity.ok(responseDto);
     }
 
-    //질문들 조회
+    @Operation(summary = "질문들 조회", description = "모든 질문을 조회합니다.")
     @GetMapping
     public ResponseEntity<List<QuestionResponseDto>> getQuestions() {
         List<Question> questions = questionService.getQuestions();
@@ -55,7 +56,7 @@ public class QuestionController {
         return ResponseEntity.ok(responseDtos);
     }
 
-    //질문 조회
+    @Operation(summary = "질문 조회", description = "특정 질문을 조회합니다.")
     @GetMapping("/{questionId}")
     public ResponseEntity<QuestionResponseDto> getQuestion(@PathVariable Long questionId) {
         Question question = questionService.getQuestion(questionId);
@@ -63,7 +64,7 @@ public class QuestionController {
         return ResponseEntity.ok(responseDto);
     }
 
-    //질문 업데이트
+    @Operation(summary = "질문 업데이트", description = "특정 질문을 업데이트합니다.")
     @PutMapping("/{questionId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
     public ResponseEntity<QuestionResponseDto> updateQuestion(@RequestBody QuestionUpdateRequestDto requestDto) {
@@ -72,22 +73,21 @@ public class QuestionController {
         return ResponseEntity.ok(responseDto);
     }
 
-    //TODO : 질문 제거
+    @Operation(summary = "질문 제거", description = "특정 질문을 제거합니다.")
     @DeleteMapping("/{questionId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
-    public ResponseEntity<Void> deleteQuestion(@RequestBody QuestionDeleteRequestDto requestDto,@PathVariable Long questionId) {
-        questionService.deleteQuestion(questionId,requestDto);
+    public ResponseEntity<Void> deleteQuestion(@RequestBody QuestionDeleteRequestDto requestDto, @PathVariable Long questionId) {
+        questionService.deleteQuestion(questionId, requestDto);
         return ResponseEntity.noContent().build();
     }
 
-    //질문에 답변조회
+    @Operation(summary = "질문에 대한 답변 조회", description = "특정 질문에 대한 모든 답변을 조회합니다.")
     @GetMapping("/{questionId}/answer")
     public ResponseEntity<List<AnswerResponseDto>> getAnswers(@PathVariable Long questionId) {
-        List<Answer> answers =questionService.getAnswers(questionId);
+        List<Answer> answers = questionService.getAnswers(questionId);
         List<AnswerResponseDto> responseDto = answers.stream()
                 .map(AnswerResponseDto::fromEntity)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(responseDto);
     }
-    
 }

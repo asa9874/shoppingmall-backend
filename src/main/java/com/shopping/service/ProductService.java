@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.springframework.cache.annotation.CacheEvict;
@@ -155,5 +156,17 @@ public class ProductService {
                 .map(productId -> ProductResponseDTO.fromEntity(productMap.get(productId)))
                 .collect(Collectors.toList());
         return response;
+    }
+
+    // 조회수 증가
+    public void incrementProductView(Long productId) {
+        String key = "product:views";
+        String product = productId.toString(); 
+
+        // 조회수 증가
+        redisTemplate.opsForZSet().incrementScore(key, product, 1);
+        
+        //1시간(3600초) 동안만 유지
+        redisTemplate.expire(key, 1, TimeUnit.HOURS);
     }
 }

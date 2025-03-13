@@ -12,6 +12,7 @@ import com.shopping.dto.Request.AuthResetPasswordRequestDto;
 import com.shopping.dto.Response.AuthResponseDto;
 import com.shopping.service.AuthService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -22,28 +23,27 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
     private final AuthService authService;
 
-    //로그인 API
+    @Operation(summary = "로그인", description = "사용자가 로그인합니다.")
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDto> login(@RequestBody AuthRequestDto request) {
         AuthResponseDto response = authService.login(request);
         return ResponseEntity.ok(response);
     }
 
-    //토큰 시간 초기화
+    @Operation(summary = "토큰 갱신", description = "리프레시 토큰을 사용하여 액세스 토큰을 갱신합니다.")
     @PostMapping("/refresh-token")
     public ResponseEntity<AuthResponseDto> refreshToken(@RequestHeader("Authorization") String refreshToken) {
         AuthResponseDto response = authService.refreshAccessToken(refreshToken);
         return ResponseEntity.ok(response);
     }
 
-    //비밀번호 초기화, 
-    //TODO: 이메일 기능추가하기
+    @Operation(summary = "비밀번호 초기화", description = "사용자의 비밀번호를 초기화합니다.")
     @PostMapping("/reset-password")
     public ResponseEntity<Void> resetPassword(@RequestBody AuthResetPasswordRequestDto requestDto) {
         return authService.resetPassword(requestDto.getCurrentPassword(), requestDto.getNewPassword());
     }
 
-    //로그아웃
+    @Operation(summary = "로그아웃", description = "사용자가 로그아웃합니다.")
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestHeader("Authorization") String token) {
         authService.logout(token);

@@ -21,6 +21,7 @@ import com.shopping.dto.Response.ReviewResponseDto;
 import com.shopping.model.Review;
 import com.shopping.service.ReviewService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -34,6 +35,7 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
+    @Operation(summary = "리뷰 목록 조회", description = "모든 리뷰를 조회합니다.")
     @GetMapping("/")
     public ResponseEntity<List<ReviewResponseDto>> getReviews() {
         List<Review> reviews = reviewService.getReviews();
@@ -43,6 +45,7 @@ public class ReviewController {
         return ResponseEntity.ok(responseDto);
     }
 
+    @Operation(summary = "리뷰 조회", description = "특정 리뷰를 조회합니다.")
     @GetMapping("/{reviewId}")
     public ResponseEntity<ReviewResponseDto> getReview(@PathVariable Long reviewId) {
         Review review = reviewService.getReview(reviewId);
@@ -50,6 +53,7 @@ public class ReviewController {
         return ResponseEntity.ok(responseDto);
     }
 
+    @Operation(summary = "리뷰 생성", description = "새로운 리뷰를 생성합니다.")
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
     public ResponseEntity<ReviewResponseDto> createReviews(@RequestBody ReviewCreateRequestDto requestDto) {
@@ -58,6 +62,7 @@ public class ReviewController {
         return ResponseEntity.ok(responseDto);
     }
 
+    @Operation(summary = "리뷰 업데이트", description = "특정 리뷰를 업데이트합니다.")
     @PutMapping("/{reviewId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
     public ResponseEntity<ReviewResponseDto> updateReviews(@PathVariable Long reviewId,
@@ -67,6 +72,7 @@ public class ReviewController {
         return ResponseEntity.ok(responseDto);
     }
 
+    @Operation(summary = "리뷰 삭제", description = "특정 리뷰를 삭제합니다.")
     @DeleteMapping("/{reviewId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
     public ResponseEntity<Void> deleteReviews(@PathVariable Long reviewId,
@@ -74,5 +80,4 @@ public class ReviewController {
         reviewService.deleteReview(reviewId);
         return ResponseEntity.noContent().build();
     }
-
 }

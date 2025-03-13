@@ -21,6 +21,7 @@ import com.shopping.model.CartItem;
 import com.shopping.model.OrderItem;
 import com.shopping.service.CustomerService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomerController {
     private final CustomerService customerService;
 
-    //맴버의 구매한 상품 리스트 조회
+    @Operation(summary = "맴버의 구매한 상품 리스트 조회", description = "맴버의 구매한 상품 리스트를 조회합니다.")
     @GetMapping("/{memberId}/orders")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<List<OrderItemResponseDto>> getOrders(@PathVariable Long memberId) {
@@ -44,7 +45,7 @@ public class CustomerController {
         return ResponseEntity.ok(responseDto);
     }
 
-    // 상품 구입 조회
+    @Operation(summary = "상품 구입 조회", description = "특정 상품 구입을 조회합니다.")
     @GetMapping("/{memberId}/orders/{orderId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<OrderItemResponseDto> getOrder(@PathVariable Long memberId, @PathVariable Long orderId) {
@@ -53,14 +54,15 @@ public class CustomerController {
         return ResponseEntity.ok(responseDto);
     }
 
-    // 특정 상품구입
+    @Operation(summary = "특정 상품 구입", description = "특정 상품을 구입합니다.")
     @PostMapping("/{memberId}/orders/{productId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<OrderItemResponseDto> buyProduct(@PathVariable Long productId, @PathVariable Long memberId, @RequestBody OrderRequestDto orderRequestDto) {
-        OrderItem orderItem = customerService.buyProduct(memberId,productId,orderRequestDto.getQuantity());
-        return ResponseEntity.ok(OrderItemResponseDto.fromEntity(orderItem));}
+        OrderItem orderItem = customerService.buyProduct(memberId, productId, orderRequestDto.getQuantity());
+        return ResponseEntity.ok(OrderItemResponseDto.fromEntity(orderItem));
+    }
 
-    // 장바구니 상품전체 구입
+    @Operation(summary = "장바구니 상품 전체 구입", description = "장바구니에 있는 모든 상품을 구입합니다.")
     @PostMapping("/{memberId}/orders")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<List<OrderItemResponseDto>> buyCart(@PathVariable Long memberId) {
@@ -71,7 +73,7 @@ public class CustomerController {
         return ResponseEntity.ok(responseDto);
     }
 
-    // 장바구니 조회
+    @Operation(summary = "장바구니 조회", description = "장바구니에 있는 상품을 조회합니다.")
     @GetMapping("/{memberId}/cart")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<List<CartItemResponseDto>> getCart(@PathVariable Long memberId) {
@@ -82,7 +84,7 @@ public class CustomerController {
         return ResponseEntity.ok(responseDto);
     }
 
-    // 장바구니 추가
+    @Operation(summary = "장바구니 추가", description = "장바구니에 상품을 추가합니다.")
     @PostMapping("/{memberId}/cart/{productId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<CartItemResponseDto> addCart(@PathVariable Long productId, @RequestBody CartRequestDto cartRequestDto, @PathVariable Long memberId) {
@@ -90,7 +92,7 @@ public class CustomerController {
         return ResponseEntity.ok(CartItemResponseDto.fromEntity(cartItem));
     }
 
-    // 장바구니 상품제거
+    @Operation(summary = "장바구니 상품 제거", description = "장바구니에서 특정 상품을 제거합니다.")
     @DeleteMapping("/{memberId}/cart/{cartItemId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<Void> deleteCart(@PathVariable Long cartItemId, @PathVariable Long memberId) {
@@ -98,13 +100,11 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
-
-    // 장바구니 전체제거
+    @Operation(summary = "장바구니 전체 제거", description = "장바구니에 있는 모든 상품을 제거합니다.")
     @DeleteMapping("/{memberId}/cart/clear")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<Void> clearCart(@PathVariable Long memberId) {
         customerService.clearCart(memberId);
         return ResponseEntity.noContent().build();
     }
-
 }
