@@ -1,7 +1,6 @@
 package com.shopping.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,12 +16,11 @@ import com.shopping.dto.Request.CartRequestDto;
 import com.shopping.dto.Request.OrderRequestDto;
 import com.shopping.dto.Response.CartItemResponseDto;
 import com.shopping.dto.Response.OrderItemResponseDto;
-import com.shopping.model.CartItem;
-import com.shopping.model.OrderItem;
 import com.shopping.service.CustomerService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -81,7 +79,7 @@ public class CustomerController {
     @PostMapping("/{memberId}/cart/{productId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<CartItemResponseDto> addCart(@PathVariable Long productId,
-            @RequestBody CartRequestDto cartRequestDto, @PathVariable Long memberId) {
+            @Valid @RequestBody CartRequestDto cartRequestDto, @PathVariable Long memberId) {
         CartItemResponseDto responseDto = customerService.addCart(memberId, productId, cartRequestDto.getQuantity());
         return ResponseEntity.ok(responseDto);
     }

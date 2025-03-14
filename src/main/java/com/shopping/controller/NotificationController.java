@@ -20,6 +20,7 @@ import com.shopping.service.NotificationService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -50,7 +51,7 @@ public class NotificationController {
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<NotificationResponseDto> createNotification(
-            @RequestBody NotificationCreateRequestDto requestDto) {
+            @Valid @RequestBody NotificationCreateRequestDto requestDto) {
         return ResponseEntity.ok(notificationService.createNotification(requestDto));
     }
 
@@ -58,7 +59,7 @@ public class NotificationController {
     @PutMapping("/{notificationId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<NotificationResponseDto> updateNotification(@PathVariable Long notificationId,
-            @RequestBody NotificationUpdateRequestDto requestDto) {
+            @Valid @RequestBody NotificationUpdateRequestDto requestDto) {
         return ResponseEntity.ok(notificationService.updateNotification(notificationId, requestDto));
     }
 

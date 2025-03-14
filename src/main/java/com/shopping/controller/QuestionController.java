@@ -22,6 +22,7 @@ import com.shopping.service.QuestionService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,7 +37,7 @@ public class QuestionController {
 
     @Operation(summary = "질문 생성", description = "새로운 질문을 생성합니다.")
     @PostMapping
-    public ResponseEntity<QuestionResponseDto> createQuestion(@RequestBody QuestionCreateRequestDto requestDto,
+    public ResponseEntity<QuestionResponseDto> createQuestion(@Valid @RequestBody QuestionCreateRequestDto requestDto,
             @AuthenticationPrincipal CustomUserDetails member) {
         QuestionResponseDto responseDto = questionService.createQuestion(requestDto, member.getId());
         return ResponseEntity.ok(responseDto);
@@ -58,7 +59,7 @@ public class QuestionController {
 
     @Operation(summary = "질문 업데이트", description = "특정 질문을 업데이트합니다.")
     @PutMapping("/{questionId}")
-    public ResponseEntity<QuestionResponseDto> updateQuestion(@RequestBody QuestionUpdateRequestDto requestDto,
+    public ResponseEntity<QuestionResponseDto> updateQuestion(@Valid @RequestBody QuestionUpdateRequestDto requestDto,
             @AuthenticationPrincipal CustomUserDetails member, @PathVariable Long questionId) {
         QuestionResponseDto responseDto = questionService.updateQuestion(requestDto, member.getId(), questionId);
         return ResponseEntity.ok(responseDto);

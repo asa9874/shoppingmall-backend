@@ -45,7 +45,7 @@ public class MemberController {
 
     @Operation(summary = "회원가입", description = "사용자를 회원가입합니다.")
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody @Valid MemberRegisterRequestDto memberRegisterDto, BindingResult bindingResult) {
+    public ResponseEntity<String> register(@Valid @RequestBody MemberRegisterRequestDto memberRegisterDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder errorMessage = new StringBuilder();
             for (ObjectError error : bindingResult.getAllErrors()) {
@@ -84,7 +84,7 @@ public class MemberController {
     @Operation(summary = "회원 정보 수정", description = "특정 회원의 정보를 수정합니다.")
     @PutMapping("/{memberId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
-    public ResponseEntity<Void> updateMember(@PathVariable Long memberId, @RequestBody MemberUpdateRequestDto requestDto) {
+    public ResponseEntity<Void> updateMember(@PathVariable Long memberId,@Valid @RequestBody MemberUpdateRequestDto requestDto) {
         memberService.updateMember(memberId, requestDto);
         return ResponseEntity.noContent().build();
     }

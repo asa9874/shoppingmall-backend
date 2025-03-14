@@ -14,6 +14,7 @@ import com.shopping.service.AuthService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -25,7 +26,7 @@ public class AuthController {
 
     @Operation(summary = "로그인", description = "사용자가 로그인합니다.")
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody AuthRequestDto request) {
+    public ResponseEntity<AuthResponseDto> login(@Valid @RequestBody AuthRequestDto request) {
         AuthResponseDto response = authService.login(request);
         return ResponseEntity.ok(response);
     }
@@ -39,7 +40,7 @@ public class AuthController {
 
     @Operation(summary = "비밀번호 초기화", description = "사용자의 비밀번호를 초기화합니다.")
     @PostMapping("/reset-password")
-    public ResponseEntity<Void> resetPassword(@RequestBody AuthResetPasswordRequestDto requestDto) {
+    public ResponseEntity<Void> resetPassword(@Valid @RequestBody AuthResetPasswordRequestDto requestDto) {
         return authService.resetPassword(requestDto.getCurrentPassword(), requestDto.getNewPassword());
     }
 

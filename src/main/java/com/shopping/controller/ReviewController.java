@@ -23,6 +23,7 @@ import com.shopping.service.ReviewService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -54,7 +55,8 @@ public class ReviewController {
 
     @Operation(summary = "리뷰 생성", description = "새로운 리뷰를 생성합니다.")
     @PostMapping
-    public ResponseEntity<ReviewResponseDto> createReviews(@RequestBody ReviewCreateRequestDto requestDto, @AuthenticationPrincipal CustomUserDetails member) {
+    public ResponseEntity<ReviewResponseDto> createReviews(@Valid @RequestBody ReviewCreateRequestDto requestDto,
+            @AuthenticationPrincipal CustomUserDetails member) {
         ReviewResponseDto responseDto = reviewService.createReview(requestDto, member.getId());
         return ResponseEntity.ok(responseDto);
     }
@@ -62,7 +64,7 @@ public class ReviewController {
     @Operation(summary = "리뷰 업데이트", description = "특정 리뷰를 업데이트합니다.")
     @PutMapping("/{reviewId}")
     public ResponseEntity<ReviewResponseDto> updateReviews(@PathVariable Long reviewId,
-            @RequestBody ReviewUpdateRequestDto requestDto, @AuthenticationPrincipal CustomUserDetails member) {
+            @Valid @RequestBody ReviewUpdateRequestDto requestDto, @AuthenticationPrincipal CustomUserDetails member) {
         ReviewResponseDto responseDto = reviewService.updateReview(reviewId, requestDto, member.getId());
         return ResponseEntity.ok(responseDto);
     }
@@ -70,7 +72,7 @@ public class ReviewController {
     @Operation(summary = "리뷰 삭제", description = "특정 리뷰를 삭제합니다.")
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<Void> deleteReviews(@PathVariable Long reviewId,
-    @AuthenticationPrincipal CustomUserDetails member) {
+            @AuthenticationPrincipal CustomUserDetails member) {
         reviewService.deleteReview(reviewId, member.getId());
         return ResponseEntity.noContent().build();
     }

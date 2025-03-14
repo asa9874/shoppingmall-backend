@@ -41,7 +41,8 @@ public class SellerController {
 
     @Operation(summary = "올린 상품 리스트 조회", description = "판매자가 올린 상품 리스트를 조회합니다.")
     @GetMapping("/{memberId}/products")
-    public ResponseEntity<List<ProductResponseDTO>> getProducts(@PathVariable Long memberId, @RequestParam(required = false) Integer count) {
+    public ResponseEntity<List<ProductResponseDTO>> getProducts(@PathVariable Long memberId,
+            @RequestParam(required = false) Integer count) {
         List<Product> products = sellerService.getProducts(memberId, count);
         List<ProductResponseDTO> responseDTOs = products.stream()
                 .map(ProductResponseDTO::fromEntity)
@@ -52,7 +53,8 @@ public class SellerController {
     @Operation(summary = "판매자 상품 추가", description = "판매자가 새로운 상품을 추가합니다.")
     @PostMapping("/{memberId}/product/create")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
-    public ResponseEntity<ProductResponseDTO> createProduct(@Valid @PathVariable Long memberId, @RequestBody ProductCreateRequestDTO productCreateRequestDTO) {
+    public ResponseEntity<ProductResponseDTO> createProduct(@Valid @PathVariable Long memberId,
+            @Valid @RequestBody ProductCreateRequestDTO productCreateRequestDTO) {
         ProductResponseDTO responseDTO = productService.createProduct(memberId, productCreateRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO); // 201 CREATED
     }
@@ -60,7 +62,8 @@ public class SellerController {
     @Operation(summary = "판매자 상품 수정", description = "판매자가 상품을 수정합니다.")
     @PutMapping("/{memberId}/product/{productId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
-    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long productId, @PathVariable Long memberId, @RequestBody ProductUpdateRequestDto productResponseDTO) {
+    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long productId, @PathVariable Long memberId,
+            @Valid @RequestBody ProductUpdateRequestDto productResponseDTO) {
         ProductResponseDTO responseDTO = productService.updateProduct(productId, productResponseDTO);
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
