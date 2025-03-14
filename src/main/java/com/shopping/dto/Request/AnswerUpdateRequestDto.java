@@ -13,6 +13,4 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AnswerUpdateRequestDto {
     private String content;
-    private Long memberId;
-
 }

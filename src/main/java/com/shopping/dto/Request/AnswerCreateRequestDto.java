@@ -19,7 +19,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AnswerCreateRequestDto {
     private String content;
-    private Long memberId;
 
     public Answer toEntity(Member member,Question question) {
         return Answer.builder()
