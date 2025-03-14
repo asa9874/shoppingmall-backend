@@ -1,10 +1,9 @@
 package com.shopping.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,12 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.dto.Request.QuestionCreateRequestDto;
-import com.shopping.dto.Request.QuestionDeleteRequestDto;
 import com.shopping.dto.Request.QuestionUpdateRequestDto;
 import com.shopping.dto.Response.AnswerResponseDto;
 import com.shopping.dto.Response.QuestionResponseDto;
-import com.shopping.model.Answer;
-import com.shopping.model.Question;
+import com.shopping.jwt.CustomUserDetails;
 import com.shopping.service.QuestionService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,14 +31,14 @@ import lombok.extern.slf4j.Slf4j;
 @Tag(name = "질문API", description = "/question")
 @Slf4j
 public class QuestionController {
-    
+
     private final QuestionService questionService;
 
     @Operation(summary = "질문 생성", description = "새로운 질문을 생성합니다.")
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
-    public ResponseEntity<QuestionResponseDto> createQuestion(@RequestBody QuestionCreateRequestDto requestDto) {
-        QuestionResponseDto responseDto = questionService.createQuestion(requestDto);
+    public ResponseEntity<QuestionResponseDto> createQuestion(@RequestBody QuestionCreateRequestDto requestDto,
+            @AuthenticationPrincipal CustomUserDetails member) {
+        QuestionResponseDto responseDto = questionService.createQuestion(requestDto, member.getId());
         return ResponseEntity.ok(responseDto);
     }
 
@@ -61,17 +58,17 @@ public class QuestionController {
 
     @Operation(summary = "질문 업데이트", description = "특정 질문을 업데이트합니다.")
     @PutMapping("/{questionId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
-    public ResponseEntity<QuestionResponseDto> updateQuestion(@RequestBody QuestionUpdateRequestDto requestDto) {
-        QuestionResponseDto responseDto = questionService.updateQuestion(requestDto);
+    public ResponseEntity<QuestionResponseDto> updateQuestion(@RequestBody QuestionUpdateRequestDto requestDto,
+            @AuthenticationPrincipal CustomUserDetails member, @PathVariable Long questionId) {
+        QuestionResponseDto responseDto = questionService.updateQuestion(requestDto, member.getId(), questionId);
         return ResponseEntity.ok(responseDto);
     }
 
     @Operation(summary = "질문 제거", description = "특정 질문을 제거합니다.")
     @DeleteMapping("/{questionId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
-    public ResponseEntity<Void> deleteQuestion(@RequestBody QuestionDeleteRequestDto requestDto, @PathVariable Long questionId) {
-        questionService.deleteQuestion(questionId, requestDto);
+    public ResponseEntity<Void> deleteQuestion(@PathVariable Long questionId,
+            @AuthenticationPrincipal CustomUserDetails member) {
+        questionService.deleteQuestion(questionId, member.getId());
         return ResponseEntity.noContent().build();
     }
 

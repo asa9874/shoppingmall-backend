@@ -17,10 +17,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class QuestionUpdateRequestDto {
-    private Long questionId;
     private String title;
     private String content;
-    private Long memberId;
 
     public Question toEntity(Member member) {
         return Question.builder()

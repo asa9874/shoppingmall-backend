@@ -12,7 +12,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReviewUpdateRequestDto {
-    private Long memberId;
     private String content;
     private Long rating;
 }

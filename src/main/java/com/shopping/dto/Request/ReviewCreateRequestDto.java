@@ -17,7 +17,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ReviewCreateRequestDto {
     private Long productId;
-    private Long memberId;
     private String content;
     private Long rating;
 
