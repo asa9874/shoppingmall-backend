@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.shopping.dto.Request.MemberRegisterRequestDto;
 import com.shopping.dto.Request.MemberUpdateRequestDto;
+import com.shopping.dto.Response.MemberInfoResponseDto;
 import com.shopping.dto.Response.NotificationResponseDto;
 import com.shopping.model.Customer;
 import com.shopping.model.Member;
@@ -58,26 +59,20 @@ public class MemberService {
         }
     }
 
-    // 토큰 기반 닉네임 조회
-    public String getNicknameByMemberId(String memberId) {
-        Member member = memberRepository.findBymemberId(memberId)
-                .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
-        return member.getNickname();
-    }
-
     // 내정보조회
-    public Member getMyInfo() {
-        String MemberId = SecurityUtil.getCurrentUserId();
-        Member member = memberRepository.findBymemberId(MemberId)
+    public MemberInfoResponseDto getMyInfo(Long id) {
+        Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
-        return member;
+                MemberInfoResponseDto responseDto = MemberInfoResponseDto.fromEntity(member);
+        return responseDto;
     }
 
     // 유저정보조회
-    public Member getMemberInfo(Long id) {
+    public MemberInfoResponseDto getMemberInfo(Long id) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
-        return member;
+        MemberInfoResponseDto responseDto = MemberInfoResponseDto.fromEntity(member);
+        return responseDto;
     }
 
     // 유저삭제

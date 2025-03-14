@@ -24,6 +24,7 @@ import com.shopping.dto.Request.MemberRegisterRequestDto;
 import com.shopping.dto.Request.MemberUpdateRequestDto;
 import com.shopping.dto.Response.MemberInfoResponseDto;
 import com.shopping.dto.Response.NotificationResponseDto;
+import com.shopping.jwt.CustomUserDetails;
 import com.shopping.model.Member;
 import com.shopping.service.MemberService;
 
@@ -57,20 +58,10 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 성공");
     }
 
-    @Operation(summary = "내 정보 조회", description = "현재 로그인한 사용자의 정보를 조회합니다.")
-    @GetMapping("/me")
-    public ResponseEntity<Map<String, String>> getMe(@AuthenticationPrincipal UserDetails userDetails) {
-        String nickname = memberService.getNicknameByMemberId(userDetails.getUsername()); 
-        Map<String, String> response = new HashMap<>();
-        response.put("nickname", nickname);
-        return ResponseEntity.ok(response);
-    }
-
     @Operation(summary = "내 정보 상세 조회", description = "현재 로그인한 사용자의 상세 정보를 조회합니다.")
     @GetMapping("/my-info")
-    public ResponseEntity<MemberInfoResponseDto> getMyInfo(){
-        Member member = memberService.getMyInfo();
-        MemberInfoResponseDto responseDto = MemberInfoResponseDto.fromEntity(member);
+    public ResponseEntity<MemberInfoResponseDto> getMyInfo(@AuthenticationPrincipal CustomUserDetails member){
+        MemberInfoResponseDto responseDto = memberService.getMyInfo(member.getId());
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
@@ -78,8 +69,7 @@ public class MemberController {
     @GetMapping("/{memberId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<MemberInfoResponseDto> getMemberInfo(@PathVariable Long memberId){
-        Member member = memberService.getMemberInfo(memberId);
-        MemberInfoResponseDto responseDto = MemberInfoResponseDto.fromEntity(member);
+        MemberInfoResponseDto responseDto = memberService.getMemberInfo(memberId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
