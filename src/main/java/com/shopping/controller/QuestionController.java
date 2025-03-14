@@ -41,26 +41,21 @@ public class QuestionController {
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
     public ResponseEntity<QuestionResponseDto> createQuestion(@RequestBody QuestionCreateRequestDto requestDto) {
-        Question question = questionService.createQuestion(requestDto);
-        QuestionResponseDto responseDto = QuestionResponseDto.fromEntity(question);
+        QuestionResponseDto responseDto = questionService.createQuestion(requestDto);
         return ResponseEntity.ok(responseDto);
     }
 
     @Operation(summary = "질문들 조회", description = "모든 질문을 조회합니다.")
     @GetMapping
     public ResponseEntity<List<QuestionResponseDto>> getQuestions() {
-        List<Question> questions = questionService.getQuestions();
-        List<QuestionResponseDto> responseDtos = questions.stream()
-                .map(QuestionResponseDto::fromEntity)
-                .collect(Collectors.toList());
+        List<QuestionResponseDto> responseDtos = questionService.getQuestions();
         return ResponseEntity.ok(responseDtos);
     }
 
     @Operation(summary = "질문 조회", description = "특정 질문을 조회합니다.")
     @GetMapping("/{questionId}")
     public ResponseEntity<QuestionResponseDto> getQuestion(@PathVariable Long questionId) {
-        Question question = questionService.getQuestion(questionId);
-        QuestionResponseDto responseDto = QuestionResponseDto.fromEntity(question);
+        QuestionResponseDto responseDto = questionService.getQuestion(questionId);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -68,8 +63,7 @@ public class QuestionController {
     @PutMapping("/{questionId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #requestDto.memberId == authentication.principal.id")
     public ResponseEntity<QuestionResponseDto> updateQuestion(@RequestBody QuestionUpdateRequestDto requestDto) {
-        Question question = questionService.updateQuestion(requestDto);
-        QuestionResponseDto responseDto = QuestionResponseDto.fromEntity(question);
+        QuestionResponseDto responseDto = questionService.updateQuestion(requestDto);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -84,10 +78,7 @@ public class QuestionController {
     @Operation(summary = "질문에 대한 답변 조회", description = "특정 질문에 대한 모든 답변을 조회합니다.")
     @GetMapping("/{questionId}/answer")
     public ResponseEntity<List<AnswerResponseDto>> getAnswers(@PathVariable Long questionId) {
-        List<Answer> answers = questionService.getAnswers(questionId);
-        List<AnswerResponseDto> responseDto = answers.stream()
-                .map(AnswerResponseDto::fromEntity)
-                .collect(Collectors.toList());
+        List<AnswerResponseDto> responseDto = questionService.getAnswers(questionId);
         return ResponseEntity.ok(responseDto);
     }
 }
