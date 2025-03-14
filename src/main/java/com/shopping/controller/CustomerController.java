@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+//TODO: 이거 책임 분리할지 말지 고민해봐야할듯
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/customer")
@@ -38,10 +39,7 @@ public class CustomerController {
     @GetMapping("/{memberId}/orders")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<List<OrderItemResponseDto>> getOrders(@PathVariable Long memberId) {
-        List<OrderItem> orderItem = customerService.getOrders(memberId);
-        List<OrderItemResponseDto> responseDto = orderItem.stream()
-                .map(OrderItemResponseDto::fromEntity)
-                .collect(Collectors.toList());
+        List<OrderItemResponseDto> responseDto = customerService.getOrders(memberId);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -49,27 +47,25 @@ public class CustomerController {
     @GetMapping("/{memberId}/orders/{orderId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<OrderItemResponseDto> getOrder(@PathVariable Long memberId, @PathVariable Long orderId) {
-        OrderItem orderItem = customerService.getOrder(orderId);
-        OrderItemResponseDto responseDto = OrderItemResponseDto.fromEntity(orderItem);
+        OrderItemResponseDto responseDto = customerService.getOrder(orderId);
         return ResponseEntity.ok(responseDto);
     }
 
     @Operation(summary = "특정 상품 구입", description = "특정 상품을 구입합니다.")
     @PostMapping("/{memberId}/orders/{productId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
-    public ResponseEntity<OrderItemResponseDto> buyProduct(@PathVariable Long productId, @PathVariable Long memberId, @RequestBody OrderRequestDto orderRequestDto) {
-        OrderItem orderItem = customerService.buyProduct(memberId, productId, orderRequestDto.getQuantity());
-        return ResponseEntity.ok(OrderItemResponseDto.fromEntity(orderItem));
+    public ResponseEntity<OrderItemResponseDto> buyProduct(@PathVariable Long productId, @PathVariable Long memberId,
+            @RequestBody OrderRequestDto orderRequestDto) {
+        OrderItemResponseDto responseDto = customerService.buyProduct(memberId, productId,
+                orderRequestDto.getQuantity());
+        return ResponseEntity.ok(responseDto);
     }
 
     @Operation(summary = "장바구니 상품 전체 구입", description = "장바구니에 있는 모든 상품을 구입합니다.")
     @PostMapping("/{memberId}/orders")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<List<OrderItemResponseDto>> buyCart(@PathVariable Long memberId) {
-        List<OrderItem> orderItem = customerService.buyCart(memberId);
-        List<OrderItemResponseDto> responseDto = orderItem.stream()
-                .map(OrderItemResponseDto::fromEntity)
-                .collect(Collectors.toList());
+        List<OrderItemResponseDto> responseDto = customerService.buyCart(memberId);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -77,19 +73,17 @@ public class CustomerController {
     @GetMapping("/{memberId}/cart")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<List<CartItemResponseDto>> getCart(@PathVariable Long memberId) {
-        List<CartItem> cartItems = customerService.getCart(memberId);
-        List<CartItemResponseDto> responseDto = cartItems.stream()
-                .map(CartItemResponseDto::fromEntity)
-                .collect(Collectors.toList());
+        List<CartItemResponseDto> responseDto = customerService.getCart(memberId);
         return ResponseEntity.ok(responseDto);
     }
 
     @Operation(summary = "장바구니 추가", description = "장바구니에 상품을 추가합니다.")
     @PostMapping("/{memberId}/cart/{productId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
-    public ResponseEntity<CartItemResponseDto> addCart(@PathVariable Long productId, @RequestBody CartRequestDto cartRequestDto, @PathVariable Long memberId) {
-        CartItem cartItem = customerService.addCart(memberId, productId, cartRequestDto.getQuantity());
-        return ResponseEntity.ok(CartItemResponseDto.fromEntity(cartItem));
+    public ResponseEntity<CartItemResponseDto> addCart(@PathVariable Long productId,
+            @RequestBody CartRequestDto cartRequestDto, @PathVariable Long memberId) {
+        CartItemResponseDto responseDto = customerService.addCart(memberId, productId, cartRequestDto.getQuantity());
+        return ResponseEntity.ok(responseDto);
     }
 
     @Operation(summary = "장바구니 상품 제거", description = "장바구니에서 특정 상품을 제거합니다.")
