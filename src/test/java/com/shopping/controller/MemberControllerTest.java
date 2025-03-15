@@ -34,7 +34,7 @@ public class MemberControllerTest {
     @WithMockUser
     void register_ShouldReturnCreatedStatus() throws Exception {
         // given: Mock 데이터 설정
-        MemberRegisterRequestDto registerRequestDto = new MemberRegisterRequestDto("user123", "password",
+        MemberRegisterRequestDto registerRequestDto = new MemberRegisterRequestDto("user1234", "password123!",
                 "user123_nickname", "CUSTOMER");
 
         // when & then: HTTP POST 요청을 보내고 응답 검증

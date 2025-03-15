@@ -3,7 +3,7 @@
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <!-- 로그 출력 포맷 설정: 시간, 로그 레벨, 메시지만 출력 -->
-            <pattern>[%-5level]-[%logger{36}] - %msg%n </pattern>
+            <pattern>[%-5level] %date{yyyy-MM-dd HH:mm:ss} [%logger{36}] - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -12,6 +12,16 @@
         <appender-ref ref="CONSOLE" />
     </root>
 
-    <!-- 특정 패키지의 로그 레벨 설정 (예: DEBUG) -->
-    <logger name="com.shopping" level="ERROR" />
+    <!-- Spring Boot 관련 로그 레벨 설정 -->
+    <logger name="org.springframework" level="INFO"/>
+    
+    <!-- JUnit 관련 로그 레벨 설정 (INFO로 설정하여 테스트 출력 간결화) -->
+    <logger name="org.junit" level="INFO" />
+    
+    <!-- Test 관련 로그 레벨 설정 (디버그 로깅을 활성화) -->
+    <logger name="org.junit.jupiter" level="DEBUG" />
+    <logger name="org.junit.platform" level="DEBUG" />
+
+    <!-- 특정 패키지의 로그 레벨 설정 (예: 상품 관련 테스트만 ERROR로 설정) -->
+    <logger name="com.shopping" level="INFO" />
 </configuration>
