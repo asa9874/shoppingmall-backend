@@ -1,5 +1,6 @@
 package com.shopping.service;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.shopping.dto.Request.ProductCreateRequestDTO;
 import com.shopping.dto.Request.ProductUpdateRequestDto;
@@ -48,7 +50,7 @@ public class ProductService {
     private final CartItemRepository cartItemRepository;
     private final OrderItemRepository orderItemRepository;
     private final ReviewRepository reviewRepository;
-
+    private final ImageUploadService imageUploadService;
     private final RedisTemplate<String, Object> redisTemplate;
 
     // 조회
@@ -98,15 +100,20 @@ public class ProductService {
     }
 
     // 생성
-    public ProductResponseDTO createProduct(Long memberId, ProductCreateRequestDTO requestDTO) {
+    public ProductResponseDTO createProduct(Long memberId, ProductCreateRequestDTO requestDTO, MultipartFile imageFile) {
         Seller seller = sellerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> {
                     String errorMessage = String.format("(MemberId: %d)", memberId);
                     return new SellerNotFoundException(errorMessage);
                 });
         ProductValidationUtil.validatePriceAndStock(requestDTO.getPrice(), requestDTO.getStock());
-        Product product = requestDTO.toEntity(seller);
-        seller.getProducts().add(product);
+        String imageUrl;
+        try {
+            imageUrl = imageUploadService.uploadImage(imageFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        Product product = requestDTO.toEntity(seller, imageUrl);
         productRepository.save(product);
         return ProductResponseDTO.fromEntity(product);
     }

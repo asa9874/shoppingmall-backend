@@ -26,8 +26,8 @@ public class ProductCreateRequestDTO {
     @Schema(description = "상품명", example = "무선 이어폰", required = true)
     private String name;
 
-    @Schema(description = "상품 이미지 URL", example = "https://example.com/product.jpg")
-    private String image;
+    //@Schema(description = "상품 이미지 URL", example = "https://example.com/product.jpg")
+    //private String image;
 
     @NotBlank(message = "상품 설명은 필수 입력값입니다.")
     @Size(max = 500, message = "상품 설명은 최대 500자까지 입력 가능합니다.")
@@ -48,10 +48,10 @@ public class ProductCreateRequestDTO {
     @Schema(description = "상품 카테고리", example = "ELECTRONICS", required = true)
     private Product.Category category;
 
-    public Product toEntity(Seller seller) {
+    public Product toEntity(Seller seller,String image) {
         return Product.builder()
             .name(this.name)
-            .image(this.image)
+            .image(image)
             .description(this.description)
             .price(this.price)
             .stock(this.stock)

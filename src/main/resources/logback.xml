@@ -13,7 +13,7 @@
     </root>
 
     <!-- Spring Boot 관련 로그 레벨 설정 -->
-    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.springframework" level="ERROR"/>
     
     <!-- JUnit 관련 로그 레벨 설정 (INFO로 설정하여 테스트 출력 간결화) -->
     <logger name="org.junit" level="INFO" />
@@ -23,5 +23,5 @@
     <logger name="org.junit.platform" level="DEBUG" />
 
     <!-- 특정 패키지의 로그 레벨 설정 (예: 상품 관련 테스트만 ERROR로 설정) -->
-    <logger name="com.shopping" level="INFO" />
+    <logger name="com.shopping" level="ERROR" />
 </configuration>
