@@ -52,7 +52,6 @@ public class ProductService {
     private final RedisTemplate<String, Object> redisTemplate;
 
     // 조회
-    // TODO : 서비스 전체적 리펙토링 필요
     public List<ProductResponseDTO> getProductItems(int count) {
         List<Product> productList = productRepository.findAll();
         if (productList.isEmpty()) {
@@ -144,7 +143,10 @@ public class ProductService {
     public List<ProductResponseDTO> getPopularProducts() {
         String key = "product:views";
         Set<Object> topProducts = redisTemplate.opsForZSet().reverseRange(key, 0, 9);
-
+        if (topProducts == null || topProducts.isEmpty()) {
+            return Collections.emptyList();
+        }
+        
         List<Long> productIds = topProducts.stream()
                 .map(productId -> Long.parseLong((String) productId))
                 .collect(Collectors.toList());

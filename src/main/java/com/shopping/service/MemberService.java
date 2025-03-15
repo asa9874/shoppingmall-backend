@@ -19,7 +19,6 @@ import com.shopping.repository.CustomerRepository;
 import com.shopping.repository.MemberRepository;
 import com.shopping.repository.NotificationRepository;
 import com.shopping.repository.SellerRepository;
-import com.shopping.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 

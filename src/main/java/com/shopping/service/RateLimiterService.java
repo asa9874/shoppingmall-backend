@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class RateLimiterService { //TODO: 이거 클래스명 변경해야할듯
+public class RateLimiterService { 
 
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -18,7 +18,9 @@ public class RateLimiterService { //TODO: 이거 클래스명 변경해야할듯
 
         //요청 횟수 증가
         Long currentCount = redisTemplate.opsForValue().increment(key, 1);
-
+        if(currentCount ==null){
+            throw new RuntimeException("Redis error");
+        }
         if (currentCount == 1) {
             // 최초 요청 시 TTL 설정
             redisTemplate.expire(key, timeWindow, TimeUnit.SECONDS);

@@ -1,14 +1,11 @@
 package com.shopping.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +22,6 @@ import com.shopping.dto.Request.MemberUpdateRequestDto;
 import com.shopping.dto.Response.MemberInfoResponseDto;
 import com.shopping.dto.Response.NotificationResponseDto;
 import com.shopping.jwt.CustomUserDetails;
-import com.shopping.model.Member;
 import com.shopping.service.MemberService;
 
 import io.swagger.v3.oas.annotations.Operation;
