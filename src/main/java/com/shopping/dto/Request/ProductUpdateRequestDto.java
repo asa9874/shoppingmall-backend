@@ -57,6 +57,7 @@ public class ProductUpdateRequestDto {
             .stock(this.stock)
             .category(this.category)
             .seller(seller)  
+            .viewCount(0)
             .build();
     }
 }

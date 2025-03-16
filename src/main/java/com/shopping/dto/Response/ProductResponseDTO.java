@@ -32,6 +32,8 @@ public class ProductResponseDTO {
 
     private Product.Category category;
 
+    private int viewCount;
+
     public static ProductResponseDTO fromEntity(Product product) {
         return ProductResponseDTO.builder()
             .id(product.getId())
@@ -43,6 +45,7 @@ public class ProductResponseDTO {
             .category(product.getCategory())
             .sellerName(product.getSeller().getMember().getNickname())  
             .memberId(product.getSeller().getMember().getId())
+            .viewCount(product.getViewCount())
             .build();
     }
 }

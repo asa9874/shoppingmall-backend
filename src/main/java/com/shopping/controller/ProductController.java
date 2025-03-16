@@ -15,6 +15,7 @@ import com.shopping.annotation.RateLimit;
 import com.shopping.dto.Response.ProductResponseDTO;
 import com.shopping.dto.Response.ReviewResponseDto;
 import com.shopping.service.ProductService;
+import com.shopping.service.ProductViewService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductController {
     
     private final ProductService productService;
+    private final ProductViewService productViewService;
 
     @Operation(summary = "상품 목록 조회", description = "상품 목록을 조회합니다.")
     @GetMapping("/")
@@ -41,7 +43,7 @@ public class ProductController {
     @RateLimit(value = 5, timeWindow = 1)
     public ResponseEntity<ProductResponseDTO> getProductItemDetail(@PathVariable Long productId){
         ProductResponseDTO responseDTO = productService.getProductDetail(productId);
-        productService.incrementProductView(productId);
+        productViewService.incrementProductView(productId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 

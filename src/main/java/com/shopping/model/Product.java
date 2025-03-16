@@ -48,19 +48,8 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    public enum Category {
-        ELECTRONICS, // 전자제품
-        FASHION, // 패션/의류
-        HOME, // 가구/인테리어
-        BEAUTY, // 뷰티/화장품
-        FOOD, // 식품/건강
-        SPORTS, // 스포츠/레저
-        TOYS, // 장난감/취미
-        BOOKS, // 도서/문구
-        AUTOMOTIVE, // 자동차/오토바이
-        PETS, // 반려동물 용품
-        ETC // 기타
-    }
+    @Column(nullable = false)
+    private int viewCount;
 
     @ManyToOne
     @JoinColumn(name = "seller_id", nullable = false)
@@ -85,4 +74,19 @@ public class Product {
             throw new IllegalArgumentException("Invalid category: " + category);
         }
     }
+
+    public enum Category {
+        ELECTRONICS, // 전자제품
+        FASHION, // 패션/의류
+        HOME, // 가구/인테리어
+        BEAUTY, // 뷰티/화장품
+        FOOD, // 식품/건강
+        SPORTS, // 스포츠/레저
+        TOYS, // 장난감/취미
+        BOOKS, // 도서/문구
+        AUTOMOTIVE, // 자동차/오토바이
+        PETS, // 반려동물 용품
+        ETC // 기타
+    }
+
 }

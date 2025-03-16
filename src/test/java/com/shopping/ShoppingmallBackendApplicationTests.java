@@ -72,6 +72,7 @@ class ShoppingmallBackendApplicationTests {
                     .stock(100)
                     .seller(seller)
                     .category(Product.Category.ELECTRONICS)
+                    .viewCount(0)
                     .build();
 
             products.add(product);

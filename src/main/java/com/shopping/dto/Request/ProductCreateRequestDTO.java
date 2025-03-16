@@ -57,6 +57,7 @@ public class ProductCreateRequestDTO {
             .stock(this.stock)
             .category(this.category)
             .seller(seller)
+            .viewCount(0)
             .build();
     }
 }
