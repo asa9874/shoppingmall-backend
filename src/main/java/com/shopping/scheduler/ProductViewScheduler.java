@@ -1,6 +1,7 @@
 package com.shopping.scheduler;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,20 +19,26 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductViewScheduler {
 
     private final String REDIS_KEY = "product:views";
-    private final RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
     private final ProductRepository productRepository;
 
     // 5분마다 Redis 조회수를 DB에 반영
-    @Scheduled(fixedRate = 100000) // 5분(300000ms)마다 실행
+    @Scheduled(fixedRate = 100000) 
     public void syncViewCountsToDatabase() {
-        Set<String> productIds = redisTemplate.opsForZSet().range(REDIS_KEY, 0, -1);
-        
+        log.error("product:views syncViewCountsToDatabase ");
+        Set<String> productIds = redisTemplate.opsForZSet().range(REDIS_KEY, 0, -1)
+                .stream()
+                .map(Object::toString)
+                .collect(Collectors.toSet());
+
         if (productIds == null || productIds.isEmpty()) {
             return;
         }
 
         for (String productId : productIds) {
+            // Redis에서 해당 제품의 조회수를 가져옴
             Double score = redisTemplate.opsForZSet().score(REDIS_KEY, productId);
+            
             if (score != null && score > 0) {
                 Long id = Long.parseLong(productId);
                 
@@ -47,6 +54,5 @@ public class ProductViewScheduler {
             }
         }
         
-        log.error("조회수 동기화 완료");
     }
 }

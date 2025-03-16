@@ -1,14 +1,9 @@
 package com.shopping.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TestController {
     private final TestService testService;
-    private final StringRedisTemplate redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
    
     @GetMapping("/public")
     public String publicEndpoint() {
@@ -52,24 +47,5 @@ public class TestController {
     @GetMapping("/redistest")
     public String redistest() {
         return testService.testRedisConnection();
-    }
-
-    @GetMapping("/cache")
-    public Map<String, String> getAllCacheValues() {
-        Set<String> keys = redisTemplate.keys("*");
-        Map<String, String> cacheData = new HashMap<>();
-
-        if (keys != null) {
-            for (String key : keys) {
-                String value = redisTemplate.opsForValue().get(key);
-                cacheData.put(key, value);
-            }
-        }
-        return cacheData;
-    }
-
-    @GetMapping("/cache/{key}")
-    public String getCacheValue(@PathVariable String key) {
-        return redisTemplate.opsForValue().get(key);
     }
 }

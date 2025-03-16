@@ -13,7 +13,7 @@ public class ProductViewService {
     
     private final String VIEWS_KEY = "product:views";  // DB 업데이트용
     private final String POPULAR_KEY = "product:popular"; // 실시간 인기 제품용
-    private final RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     // 조회수 증가
     public void incrementProductView(Long productId) {

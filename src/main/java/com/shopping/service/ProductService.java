@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,11 +36,11 @@ import com.shopping.util.ProductUpdateUtil;
 import com.shopping.util.ProductValidationUtil;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
+@Log4j2
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -87,14 +86,14 @@ public class ProductService {
     }
 
     // 조회
-    @Cacheable(value = "product", key = "#productId")
+    //@Cacheable(value = "product", key = "#productId") TODO: 이거 조회수기능때문에 잠시 지워둠
     public ProductResponseDTO getProductDetail(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> {
                     String errorMessage = String.format("(ProductId: %d)", productId);
                     return new ProductNotFoundException(errorMessage);
                 });
-
+        log.error(product.getViewCount());
         return ProductResponseDTO.fromEntity(product);
     }
 
