@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.data.redis.RedisSystemException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,6 +76,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleRedisException(RedisSystemException ex) {
         log.error("Redis error: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Redis error: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(RedisConnectionFailureException.class)
+    public ResponseEntity<String> handleRedisConnectionFailureException(RedisConnectionFailureException ex) {
+        log.error("Redis connection error: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Redis connection error: " + ex.getMessage());
     }
 
 
