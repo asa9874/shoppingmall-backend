@@ -11,7 +11,4 @@ public class ShoppingmallBackendApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ShoppingmallBackendApplication.class, args);
 	}
-
 }
-
-	

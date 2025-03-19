@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.annotation.RateLimit;
+import com.shopping.common.ApiResponse;
 import com.shopping.dto.Response.ProductResponseDTO;
 import com.shopping.dto.Response.ReviewResponseDto;
 import com.shopping.service.ProductService;
@@ -41,10 +42,11 @@ public class ProductController {
     @Operation(summary = "상품 상세 조회", description = "특정 상품의 상세 정보를 조회합니다.")
     @GetMapping("/{productId}")
     @RateLimit(value = 5, timeWindow = 1)
-    public ResponseEntity<ProductResponseDTO> getProductItemDetail(@PathVariable Long productId){
+    public ResponseEntity<ApiResponse<ProductResponseDTO>> getProductItemDetail(@PathVariable Long productId){
         ProductResponseDTO responseDTO = productService.getProductDetail(productId);
         productViewService.incrementProductView(productId);
-        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
+        ApiResponse<ProductResponseDTO> apiResponse = ApiResponse.success(responseDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
     @Operation(summary = "상품 리뷰 조회", description = "특정 상품의 리뷰를 조회합니다.")
