@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shopping.common.ApiResponse;
 import com.shopping.dto.Request.AnswerCreateRequestDto;
 import com.shopping.dto.Request.AnswerUpdateRequestDto;
 import com.shopping.dto.Response.AnswerResponseDto;
@@ -37,23 +38,28 @@ public class AnswerController {
 
     @Operation(summary = "답변 생성", description = "질문에 대한 답변을 생성합니다.")
     @PostMapping("/{questionId}")
-    public ResponseEntity<AnswerResponseDto> createAnswer(@PathVariable Long questionId,
-            @Valid @RequestBody AnswerCreateRequestDto requestDto, @AuthenticationPrincipal CustomUserDetails member) {
+    public ResponseEntity<ApiResponse<AnswerResponseDto>> createAnswer(
+            @PathVariable Long questionId,
+            @Valid @RequestBody AnswerCreateRequestDto requestDto,
+            @AuthenticationPrincipal CustomUserDetails member) {
         AnswerResponseDto responseDto = answerService.createAnswer(questionId, requestDto, member.getId());
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
     @Operation(summary = "답변 업데이트", description = "특정 답변을 업데이트합니다.")
     @PutMapping("/{answerId}")
-    public ResponseEntity<AnswerResponseDto> updateAnswer(@PathVariable Long answerId,
-            @Valid @RequestBody AnswerUpdateRequestDto requestDto, @AuthenticationPrincipal CustomUserDetails member) {
+    public ResponseEntity<ApiResponse<AnswerResponseDto>> updateAnswer(
+            @PathVariable Long answerId,
+            @Valid @RequestBody AnswerUpdateRequestDto requestDto,
+            @AuthenticationPrincipal CustomUserDetails member) {
         AnswerResponseDto responseDto = answerService.updateAnswer(answerId, requestDto, member.getId());
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
     @Operation(summary = "답변 제거", description = "특정 답변을 제거합니다.")
     @DeleteMapping("/{answerId}")
-    public ResponseEntity<Void> deleteAnswer(@PathVariable Long answerId,
+    public ResponseEntity<Void> deleteAnswer(
+            @PathVariable Long answerId,
             @AuthenticationPrincipal CustomUserDetails member) {
         answerService.deleteAnswer(answerId, member.getId());
         return ResponseEntity.noContent().build();
@@ -62,17 +68,16 @@ public class AnswerController {
     @Operation(summary = "전체 답변 조회", description = "모든 답변을 조회합니다.")
     @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<AnswerResponseDto>> getAnswers() {
+    public ResponseEntity<ApiResponse<List<AnswerResponseDto>>> getAnswers() {
         List<AnswerResponseDto> responseDto = answerService.getAnswers();
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
     @Operation(summary = "답변 조회", description = "특정 답변을 조회합니다.")
     @GetMapping("/{answerId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<AnswerResponseDto> getAnswer(@PathVariable Long answerId) {
+    public ResponseEntity<ApiResponse<AnswerResponseDto>> getAnswer(@PathVariable Long answerId) {
         AnswerResponseDto responseDto = answerService.getAnswer(answerId);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
-
 }

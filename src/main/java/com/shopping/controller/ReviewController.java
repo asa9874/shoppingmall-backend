@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shopping.common.ApiResponse;
 import com.shopping.dto.Request.ReviewCreateRequestDto;
 import com.shopping.dto.Request.ReviewUpdateRequestDto;
 import com.shopping.dto.Response.ReviewResponseDto;
@@ -38,35 +39,38 @@ public class ReviewController {
 
     @Operation(summary = "리뷰 목록 조회", description = "모든 리뷰를 조회합니다.")
     @GetMapping("/")
-    public ResponseEntity<List<ReviewResponseDto>> getReviews() {
+    public ResponseEntity<ApiResponse<List<ReviewResponseDto>>> getReviews() {
         List<Review> reviews = reviewService.getReviews();
         List<ReviewResponseDto> responseDto = reviews.stream()
                 .map(ReviewResponseDto::fromEntity)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
     @Operation(summary = "리뷰 조회", description = "특정 리뷰를 조회합니다.")
     @GetMapping("/{reviewId}")
-    public ResponseEntity<ReviewResponseDto> getReview(@PathVariable Long reviewId) {
+    public ResponseEntity<ApiResponse<ReviewResponseDto>> getReview(@PathVariable Long reviewId) {
         ReviewResponseDto responseDto = reviewService.getReview(reviewId);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
     @Operation(summary = "리뷰 생성", description = "새로운 리뷰를 생성합니다.")
     @PostMapping
-    public ResponseEntity<ReviewResponseDto> createReviews(@Valid @RequestBody ReviewCreateRequestDto requestDto,
+    public ResponseEntity<ApiResponse<ReviewResponseDto>> createReviews(
+            @Valid @RequestBody ReviewCreateRequestDto requestDto,
             @AuthenticationPrincipal CustomUserDetails member) {
         ReviewResponseDto responseDto = reviewService.createReview(requestDto, member.getId());
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
     @Operation(summary = "리뷰 업데이트", description = "특정 리뷰를 업데이트합니다.")
     @PutMapping("/{reviewId}")
-    public ResponseEntity<ReviewResponseDto> updateReviews(@PathVariable Long reviewId,
-            @Valid @RequestBody ReviewUpdateRequestDto requestDto, @AuthenticationPrincipal CustomUserDetails member) {
+    public ResponseEntity<ApiResponse<ReviewResponseDto>> updateReviews(
+            @PathVariable Long reviewId,
+            @Valid @RequestBody ReviewUpdateRequestDto requestDto,
+            @AuthenticationPrincipal CustomUserDetails member) {
         ReviewResponseDto responseDto = reviewService.updateReview(reviewId, requestDto, member.getId());
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
     @Operation(summary = "리뷰 삭제", description = "특정 리뷰를 삭제합니다.")

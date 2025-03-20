@@ -46,6 +46,7 @@ public class AuthService {
 
     //토큰 재발급
     public AuthResponseDto refreshAccessToken(String refreshToken) {
+        //TODO: 이거도 블랙리스트 로직추가하기
         if (refreshToken.startsWith("Bearer ")) {
             refreshToken = refreshToken.substring(7);
         }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shopping.common.ApiResponse;
 import com.shopping.dto.Request.AuthRequestDto;
 import com.shopping.dto.Request.AuthResetPasswordRequestDto;
 import com.shopping.dto.Response.AuthResponseDto;
@@ -22,20 +23,21 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/auth")
 @Tag(name = "인증API", description = "/auth")
 public class AuthController {
+
     private final AuthService authService;
 
     @Operation(summary = "로그인", description = "사용자가 로그인합니다.")
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto> login(@Valid @RequestBody AuthRequestDto request) {
+    public ResponseEntity<ApiResponse<AuthResponseDto>> login(@Valid @RequestBody AuthRequestDto request) {
         AuthResponseDto response = authService.login(request);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @Operation(summary = "토큰 갱신", description = "리프레시 토큰을 사용하여 액세스 토큰을 갱신합니다.")
     @PostMapping("/refresh-token")
-    public ResponseEntity<AuthResponseDto> refreshToken(@RequestHeader("Authorization") String refreshToken) {
+    public ResponseEntity<ApiResponse<AuthResponseDto>> refreshToken(@RequestHeader("Authorization") String refreshToken) {
         AuthResponseDto response = authService.refreshAccessToken(refreshToken);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @Operation(summary = "비밀번호 초기화", description = "사용자의 비밀번호를 초기화합니다.")

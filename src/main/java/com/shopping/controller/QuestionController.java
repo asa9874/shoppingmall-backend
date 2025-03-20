@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shopping.common.ApiResponse;
 import com.shopping.dto.Request.QuestionCreateRequestDto;
 import com.shopping.dto.Request.QuestionUpdateRequestDto;
 import com.shopping.dto.Response.AnswerResponseDto;
@@ -37,32 +38,35 @@ public class QuestionController {
 
     @Operation(summary = "질문 생성", description = "새로운 질문을 생성합니다.")
     @PostMapping
-    public ResponseEntity<QuestionResponseDto> createQuestion(@Valid @RequestBody QuestionCreateRequestDto requestDto,
+    public ResponseEntity<ApiResponse<QuestionResponseDto>> createQuestion(
+            @Valid @RequestBody QuestionCreateRequestDto requestDto,
             @AuthenticationPrincipal CustomUserDetails member) {
         QuestionResponseDto responseDto = questionService.createQuestion(requestDto, member.getId());
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
     @Operation(summary = "질문들 조회", description = "모든 질문을 조회합니다.")
     @GetMapping
-    public ResponseEntity<List<QuestionResponseDto>> getQuestions() {
+    public ResponseEntity<ApiResponse<List<QuestionResponseDto>>> getQuestions() {
         List<QuestionResponseDto> responseDtos = questionService.getQuestions();
-        return ResponseEntity.ok(responseDtos);
+        return ResponseEntity.ok(ApiResponse.success(responseDtos));
     }
 
     @Operation(summary = "질문 조회", description = "특정 질문을 조회합니다.")
     @GetMapping("/{questionId}")
-    public ResponseEntity<QuestionResponseDto> getQuestion(@PathVariable Long questionId) {
+    public ResponseEntity<ApiResponse<QuestionResponseDto>> getQuestion(@PathVariable Long questionId) {
         QuestionResponseDto responseDto = questionService.getQuestion(questionId);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
     @Operation(summary = "질문 업데이트", description = "특정 질문을 업데이트합니다.")
     @PutMapping("/{questionId}")
-    public ResponseEntity<QuestionResponseDto> updateQuestion(@Valid @RequestBody QuestionUpdateRequestDto requestDto,
-            @AuthenticationPrincipal CustomUserDetails member, @PathVariable Long questionId) {
+    public ResponseEntity<ApiResponse<QuestionResponseDto>> updateQuestion(
+            @Valid @RequestBody QuestionUpdateRequestDto requestDto,
+            @AuthenticationPrincipal CustomUserDetails member,
+            @PathVariable Long questionId) {
         QuestionResponseDto responseDto = questionService.updateQuestion(requestDto, member.getId(), questionId);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
     @Operation(summary = "질문 제거", description = "특정 질문을 제거합니다.")
@@ -75,8 +79,8 @@ public class QuestionController {
 
     @Operation(summary = "질문에 대한 답변 조회", description = "특정 질문에 대한 모든 답변을 조회합니다.")
     @GetMapping("/{questionId}/answer")
-    public ResponseEntity<List<AnswerResponseDto>> getAnswers(@PathVariable Long questionId) {
+    public ResponseEntity<ApiResponse<List<AnswerResponseDto>>> getAnswers(@PathVariable Long questionId) {
         List<AnswerResponseDto> responseDto = questionService.getAnswers(questionId);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 }

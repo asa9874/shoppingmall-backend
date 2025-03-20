@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shopping.common.ApiResponse;
 import com.shopping.dto.Request.NotificationCreateRequestDto;
 import com.shopping.dto.Request.NotificationUpdateRequestDto;
 import com.shopping.dto.Response.NotificationResponseDto;
@@ -36,31 +37,35 @@ public class NotificationController {
     @Operation(summary = "알림 조회", description = "모든 알림을 조회합니다.")
     @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<NotificationResponseDto>> getNotifications() {
-        return ResponseEntity.ok(notificationService.getNotifications());
+    public ResponseEntity<ApiResponse<List<NotificationResponseDto>>> getNotifications() {
+        List<NotificationResponseDto> responseList = notificationService.getNotifications();
+        return ResponseEntity.ok(ApiResponse.success(responseList));
     }
 
     @Operation(summary = "알림 상세 조회", description = "특정 알림을 조회합니다.")
     @GetMapping("/{notificationId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<NotificationResponseDto> getNotification(@PathVariable Long notificationId) {
-        return ResponseEntity.ok(notificationService.getNotification(notificationId));
+    public ResponseEntity<ApiResponse<NotificationResponseDto>> getNotification(@PathVariable Long notificationId) {
+        NotificationResponseDto responseDto = notificationService.getNotification(notificationId);
+        return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
     @Operation(summary = "알림 생성", description = "새로운 알림을 생성합니다.")
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<NotificationResponseDto> createNotification(
+    public ResponseEntity<ApiResponse<NotificationResponseDto>> createNotification(
             @Valid @RequestBody NotificationCreateRequestDto requestDto) {
-        return ResponseEntity.ok(notificationService.createNotification(requestDto));
+        NotificationResponseDto responseDto = notificationService.createNotification(requestDto);
+        return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
     @Operation(summary = "알림 업데이트", description = "특정 알림을 업데이트합니다.")
     @PutMapping("/{notificationId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<NotificationResponseDto> updateNotification(@PathVariable Long notificationId,
+    public ResponseEntity<ApiResponse<NotificationResponseDto>> updateNotification(@PathVariable Long notificationId,
             @Valid @RequestBody NotificationUpdateRequestDto requestDto) {
-        return ResponseEntity.ok(notificationService.updateNotification(notificationId, requestDto));
+        NotificationResponseDto responseDto = notificationService.updateNotification(notificationId, requestDto);
+        return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
     @Operation(summary = "알림 삭제", description = "특정 알림을 삭제합니다.")
