@@ -17,6 +17,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.shopping.common.ApiResponse;
+
 import io.jsonwebtoken.JwtException;
 import io.swagger.v3.oas.annotations.Hidden;
 /*
@@ -32,71 +34,76 @@ public class GlobalExceptionHandler {
 
     // Handle SellerNotFoundException
     @ExceptionHandler(SellerNotFoundException.class)
-    public ResponseEntity<String> handleSellerNotFound(SellerNotFoundException ex) {
+    public ResponseEntity<ApiResponse<String>> handleSellerNotFound(SellerNotFoundException ex) {
         log.error("Seller not found: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Seller not found: " + ex.getMessage());
+        ApiResponse<String> apiResponse = ApiResponse.error("Seller not found: " + ex.getMessage(), HttpStatus.NOT_FOUND.value());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiResponse);
     }
 
     // Handle InvalidProductDataException
     @ExceptionHandler(InvalidProductDataException.class)
-    public ResponseEntity<String> handleInvalidProductData(InvalidProductDataException ex) {
+    public ResponseEntity<ApiResponse<String>> handleInvalidProductData(InvalidProductDataException ex) {
         log.error("Invalid product data: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid product data: " + ex.getMessage());
+        ApiResponse<String> apiResponse = ApiResponse.error("Invalid product data: " + ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
     }
-    
+
     // Handle ProductNotFoundException
     @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<String> handleProductNotFoundException(ProductNotFoundException ex) {
+    public ResponseEntity<ApiResponse<String>> handleProductNotFoundException(ProductNotFoundException ex) {
         log.error("Product Not Found: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Product Not Found" + ex.getMessage());
+        ApiResponse<String> apiResponse = ApiResponse.error("Product Not Found: " + ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
     }
 
     // AccessDeniedException
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException ex) {
+    public ResponseEntity<ApiResponse<String>> handleAccessDeniedException(AccessDeniedException ex) {
         log.error("Access Denied: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied: " + ex.getMessage());
+        ApiResponse<String> apiResponse = ApiResponse.error("Access Denied: " + ex.getMessage(), HttpStatus.FORBIDDEN.value());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(apiResponse);
     }
 
     // Handle JwtException (JWT 검증 오류 처리)
     @ExceptionHandler(JwtException.class)
-    public ResponseEntity<String> handleJwtException(JwtException ex) {
+    public ResponseEntity<ApiResponse<String>> handleJwtException(JwtException ex) {
         log.error("JWT Error: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or blacklisted JWT: " + ex.getMessage());
-
+        ApiResponse<String> apiResponse = ApiResponse.error("Invalid or blacklisted JWT: " + ex.getMessage(), HttpStatus.UNAUTHORIZED.value());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
     }
 
     // 유효성 검사 오류 처리
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ApiResponse<String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
         // 필드별 오류 메시지 수집
         String errorMessages = fieldErrors.stream()
             .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
             .collect(Collectors.joining(", "));
         
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessages);
+        ApiResponse<String> apiResponse = ApiResponse.error(errorMessages, HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
     }
 
     @ExceptionHandler(RedisSystemException.class)
-    public ResponseEntity<String> handleRedisException(RedisSystemException ex) {
+    public ResponseEntity<ApiResponse<String>> handleRedisException(RedisSystemException ex) {
         log.error("Redis error: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Redis error: " + ex.getMessage());
+        ApiResponse<String> apiResponse = ApiResponse.error("Redis error: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
     }
 
     @ExceptionHandler(RedisConnectionFailureException.class)
-    public ResponseEntity<String> handleRedisConnectionFailureException(RedisConnectionFailureException ex) {
+    public ResponseEntity<ApiResponse<String>> handleRedisConnectionFailureException(RedisConnectionFailureException ex) {
         log.error("Redis connection error: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Redis connection error: " + ex.getMessage());
+        ApiResponse<String> apiResponse = ApiResponse.error("Redis connection error: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
     }
-
 
     // Handle generic exceptions (500 Internal Server Error)
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleUnexpectedError(Exception ex) {
+    public ResponseEntity<ApiResponse<String>> handleUnexpectedError(Exception ex) {
         log.error("Unexpected error: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error: " + ex.getMessage());
+        ApiResponse<String> apiResponse = ApiResponse.error("Unexpected error: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
     }
-
-    
 }

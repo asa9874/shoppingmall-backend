@@ -10,6 +10,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.shopping.annotation.RateLimit;
+import com.shopping.common.ApiResponse;
 import com.shopping.service.RateLimiterService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,7 +36,8 @@ public class RateLimitAspect {
 
         // 요청 제한 확인
         if (!rateLimiterService.isAllowed(clientIp, endpoint, rateLimit.value(), rateLimit.timeWindow())) {
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Too many requests");
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                    .body(ApiResponse.error("Too many requests", HttpStatus.TOO_MANY_REQUESTS.value()));
         }
 
         return joinPoint.proceed();
