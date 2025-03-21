@@ -1,5 +1,7 @@
 package com.shopping.scheduler;
 
+import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,7 +29,8 @@ public class ProductViewScheduler {
     public void syncViewCountsToDatabase() {
         try {
             log.info("product:views syncViewCountsToDatabase ");
-            Set<String> productIds = redisTemplate.opsForZSet().range(REDIS_KEY, 0, -1)
+            Set<String> productIds = Optional.ofNullable(redisTemplate.opsForZSet().range(REDIS_KEY, 0, -1)) 
+                    .orElse(Collections.emptySet())
                     .stream()
                     .map(Object::toString)
                     .collect(Collectors.toSet());

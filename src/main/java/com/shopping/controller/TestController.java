@@ -1,6 +1,5 @@
 package com.shopping.controller;
 
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TestController {
     private final TestService testService;
-    private final RedisTemplate<String, Object> redisTemplate;
    
     @GetMapping("/public")
     public String publicEndpoint() {

@@ -4,6 +4,8 @@ import java.lang.reflect.Type;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,17 +22,17 @@ public class MultipartJackson2HttpMessageConverter extends AbstractJackson2HttpM
     }
 
     @Override
-    public boolean canWrite(Class<?> clazz, MediaType mediaType) {
+    public boolean canWrite(@NonNull Class<?> clazz,@Nullable MediaType mediaType) {
         return false;
     }
 
     @Override
-    public boolean canWrite(Type type, Class<?> clazz, MediaType mediaType) {
+    public boolean canWrite(@Nullable Type type,@NonNull  Class<?> clazz,@Nullable  MediaType mediaType) {
         return false;
     }
 
     @Override
-    protected boolean canWrite(MediaType mediaType) {
+    protected boolean canWrite(@Nullable MediaType mediaType) {
         return false;
     }
 }
