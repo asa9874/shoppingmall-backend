@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7.2
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml 
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+
+volumes:
+  redis_data:
+    driver: local
+
+#docker-compose up --build
+# mvn spring-boot:run 스프링부트 자체는 로컬에서 실행 
+#TODO: 이거 나중에 springboot도 docker에서 실행되도록 바꿀거임, h2 -> MySQL꿔서 docker로 바꾸기
+
+
+#copy con local.mv.db 로컬에 테스트용 db 파일 복사
