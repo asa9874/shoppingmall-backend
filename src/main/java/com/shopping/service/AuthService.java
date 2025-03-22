@@ -46,7 +46,6 @@ public class AuthService {
 
     //토큰 재발급
     public AuthResponseDto refreshAccessToken(String refreshToken) {
-        //TODO: 이거도 블랙리스트 로직추가하기
         if (refreshToken.startsWith("Bearer ")) {
             refreshToken = refreshToken.substring(7);
         }
@@ -54,6 +53,8 @@ public class AuthService {
         if (!jwtTokenProvider.validateToken(refreshToken)) {
             throw new RuntimeException("Refresh Token이 유효하지 않습니다.");
         }
+        redisTemplate.opsForValue().set("blacklist:" + refreshToken, "blacklisted", 1, TimeUnit.HOURS);
+
         String userId = jwtTokenProvider.getUserIdFromToken(refreshToken);
         String role = jwtTokenProvider.getRoleFromToken(refreshToken);
         Long id = jwtTokenProvider.getIdFromToken(refreshToken);

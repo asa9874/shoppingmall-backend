@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApiResponse<T> { //TODO 이거 resposne 하는곳에서 전부 이걸로 바꿔야함
+public class ApiResponse<T> { 
     private String message;
     private T data;
     private int status;
