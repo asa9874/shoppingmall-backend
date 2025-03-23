@@ -1,5 +1,4 @@
 <configuration>
-    <!-- 콘솔 로그 출력 포맷을 간결하게 설정 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <!-- 로그 출력 포맷 설정: 시간, 로그 레벨, 메시지만 출력 -->
@@ -15,12 +14,11 @@
     <!-- Spring Boot 관련 로그 레벨 설정 -->
     <logger name="org.springframework" level="ERROR"/>
     
-    <!-- JUnit 관련 로그 레벨 설정 (INFO로 설정하여 테스트 출력 간결화) -->
-    <logger name="org.junit" level="INFO" />
-    
-    <!-- Test 관련 로그 레벨 설정 (디버그 로깅을 활성화) -->
+    <!-- Test 관련 -->
     <logger name="org.junit.jupiter" level="DEBUG" />
     <logger name="org.junit.platform" level="DEBUG" />
+    <logger name="org.junit" level="INFO" />
+
 
     <!-- 특정 패키지의 로그 레벨 설정 (예: 상품 관련 테스트만 ERROR로 설정) -->
     <logger name="com.shopping" level="ERROR" />
