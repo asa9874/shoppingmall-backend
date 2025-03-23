@@ -36,6 +36,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/actuator/**", //이건 임시임
                                 "/auth/**",
                                 "/member/register",
                                 "/h2-console/**",
