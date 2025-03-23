@@ -7,16 +7,14 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Component
 @Log4j2
+@RequiredArgsConstructor
 public class RedisStartupListener implements ApplicationListener<ApplicationReadyEvent> {
     private final RedisConnectionFactory redisConnectionFactory;
-
-    public RedisStartupListener(RedisConnectionFactory redisConnectionFactory) {
-        this.redisConnectionFactory = redisConnectionFactory;
-    }
 
     @Override
     public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {
