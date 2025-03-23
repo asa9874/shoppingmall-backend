@@ -22,6 +22,17 @@ services:
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
 
+  grafana:  
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: always
+    ports:
+      - "3000:3000"  # Grafana 기본 포트
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin  # Grafana 기본 관리자 비밀번호 설정
+    depends_on:
+      - prometheus  # Grafana가 Prometheus 서비스가 시작된 후 실행
+
 volumes:
   redis_data:
     driver: local
