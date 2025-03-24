@@ -12,3 +12,4 @@ public class ShoppingmallBackendApplication {
 		SpringApplication.run(ShoppingmallBackendApplication.class, args);
 	}
 }
+	
