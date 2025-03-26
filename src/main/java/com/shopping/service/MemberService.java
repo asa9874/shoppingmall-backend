@@ -74,6 +74,13 @@ public class MemberService {
         return responseDto;
     }
 
+    // 유저리스트조회
+    public List<MemberInfoResponseDto> getMembers() {
+        return memberRepository.findAll().stream()
+                .map(MemberInfoResponseDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
     // 유저삭제
     @Transactional
     public void deleteMember(Long id) {
