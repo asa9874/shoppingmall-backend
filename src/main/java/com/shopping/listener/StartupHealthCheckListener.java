@@ -22,7 +22,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @RequiredArgsConstructor
 public class StartupHealthCheckListener implements ApplicationListener<ApplicationReadyEvent> {
-    
+    Instant startTime = Instant.now();
     private final RedisConnectionFactory redisConnectionFactory;
 
     @Value("${grafana.url}")  
@@ -91,7 +91,6 @@ public class StartupHealthCheckListener implements ApplicationListener<Applicati
 
     // Spring Boot 시작 시간 체크
     private void checkStartupTime() {
-        Instant startTime = Instant.now();
         Instant endTime = Instant.now();
         long timeTaken = Duration.between(startTime, endTime).toMillis();
         System.out.println("SpringBoot Started: " + timeTaken + " milliseconds.");
