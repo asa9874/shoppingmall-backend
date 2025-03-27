@@ -27,7 +27,7 @@ public class JwtTokenProvider {
     private final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
 
     // JWT 토큰 생성
-    public String createToken(String userId, String role,Long id) {
+    public String createToken(String userId, String role, Long id) {
         return Jwts.builder()
                 .claims().empty().add("role", role).add("id", id) // role,id 추가
                 .and()
@@ -40,9 +40,9 @@ public class JwtTokenProvider {
 
     // JWT 토큰 검증
     public boolean validateToken(String token) {
-        if (redisTemplate.hasKey("blacklist:" + token)) { //블랙리스트
-            log.error("blackList Token: {}", token);
-            return false;
+        if(isBlackList(token) || isBanList(token)) {
+            throw new JwtException("BlackList or BanList token");
+            
         }
 
         try {
@@ -55,6 +55,14 @@ public class JwtTokenProvider {
             log.error("Invalid JWT token: {}", e.getMessage());
             return false;
         }
+    }
+
+    public boolean isBlackList(String token) {
+        return redisTemplate.hasKey("blacklist:" + token);
+    }
+
+    public boolean isBanList(String token) {
+        return redisTemplate.hasKey("ban" + getIdFromToken(token).toString());
     }
 
     // JWT에서 사용자 ID 추출
@@ -77,7 +85,7 @@ public class JwtTokenProvider {
                 .get("role", String.class);
     }
 
-    //JWT에서 id 추출
+    // JWT에서 id 추출
     public Long getIdFromToken(String token) {
         return Jwts.parser()
                 .verifyWith(key)
