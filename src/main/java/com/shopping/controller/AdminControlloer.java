@@ -50,22 +50,22 @@ public class AdminControlloer {
     @PostMapping("/ban/member/{memberId}")  
     public ResponseEntity<ApiResponse<String>> banMember(@RequestBody AdminMemberBanRequestDto requestDto,@PathVariable Long memberId) {
         adminService.banMember(memberId,requestDto.getSeconds());
-        return ResponseEntity.ok(ApiResponse.success("banUser"));
+        return ResponseEntity.ok(ApiResponse.success("banMember"));
     }
 
 
     //TODO: 유저 밴해제
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/unban/member/{memberId}")
-    public ResponseEntity<ApiResponse<String>> unBanUser(@PathVariable Long memberId) {
+    public ResponseEntity<ApiResponse<String>> unBanMember(@PathVariable Long memberId) {
         adminService.unBanMember(memberId);
-        return ResponseEntity.ok(ApiResponse.success("unBanUser"));
+        return ResponseEntity.ok(ApiResponse.success("unBanMember"));
     }
 
     //TODO: 벤당한 유저리스트 확인
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/ban/users")
-    public ResponseEntity<ApiResponse<List<BanMemberResponseDto>>> getBanUsers() {
+    @GetMapping("/ban/members")
+    public ResponseEntity<ApiResponse<List<BanMemberResponseDto>>> getBanMembers() {
         List<BanMemberResponseDto> banMemberResponseDtoList = adminService.getBanMembers();
         return ResponseEntity.ok(ApiResponse.success(banMemberResponseDtoList));
     }
