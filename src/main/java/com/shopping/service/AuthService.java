@@ -40,6 +40,11 @@ public class AuthService {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
 
+        if(redisTemplate.hasKey("ban" + member.getId())) {
+            Long seconds = redisTemplate.getExpire("ban" + member.getId(), TimeUnit.SECONDS);
+            throw new AccessDeniedException("로그인 실패: 벤당함 (" + seconds + "초 남음)");
+        }
+
         String token = jwtTokenProvider.createToken(member.getMemberId(),member.getRole().name(),member.getId());
         return new AuthResponseDto(token);
     }

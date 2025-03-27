@@ -94,7 +94,7 @@ public class StartupHealthCheckListener implements ApplicationListener<Applicati
         Instant startTime = Instant.now();
         Instant endTime = Instant.now();
         long timeTaken = Duration.between(startTime, endTime).toMillis();
-        log.info("SpringBoot Started: " + timeTaken + " milliseconds.");
+        System.out.println("SpringBoot Started: " + timeTaken + " milliseconds.");
     }
 }
 
