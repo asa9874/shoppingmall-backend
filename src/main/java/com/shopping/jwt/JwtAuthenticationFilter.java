@@ -15,6 +15,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shopping.common.ApiResponse;
+
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
@@ -35,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain chain) throws ServletException, IOException {
         String token = getTokenFromRequest(request);
 
-        if (StringUtils.hasText(token)) {
+        if (StringUtils.hasText(token)) { //TODO: response 형식 재구성필요
             try {
                 // JWT 검증
                 if (jwtTokenProvider.validateToken(token)) {
@@ -55,8 +58,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             } catch (JwtException ex) {
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 response.setContentType("application/json");
-                response.getWriter()
-                        .write("{\"error\": \"Invalid JWT token\", \"message\": \"" + ex.getMessage() + "\"}");
+                ApiResponse<Object> apiResponse = ApiResponse.error("Invalid JWT token: " + ex.getMessage(), HttpStatus.UNAUTHORIZED.value());
+                response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
                 return; // 더 이상 필터 체인을 진행하지 않음
             }
         }
