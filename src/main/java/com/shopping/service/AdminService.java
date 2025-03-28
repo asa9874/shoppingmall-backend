@@ -23,10 +23,15 @@ public class AdminService {
     private final MemberRepository memberRepository;
 
     public void banMember(Long memberId,Long seconds) {
+        memberRepository.findById(memberId)
+            .orElseThrow(() -> new IllegalArgumentException("해당하는 멤버가 없습니다."));
         redisTemplate.opsForValue().set("ban" + memberId, "ban", seconds, TimeUnit.SECONDS);
     }
 
     public void unBanMember(Long memberId) {
+        if(!redisTemplate.hasKey("ban" + memberId)) {
+            throw new IllegalArgumentException("벤되어있지 않은 맴버입니다.");
+        }
         redisTemplate.delete("ban" + memberId);
     }
 
