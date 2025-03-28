@@ -18,6 +18,7 @@ import com.shopping.dto.Response.MemberInfoResponseDto;
 import com.shopping.service.AdminService;
 import com.shopping.service.MemberService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -31,12 +32,7 @@ public class AdminControlloer {
     private final MemberService memberService;
     private final AdminService adminService;
 
-    @GetMapping("/test")
-    public ResponseEntity<ApiResponse<String>> test() {
-        return ResponseEntity.ok(ApiResponse.success("test"));
-    }
-
-    //TODO: 유저들 정보 조회
+    @Operation(summary = "유저 전체 조회", description = "유저 전체 조회")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/users")
     public ResponseEntity<ApiResponse<List<MemberInfoResponseDto>>> getUsers() {
@@ -44,8 +40,7 @@ public class AdminControlloer {
         return ResponseEntity.ok(ApiResponse.success(memberInfoResponseDtoList));
     }
 
-
-    //TODO: 유저 밴하기
+    @Operation(summary = "유저 밴하기", description = "유저를 밴합니다.")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/ban/member/{memberId}")  
     public ResponseEntity<ApiResponse<String>> banMember(@RequestBody AdminMemberBanRequestDto requestDto,@PathVariable Long memberId) {
@@ -53,8 +48,7 @@ public class AdminControlloer {
         return ResponseEntity.ok(ApiResponse.success("banMember"));
     }
 
-
-    //TODO: 유저 밴해제
+    @Operation(summary = "유저 언밴하기", description = "유저를 언밴합니다.")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/unban/member/{memberId}")
     public ResponseEntity<ApiResponse<String>> unBanMember(@PathVariable Long memberId) {
@@ -62,7 +56,7 @@ public class AdminControlloer {
         return ResponseEntity.ok(ApiResponse.success("unBanMember"));
     }
 
-    //TODO: 벤당한 유저리스트 확인
+    @Operation(summary = "밴된 유저 조회", description = "밴된 유저를 조회합니다.")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/ban/members")
     public ResponseEntity<ApiResponse<List<BanMemberResponseDto>>> getBanMembers() {
