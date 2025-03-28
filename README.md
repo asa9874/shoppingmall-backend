@@ -26,6 +26,19 @@ mvn spring-boot:run
 http://localhost:8080/swagger-ui.html
 ```
 
+### 성공 응답 예시
+``` 
+{
+  "message": "Success",
+  "data": {
+    "id": 1,
+    "name": "Product A",
+    "price": 100
+  },
+  "status": 200,
+  "error": null
+}
+```
 ---
 
 ### ❓ **질문(Question) API**
@@ -115,6 +128,7 @@ http://localhost:8080/swagger-ui.html
 | `/review/{reviewId}` | PUT | 리뷰 수정 | ✅ | CUSTOMER (작성자) |
 | `/review/{reviewId}` | DELETE | 리뷰 삭제 | ✅ | CUSTOMER (작성자) |
 
+---
 
 ### 📲 **알림(Notification) API**
 | 엔드포인트 | 메서드 | 설명 | 인증 필요 여부 | ROLE |
@@ -126,6 +140,18 @@ http://localhost:8080/swagger-ui.html
 | `/notification` | POST | 알림 생성 | ✅ | - |
 
 ---
+
+### 👮‍♂️ **관리자(Admin) API**
+| 엔드포인트 | 메서드 | 설명 | 인증 필요 여부 | ROLE |
+|------------|--------|------|--------------|------|
+| `/admin/unban/member/{memberId}` | POST | 회원의 차단 해제 | ✅ | ADMIN |
+| `/admin/ban/member/{memberId}` | POST | 회원 차단 | ✅ | ADMIN |
+| `/admin/users` | GET | 전체 사용자 목록 조회 | ✅ | ADMIN |
+| `/admin/test` | GET | 관리자용 테스트 | ✅ | ADMIN |
+| `/admin/ban/members` | GET | 차단된 회원 목록 조회 | ✅ | ADMIN |
+
+---
+
 
 ---
 
