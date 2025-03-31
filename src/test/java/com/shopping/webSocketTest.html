@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket 채팅 테스트</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+  <h2>WebSocket 채팅 테스트</h2>
+  <div>
+    <input type="text" id="message" placeholder="메시지를 입력하세요" />
+    <button onclick="sendMessage()">전송</button>
+  </div>
+  <div id="chat"></div>
+
+  <script>
+    const socket = new SockJS("http://localhost:8080/ws");
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, () => {
+      console.log("WebSocket 연결됨");
+
+      stompClient.subscribe("/topic/public", (message) => {
+        const chatBox = document.getElementById("chat");
+        const msg = JSON.parse(message.body);
+        // 변수 치환을 위해 역슬래시를 제거합니다.
+        chatBox.innerHTML += `<p><strong>${msg.sender}:</strong> ${msg.content}</p>`;
+      });
+    });
+
+    function sendMessage() {
+      const messageInput = document.getElementById("message");
+      const message = messageInput.value;
+
+      if (message.trim() !== "") {
+        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify({
+          type: "CHAT",
+          sender: "사용자1",
+          content: message
+        }));
+        messageInput.value = "";
+      }
+    }
+  </script>
+</body>
+</html>

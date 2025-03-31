@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/actuator/**", //이건 임시임
+                                "/ws/**", // 웹소켓 엔드포인트 임시
                                 "/auth/**",
                                 "/member/register",
                                 "/h2-console/**",
@@ -74,7 +75,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080")); // 프론트엔드 도메인 허용
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080","http://127.0.0.1:3000")); // 프론트엔드 도메인 허용
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

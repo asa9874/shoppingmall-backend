@@ -18,10 +18,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         config.setApplicationDestinationPrefixes("/app");
     }
     
-    // 웹소켓 연결을 위한 엔드포인트 등록
-    // SockJS: 웹소켓을 지원하지 않는 브라우저에서도 사용 가능하게
+
+
     @Override
-    public void registerStompEndpoints(@NonNull StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").withSockJS();
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/ws")
+                .setAllowedOrigins("http://localhost:5173", "http://localhost:8080", "http://127.0.0.1:3000")
+                .withSockJS();
     }
 }
