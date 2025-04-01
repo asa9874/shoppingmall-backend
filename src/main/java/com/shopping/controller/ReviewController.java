@@ -63,7 +63,7 @@ public class ReviewController {
         return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
-    @Operation(summary = "리뷰 업데이트", description = "특정 리뷰를 업데이트합니다.")
+    @Operation(summary = "리뷰 업데이트", description = "특정 리뷰를 업데이트합니다.(본인 권한)")
     @PutMapping("/{reviewId}")
     public ResponseEntity<ApiResponse<ReviewResponseDto>> updateReviews(
             @PathVariable Long reviewId,
@@ -73,7 +73,7 @@ public class ReviewController {
         return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
-    @Operation(summary = "리뷰 삭제", description = "특정 리뷰를 삭제합니다.")
+    @Operation(summary = "리뷰 삭제", description = "특정 리뷰를 삭제합니다.(본인 권한)")
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<Void> deleteReviews(@PathVariable Long reviewId,
             @AuthenticationPrincipal CustomUserDetails member) {

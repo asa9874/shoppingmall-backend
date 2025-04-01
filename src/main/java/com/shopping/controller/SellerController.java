@@ -54,7 +54,7 @@ public class SellerController {
         return ResponseEntity.ok(ApiResponse.success(responseDTOs));
     }
 
-    @Operation(summary = "판매자 상품 생성", description = "판매자가 상품을 생성합니다.")
+    @Operation(summary = "판매자 상품 생성", description = "판매자가 상품을 생성합니다.(Seller 본인 권한)")
     @PostMapping(value = "/{memberId}/product/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<ApiResponse<ProductResponseDTO>> createProduct(
@@ -66,7 +66,7 @@ public class SellerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(responseDTO));
     }
 
-    @Operation(summary = "판매자 상품 수정", description = "판매자가 상품을 수정합니다.")
+    @Operation(summary = "판매자 상품 수정", description = "판매자가 상품을 수정합니다.(Seller 본인 권한)")
     @PutMapping("/{memberId}/product/{productId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<ApiResponse<ProductResponseDTO>> updateProduct(@PathVariable Long productId,
@@ -76,7 +76,7 @@ public class SellerController {
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(responseDTO));
     }
 
-    @Operation(summary = "판매자 상품 제거", description = "판매자가 상품을 제거합니다.")
+    @Operation(summary = "판매자 상품 제거", description = "판매자가 상품을 제거합니다.(Seller 본인 권한)")
     @DeleteMapping("/{memberId}/product/{productId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long memberId, @PathVariable Long productId) {

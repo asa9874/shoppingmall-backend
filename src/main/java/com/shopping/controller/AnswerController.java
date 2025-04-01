@@ -46,7 +46,7 @@ public class AnswerController {
         return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
-    @Operation(summary = "답변 업데이트", description = "특정 답변을 업데이트합니다.")
+    @Operation(summary = "답변 업데이트", description = "특정 답변을 업데이트합니다.(본인 권한)")
     @PutMapping("/{answerId}")
     public ResponseEntity<ApiResponse<AnswerResponseDto>> updateAnswer(
             @PathVariable Long answerId,
@@ -56,7 +56,7 @@ public class AnswerController {
         return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
-    @Operation(summary = "답변 제거", description = "특정 답변을 제거합니다.")
+    @Operation(summary = "답변 제거", description = "특정 답변을 제거합니다.(본인 권한)")
     @DeleteMapping("/{answerId}")
     public ResponseEntity<Void> deleteAnswer(
             @PathVariable Long answerId,
@@ -65,7 +65,7 @@ public class AnswerController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "전체 답변 조회", description = "모든 답변을 조회합니다.")
+    @Operation(summary = "전체 답변 조회", description = "모든 답변을 조회합니다.(Admin 권한)")
     @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse<List<AnswerResponseDto>>> getAnswers() {
@@ -73,7 +73,7 @@ public class AnswerController {
         return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
-    @Operation(summary = "답변 조회", description = "특정 답변을 조회합니다.")
+    @Operation(summary = "답변 조회", description = "특정 답변을 조회합니다.(Admin 권한)")
     @GetMapping("/{answerId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse<AnswerResponseDto>> getAnswer(@PathVariable Long answerId) {

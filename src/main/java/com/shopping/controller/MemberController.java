@@ -66,7 +66,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(responseDto));
     }
 
-    @Operation(summary = "회원 정보 조회", description = "특정 회원의 정보를 조회합니다.")
+    @Operation(summary = "회원 정보 조회", description = "특정 회원의 정보를 조회합니다.(본인 권한)")
     @GetMapping("/{memberId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<ApiResponse<MemberInfoResponseDto>> getMemberInfo(@PathVariable Long memberId){
@@ -74,7 +74,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(responseDto));
     }
 
-    @Operation(summary = "회원 삭제", description = "특정 회원을 삭제합니다.")
+    @Operation(summary = "회원 삭제", description = "특정 회원을 삭제합니다.(본인 권한)")
     @DeleteMapping("/{memberId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<Void> deleteMember(@PathVariable Long memberId) {
@@ -82,7 +82,7 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "회원 정보 수정", description = "특정 회원의 정보를 수정합니다.")
+    @Operation(summary = "회원 정보 수정", description = "특정 회원의 정보를 수정합니다.(본인 권한)")
     @PutMapping("/{memberId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<ApiResponse<Void>> updateMember(@PathVariable Long memberId, @Valid @RequestBody MemberUpdateRequestDto requestDto) {
@@ -90,7 +90,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(null));
     }
 
-    @Operation(summary = "알림 조회", description = "특정 회원의 알림을 조회합니다.")
+    @Operation(summary = "알림 조회", description = "특정 회원의 알림을 조회합니다.(본인 권한)")
     @GetMapping("/{memberId}/notification")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<ApiResponse<List<NotificationResponseDto>>> getNotification(@PathVariable Long memberId) {
@@ -98,7 +98,7 @@ public class MemberController {
         return ResponseEntity.ok(ApiResponse.success(notification));
     }
 
-    @Operation(summary = "알림 상세 조회", description = "특정 회원의 알림 상세 정보를 조회합니다.")
+    @Operation(summary = "알림 상세 조회", description = "특정 회원의 알림 상세 정보를 조회합니다.(본인 권한)")
     @GetMapping("/{memberId}/notification/{notificationId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #memberId == authentication.principal.id")
     public ResponseEntity<ApiResponse<NotificationResponseDto>> getNotificationDetail(@PathVariable Long memberId, @PathVariable Long notificationId) {

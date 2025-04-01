@@ -34,7 +34,7 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
-    @Operation(summary = "알림 조회", description = "모든 알림을 조회합니다.")
+    @Operation(summary = "알림 조회", description = "모든 알림을 조회합니다.(Admin 권한)")
     @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse<List<NotificationResponseDto>>> getNotifications() {
@@ -42,7 +42,7 @@ public class NotificationController {
         return ResponseEntity.ok(ApiResponse.success(responseList));
     }
 
-    @Operation(summary = "알림 상세 조회", description = "특정 알림을 조회합니다.")
+    @Operation(summary = "알림 상세 조회", description = "특정 알림을 조회합니다.(Admin 권한)")
     @GetMapping("/{notificationId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse<NotificationResponseDto>> getNotification(@PathVariable Long notificationId) {
@@ -50,7 +50,7 @@ public class NotificationController {
         return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
-    @Operation(summary = "알림 생성", description = "새로운 알림을 생성합니다.")
+    @Operation(summary = "알림 생성", description = "새로운 알림을 생성합니다.(Admin 권한)")
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse<NotificationResponseDto>> createNotification(
@@ -59,7 +59,7 @@ public class NotificationController {
         return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
-    @Operation(summary = "알림 업데이트", description = "특정 알림을 업데이트합니다.")
+    @Operation(summary = "알림 업데이트", description = "특정 알림을 업데이트합니다.(Admin 권한)")
     @PutMapping("/{notificationId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse<NotificationResponseDto>> updateNotification(@PathVariable Long notificationId,
@@ -68,7 +68,7 @@ public class NotificationController {
         return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
-    @Operation(summary = "알림 삭제", description = "특정 알림을 삭제합니다.")
+    @Operation(summary = "알림 삭제", description = "특정 알림을 삭제합니다.(Admin 권한)")
     @DeleteMapping("/{notificationId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteNotification(@PathVariable Long notificationId) {

@@ -32,7 +32,7 @@ public class AdminControlloer {
     private final MemberService memberService;
     private final AdminService adminService;
 
-    @Operation(summary = "유저 전체 조회", description = "유저 전체 조회")
+    @Operation(summary = "유저 전체 조회", description = "유저 전체 조회(Admin 권한)")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/users")
     public ResponseEntity<ApiResponse<List<MemberInfoResponseDto>>> getUsers() {
@@ -40,7 +40,7 @@ public class AdminControlloer {
         return ResponseEntity.ok(ApiResponse.success(memberInfoResponseDtoList));
     }
 
-    @Operation(summary = "유저 밴하기", description = "유저를 밴합니다.")
+    @Operation(summary = "유저 밴하기", description = "유저를 밴합니다.(Admin 권한)")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/ban/member/{memberId}")  
     public ResponseEntity<ApiResponse<String>> banMember(@RequestBody AdminMemberBanRequestDto requestDto,@PathVariable Long memberId) {
@@ -48,7 +48,7 @@ public class AdminControlloer {
         return ResponseEntity.ok(ApiResponse.success("banMember"));
     }
 
-    @Operation(summary = "유저 언밴하기", description = "유저를 언밴합니다.")
+    @Operation(summary = "유저 언밴하기", description = "유저를 언밴합니다.(Admin 권한)")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/unban/member/{memberId}")
     public ResponseEntity<ApiResponse<String>> unBanMember(@PathVariable Long memberId) {
@@ -56,7 +56,7 @@ public class AdminControlloer {
         return ResponseEntity.ok(ApiResponse.success("unBanMember"));
     }
 
-    @Operation(summary = "밴된 유저 조회", description = "밴된 유저를 조회합니다.")
+    @Operation(summary = "밴된 유저 조회", description = "밴된 유저를 조회합니다.(Admin 권한)")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/ban/members")
     public ResponseEntity<ApiResponse<List<BanMemberResponseDto>>> getBanMembers() {

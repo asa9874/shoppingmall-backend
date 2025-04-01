@@ -59,7 +59,7 @@ public class QuestionController {
         return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
-    @Operation(summary = "질문 업데이트", description = "특정 질문을 업데이트합니다.")
+    @Operation(summary = "질문 업데이트", description = "특정 질문을 업데이트합니다.(본인 권한)")
     @PutMapping("/{questionId}")
     public ResponseEntity<ApiResponse<QuestionResponseDto>> updateQuestion(
             @Valid @RequestBody QuestionUpdateRequestDto requestDto,
@@ -69,7 +69,7 @@ public class QuestionController {
         return ResponseEntity.ok(ApiResponse.success(responseDto));
     }
 
-    @Operation(summary = "질문 제거", description = "특정 질문을 제거합니다.")
+    @Operation(summary = "질문 제거", description = "특정 질문을 제거합니다.(본인 권한)")
     @DeleteMapping("/{questionId}")
     public ResponseEntity<Void> deleteQuestion(@PathVariable Long questionId,
             @AuthenticationPrincipal CustomUserDetails member) {
