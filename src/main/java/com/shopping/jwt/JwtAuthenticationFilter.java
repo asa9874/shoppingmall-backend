@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain chain) throws ServletException, IOException {
         String token = getTokenFromRequest(request);
 
-        if (StringUtils.hasText(token)) { //TODO: response 형식 재구성필요
+        if (StringUtils.hasText(token)) {
             try {
                 // JWT 검증
                 if (jwtTokenProvider.validateToken(token)) {
