@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import com.shopping.model.Member;
+import com.shopping.oauth.CustomOAuth2User;
 import com.shopping.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -55,6 +56,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         // 예를 들어, 이름이 바뀌었다면 업데이트하는 로직 추가 가능
         
         // 커스텀 OAuth2User 객체로 변환하여 반환
-        return new CustomOAuth2User(user, attributes);
+        return new CustomOAuth2User(member, attributes);
     }
 }
