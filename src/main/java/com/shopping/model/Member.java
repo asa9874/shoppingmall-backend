@@ -44,6 +44,9 @@ public class Member {
     public enum Role {
         CUSTOMER, SELLER, ADMIN
     }
+    
+    @Builder.Default
+    private String provider = "local";
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     @Builder.Default
