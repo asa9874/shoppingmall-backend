@@ -20,6 +20,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.shopping.jwt.JwtAuthenticationFilter;
 import com.shopping.jwt.JwtTokenProvider;
+import com.shopping.oauth.OAuth2LoginSuccessHandler;
 import com.shopping.service.CustomOAuth2UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,8 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler; 
+    
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -78,11 +81,11 @@ public class SecurityConfig {
                 
                 // OAuth2 로그인 설정
                 .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/login") // 커스텀 로그인 페이지 (없으면 기본 제공)
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customOAuth2UserService))
-                        .defaultSuccessUrl("/home", true)
-                        .failureUrl("/login?error=true"));
+                    .loginPage("/login")
+                    .userInfoEndpoint(userInfo -> userInfo
+                            .userService(customOAuth2UserService))
+                    .successHandler(oAuth2LoginSuccessHandler)
+                    .failureUrl("/login?error=true"));
         
         return http.build();
     }
