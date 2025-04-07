@@ -20,6 +20,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.shopping.jwt.JwtAuthenticationFilter;
 import com.shopping.jwt.JwtTokenProvider;
+import com.shopping.service.CustomOAuth2UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
-
+    private final CustomOAuth2UserService customOAuth2UserService;
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -38,6 +39,9 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/actuator/**", //이건 임시임
                                 "/ws/**", // 웹소켓 엔드포인트 임시
+                                "/login**", // oauth2 로그인 엔드포인트
+                                "/oauth2/**", // oauth2 로그인 엔드포인트
+                                "/error", // 에러 페이지
                                 "/auth/**",
                                 "/member/register",
                                 "/h2-console/**",
@@ -64,10 +68,22 @@ public class SecurityConfig {
                         .hasRole("ADMIN")
                         
                         .anyRequest().authenticated())
+                // CSRF 비활성화 및 세션 정책 설정 (JWT 사용 시)
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                
+                // JWT 인증 필터 등록
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                
+                // OAuth2 로그인 설정
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login") // 커스텀 로그인 페이지 (없으면 기본 제공)
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(customOAuth2UserService))
+                        .defaultSuccessUrl("/home", true)
+                        .failureUrl("/login?error=true"));
+        
         return http.build();
     }
 
