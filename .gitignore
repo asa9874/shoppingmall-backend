@@ -35,3 +35,6 @@ build/
 
 ### properties ###
 application-oauth.properties
+
+bin/
+.gradle/
