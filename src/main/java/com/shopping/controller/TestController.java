@@ -12,6 +12,9 @@ import com.shopping.service.TestService;
 
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping("/test")
@@ -60,5 +63,12 @@ public class TestController {
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(body -> ResponseEntity.ok().body(body));
+    }
+
+
+    @PostMapping("/rabbitMQ")
+    public ResponseEntity<String> sendMessageToRabbitMQ(@RequestBody String message) {
+        testService.sendMessageToRabbitMQ(message);
+        return ResponseEntity.ok("메시지가 RabbitMQ에 전송되었습니다: " + message);
     }
 }
