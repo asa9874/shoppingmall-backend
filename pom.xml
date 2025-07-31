@@ -161,9 +161,19 @@
 		</dependency>
 		-->
 
+		
+
+		<!-- Spring Boot AMQP -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
+
+		<!-- coobird thumbnailator 이미지 처리 라이브러리 -->
+		<dependency>
+			<groupId>net.coobird</groupId>
+			<artifactId>thumbnailator</artifactId>
+			<version>0.4.20</version>
 		</dependency>
 		
 
