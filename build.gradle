@@ -38,6 +38,8 @@ dependencies {
     testImplementation libs.org.springframework.boot.spring.boot.starter.test
     testImplementation libs.org.springframework.security.spring.security.test
 
+	implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.0.0'
+	
 	compileOnly("org.projectlombok:lombok:1.18.38")
 	annotationProcessor("org.projectlombok:lombok:1.18.38")
 	
